@@ -16,19 +16,19 @@ module exampleFoamSize() {
 }
 
 module xRailEndPlate() {
-	translate([50,360,0]) {
+	translate([50,365,0]) {
 			cube([150,10,150], center = true);
 	}
-	translate([50,-360,0]) {
+	translate([50,-365,0]) {
 			cube([150,10,150], center = true);
 	}
 }
 
 module yRailEndPlate() {
-	translate([10,300,60]) {
+	translate([10,300,62]) {
 			cube([50,50,10], center = true);
 	}
-	translate([10,300,-60]) {
+	translate([10,300,-62]) {
 			cube([50,50,10], center = true);
 	}
 }
@@ -69,10 +69,10 @@ module zRail() {
 }
 
 module endBlocks() {
-	translate([650-endBlockWidth/2,0,-75]) {
+	translate([650-endBlockWidth/2,0,-76]) {
 			cube([endBlockWidth, endBlockLength, endBlockHeight], center = true);
 		}
-	translate([-650+endBlockWidth/2,0,-75]) {
+	translate([-650+endBlockWidth/2,0,-76]) {
 			cube([endBlockWidth, endBlockLength, endBlockHeight], center = true);
 	}
 }
