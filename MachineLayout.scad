@@ -1,10 +1,10 @@
 xRailDiameter = 10;
 xRailLength = 700;
 
-yRailDiameter = 10;
+yRailDiameter = 16;
 yRailLength = 110;
 
-zRailDiameter = 10;
+zRailDiameter = 20;
 zRailLength = 1300;
 
 endBlockLength = 720;
@@ -33,14 +33,53 @@ module yRailEndPlate() {
 	}
 }
 
+module endRailBearingMount(rodDiameter, length) {
+	difference(){
+		rotate(90, [0,1,0]) difference(){
+				cylinder(r = rodDiameter*1.2, h = length, center = true);
+				translate([-rodDiameter*0.6,0,0]) cylinder(r = rodDiameter/2+1, h = length+1, center = true);
+		}
+		translate([0,0,-rodDiameter-1]) cylinder(r = rodDiameter/2+1, h = length+1, center = true);
+	}
+}
+
+module yRailEndRoller() {
+	translate([0,0,70]) {
+			#endRailBearingMount(yRailDiameter, 30);
+			ballBearing(-30,yRailDiameter,0);
+			ballBearing(30,-yRailDiameter,0);
+	}
+	translate([0,0,-70]) {
+			ballBearing(30,yRailDiameter,-30);
+			ballBearing(30,yRailDiameter,30);
+			ballBearing(-30,-yRailDiameter,0);
+	}
+}
+
+module ballBearing(rotation, distance, offset) {
+	translate([offset,distance,0])
+	rotate(rotation, [1,0,0])
+	difference() {
+    		cylinder(r = 11, h = 7, center = true);
+	    cylinder(r = 4, h = 7 + 1, center = true);
+	}
+}
+
+module hollowTube(railDiameter, railLength) {
+	difference() {
+    		cylinder(r = railDiameter / 2, h = railLength, center = true);
+	    cylinder(r = railDiameter / 2 - 0.7, h = railLength + 1, center = true);
+	}
+}
+
 module xRail() {
 	translate([-300,0,0]) {
 		rotate(90, [1,0,0]) {
 			translate([0,-45,0]) {
-				cylinder(r = xRailDiameter / 2, h = xRailLength, center = true);
+				hollowTube(xRailDiameter, xRailLength);
 			}
 			translate([0,45,0]) {
-				cylinder(r = xRailDiameter / 2, h = xRailLength, center = true);
+				hollowTube(xRailDiameter, xRailLength);
 			}
 		}
 		xRailEndPlate();
@@ -51,19 +90,20 @@ module xRail() {
 module yRail() {
 	rotate(90, [0,0,1]) {
 		translate([300,-20,0]) {
-			cylinder(r = yRailDiameter / 2, h = yRailLength, center = true);
+			hollowTube(yRailDiameter, yRailLength);
+			yRailEndRoller();
 		}
 	}
-	yRailEndPlate();
+	//yRailEndPlate();
 }
 
 module zRail() {
 	rotate(90, [0,1,0]) {
 		translate([60,350,0]) {
-			cylinder(r = zRailDiameter / 2, h = zRailLength, center = true);
+			hollowTube(zRailDiameter, zRailLength);
 		}
 	translate([60,-350,0]) {
-			cylinder(r = zRailDiameter / 2, h = zRailLength, center = true);
+			hollowTube(zRailDiameter, zRailLength);
 		}
 	}
 }
@@ -84,7 +124,6 @@ module assembly() {
 	zRail();
 	endBlocks();
 }
-
 exampleFoamSize();
 assembly();
 
