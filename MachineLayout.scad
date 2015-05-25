@@ -1,4 +1,4 @@
-xRailDiameter = 10;
+xRailDiameter = 16;
 xRailLength = 700;
 
 yRailDiameter = 16;
@@ -50,8 +50,8 @@ module endRailBearingMount(rodDiameter, length) {
 module yRailEndRoller() {
 	translate([0,0,70]) {
 			endRailBearingMount(yRailDiameter, 30);
-			//ballBearing(-30,yRailDiameter,0);
-			//ballBearing(30,-yRailDiameter,0);
+			ballBearing(-30,yRailDiameter,0);
+			ballBearing(30,-yRailDiameter,0);
 	}
 	translate([0,0,-70]) {
 			ballBearing(30,yRailDiameter,-30);
@@ -65,7 +65,7 @@ module ballBearingSpace(rotation, distance, offset) {
 	rotate(rotation, [1,0,0]) {
 		difference() {
     		cylinder(r = 12, h = 9, center = true);
-		translate([0,0,-6.5])	cylinder(r = 6, h = 5, center = true);
+		translate([0,0,-6.3])	cylinder(r = 6, h = 5, center = true);
 		}
 		translate([0,0,10])	cylinder(r = 6, h = 7 + 10, center = true);
   	  	cylinder(r = 1, h = 70, center = true);
@@ -142,4 +142,7 @@ module assembly() {
 }
 exampleFoamSize();
 assembly();
+
+// export the single rod end
+//rotate(90, [0,1,0]) endRailBearingMount(yRailDiameter, 30);
 
