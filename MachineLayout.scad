@@ -39,20 +39,36 @@ module endRailBearingMount(rodDiameter, length) {
 				cylinder(r = rodDiameter*1.2, h = length, center = true);
 				translate([-rodDiameter*0.6,0,0]) cylinder(r = rodDiameter/2+1, h = length+1, center = true);
 		}
+		union() {
 		translate([0,0,-rodDiameter-1]) cylinder(r = rodDiameter/2+1, h = length+1, center = true);
+		ballBearingSpace(-30,yRailDiameter,0);
+		ballBearingSpace(30,-yRailDiameter,0);
+		}
 	}
 }
 
 module yRailEndRoller() {
 	translate([0,0,70]) {
-			#endRailBearingMount(yRailDiameter, 30);
-			ballBearing(-30,yRailDiameter,0);
-			ballBearing(30,-yRailDiameter,0);
+			endRailBearingMount(yRailDiameter, 30);
+			//ballBearing(-30,yRailDiameter,0);
+			//ballBearing(30,-yRailDiameter,0);
 	}
 	translate([0,0,-70]) {
 			ballBearing(30,yRailDiameter,-30);
 			ballBearing(30,yRailDiameter,30);
 			ballBearing(-30,-yRailDiameter,0);
+	}
+}
+
+module ballBearingSpace(rotation, distance, offset) {
+	translate([offset,distance,0])
+	rotate(rotation, [1,0,0]) {
+		difference() {
+    		cylinder(r = 12, h = 9, center = true);
+		translate([0,0,-6.5])	cylinder(r = 6, h = 5, center = true);
+		}
+		translate([0,0,10])	cylinder(r = 6, h = 7 + 10, center = true);
+  	  	cylinder(r = 1, h = 70, center = true);
 	}
 }
 
