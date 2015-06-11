@@ -37,10 +37,15 @@ module endRailBearingMount(rodDiameter, length, sideA, sideB) {
 	difference(){
 		rotate(90, [0,1,0]) difference(){
 				cylinder(r = rodDiameter*1.2, h = length, center = true);
+//			union() {
 				translate([-rodDiameter*0.6,0,0]) cylinder(r = rodDiameter/2+1, h = length+1, center = true);
-		}
+//				translate([offset,distance,0])
+//	rotate(90, [1,0,1]) rotate(30, [1,0,0]) 
+  //  		translate([0,0,-18]) cylinder(r = 120, h = 19, center = true);
+			}
+//		}
 		union() {
-			translate([0,0,-rodDiameter-1]) cylinder(r = rodDiameter/2+1, h = length+1, center = true);
+			translate([0,0,-rodDiameter-1]) cylinder(r = rodDiameter/2+1, h = 30+1, center = true);
 			for(bearingOffset = sideA) {
 				translate([bearingOffset,0,0]) ballBearingSpace(-30,yRailDiameter,0);
 			}
@@ -70,7 +75,10 @@ module ballBearingSpace(rotation, distance, offset) {
 	translate([offset,distance,0])
 	rotate(rotation, [1,0,0]) {
 		difference() {
-    		cylinder(r = 12, h = 9, center = true);
+    		union() {
+                    cylinder(r = 12, h = 9, center = true);
+                    translate([0,0,9]) cylinder(r = 120, h = 19, center = true);
+                }
 		union() {
 			translate([0,0,-6.3])	cylinder(r = 6, h = 5, center = true);
 			translate([0,0,-3])	cylinder(r1 = 4,r2 = 3, h = 5, center = true);
