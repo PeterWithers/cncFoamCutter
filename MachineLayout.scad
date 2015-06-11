@@ -1,26 +1,68 @@
-xRailDiameter = 16;
-xRailLength = 700;
+xRailDiameter = 8;
+xRailLength = 350;
+xRailSeparation = 700;
 
 yRailDiameter = 16;
 yRailLength = 110;
 
 zRailDiameter = 20;
-zRailLength = 1300;
+zRailLength = 900;
 
-endBlockLength = 720;
+endBlockLength = 450;
 endBlockWidth = 50;
 endBlockHeight = 20;
 
+
+
 module exampleFoamSize() {
-	%cube([1200, 600, 60], center = true);
+	%cube([600, 1200, 60], center = true);
 }
 
-module xRailEndPlate() {
-	translate([50,365,0]) {
-			cube([150,10,150], center = true);
+module stepperMotor() {
+	stepperWidth = 50;
+	stepperLength = 60;
+	stepperShaft = 5;
+	stepperShaftLenght = 30;
+	stepperBoltDist = 42;
+	stepperBolt = 4;
+	stepperBoltLength = 10;
+	cube([stepperWidth, stepperWidth, stepperLength], center = true);
+	translate([0,0,stepperShaftLenght]) {
+		cylinder(r = stepperShaft/2, h = stepperLength, center = true);
 	}
-	translate([50,-365,0]) {
-			cube([150,10,150], center = true);
+	for (rotation = [0, 90, 180, 270]) {
+		rotate(rotation+45, [0,0,1]) translate([0,stepperBoltDist/2,stepperBoltLength]) {
+			cylinder(r = stepperBolt/2.0, h = stepperLength, center = true);
+		}
+	}
+}
+
+module linearBearing() {
+	blockWidth = 20;
+	blockLength = 30;
+	rodHoleSize = 8;
+	rodHoleOffset = 5;
+	blockBoltDist = 42;
+	blockBolt = 2;
+	stepperBoltLength = 10;
+	cube([blockWidth, blockWidth, blockLength], center = true);
+	translate([0,rodHoleOffset,0]) {
+		cylinder(r = rodHoleSize/2, h = blockLength*2, center = true);
+	}
+	//for (rotation = [0, 90, 180, 270]) {
+	//	rotate(rotation+45, [0,0,1]) translate([0,blockBoltDist/2,stepperBoltLength]) {
+	//		cylinder(r = blockBolt/2.0, h = blockLength, center = true);
+	//	}
+	//}
+}
+
+
+module xRailEndPlate() {
+	translate([0,xRailLength/2,0]) {
+			cube([50,5,150], center = true);
+	}
+	translate([0,-xRailLength/2,0]) {
+			cube([50,5,150], center = true);
 	}
 }
 
@@ -30,62 +72,6 @@ module yRailEndPlate() {
 	}
 	translate([10,300,-62]) {
 			cube([50,50,10], center = true);
-	}
-}
-
-module endRailBearingMount(rodDiameter, length, sideA, sideB) {
-	difference(){
-		rotate(90, [0,1,0]) difference(){
-				cylinder(r = rodDiameter*1.2, h = length, center = true);
-//			union() {
-				translate([-rodDiameter*0.6,0,0]) cylinder(r = rodDiameter/2+1, h = length+1, center = true);
-//				translate([offset,distance,0])
-//	rotate(90, [1,0,1]) rotate(30, [1,0,0]) 
-  //  		translate([0,0,-18]) cylinder(r = 120, h = 19, center = true);
-			}
-//		}
-		union() {
-			translate([0,0,-rodDiameter-1]) cylinder(r = rodDiameter/2+1, h = 30+1, center = true);
-			for(bearingOffset = sideA) {
-				translate([bearingOffset,0,0]) ballBearingSpace(-30,yRailDiameter,0);
-			}
-			for(bearingOffset = sideB) {
-				translate([bearingOffset,0,0]) 
-				ballBearingSpace(30,-yRailDiameter,0);
-			}
-		}
-	}
-}
-
-module yRailEndRoller() {
-	translate([0,0,70]) {
-			endRailBearingMount(yRailDiameter, 30, [0],[0]);
-			ballBearing(-30,yRailDiameter,0);
-			ballBearing(30,-yRailDiameter,0);
-	}
-	translate([0,0,-70]) {
-			rotate(180, [0,1,0]) endRailBearingMount(yRailDiameter, 50, [15,-15],[0]);
-			ballBearing(30,yRailDiameter,-15);
-			ballBearing(30,yRailDiameter,15);
-			ballBearing(-30,-yRailDiameter,0);
-	}
-}
-
-module ballBearingSpace(rotation, distance, offset) {
-	translate([offset,distance,0])
-	rotate(rotation, [1,0,0]) {
-		difference() {
-    		union() {
-                    cylinder(r = 12, h = 9, center = true);
-                    translate([0,0,9]) cylinder(r = 120, h = 19, center = true);
-                }
-		union() {
-			translate([0,0,-6.3])	cylinder(r = 6, h = 5, center = true);
-			translate([0,0,-3])	cylinder(r1 = 4,r2 = 3, h = 5, center = true);
-			}
-		}
-		translate([0,0,10])	cylinder(r = 6, h = 7 + 10, center = true);
-  	  	cylinder(r = 1, h = 70, center = true);
 	}
 }
 
@@ -105,47 +91,61 @@ module hollowTube(railDiameter, railLength) {
 	}
 }
 
-module xRail() {
-	translate([-300,0,0]) {
-		rotate(90, [1,0,0]) {
-			translate([0,-45,0]) {
-				hollowTube(xRailDiameter, xRailLength);
-			}
-			translate([0,115,0]) {
-				hollowTube(xRailDiameter, xRailLength);
-			}
-		}
-		xRailEndPlate();
-		yRail();
-	}
+module solidRod(railDiameter, railLength) {
+	cylinder(r = railDiameter / 2, h = railLength, center = true);
 }
 
+module xRail() {
+    translate([xRailSeparation/2,0,0]) {
+            rotate(90, [1,0,0]) {
+                    translate([0,-50,0]) {
+                            solidRod(xRailDiameter, xRailLength);
+                    }
+                    translate([0,50,0]) {
+                            solidRod(xRailDiameter, xRailLength);
+                    }
+            }
+            xRailEndPlate();
+            yRail();
+    }
+}
+
+module wire() {
+    rotate(90, [1,0,0])
+        translate([0,0,-xRailSeparation/4])
+            cylinder(r = 0.5, h = xRailSeparation/2, center = true);
+}
 module yRail() {
 	rotate(90, [0,0,1]) {
-		translate([300,0,35]) {
-			hollowTube(yRailDiameter, yRailLength);
-			yRailEndRoller();
-		}
+            translate([100,20,0]) {
+                cube([50,10,100], center = true);
+                for (offset = [-50, 50]) {
+                    translate([0,-20,offset]) rotate(90, [0,1,0]) rotate(180, [1,0,0]){
+                    linearBearing();
+                    }
+                }
+                wire();
+            }
 	}
 	//yRailEndPlate();
 }
 
 module zRail() {
 	rotate(90, [0,1,0]) {
-		translate([60,350,0]) {
+		translate([60,200,0]) {
 			hollowTube(zRailDiameter, zRailLength);
 		}
-	translate([60,-350,0]) {
+	translate([60,-200,0]) {
 			hollowTube(zRailDiameter, zRailLength);
 		}
 	}
 }
 
 module endBlocks() {
-	translate([650-endBlockWidth/2,0,-76]) {
+	translate([zRailLength/2-endBlockWidth/2,0,-76]) {
 			cube([endBlockWidth, endBlockLength, endBlockHeight], center = true);
 		}
-	translate([-650+endBlockWidth/2,0,-76]) {
+	translate([-zRailLength/2+endBlockWidth/2,0,-76]) {
 			cube([endBlockWidth, endBlockLength, endBlockHeight], center = true);
 	}
 }
@@ -154,15 +154,12 @@ module endBlocks() {
 module assembly() {
 	xRail();
 	mirror([1,0,0]) xRail();
-	zRail();
-	endBlocks();
+	#zRail();
+	#endBlocks();
 }
 exampleFoamSize();
 assembly();
 
-// export the single rod end
-//translate([50,0,0])rotate(90, [0,1,0]) endRailBearingMount(yRailDiameter, 50, [15, -15], [0]);
-
-// export the single rod end
-//rotate(90, [0,1,0]) endRailBearingMount(yRailDiameter, 30,[0],[0]);
-
+//stepperMotor();
+//linearBearing();
+//yRail();
