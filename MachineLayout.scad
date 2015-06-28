@@ -128,18 +128,31 @@ module yRailMount() {
 
 	bearingBlockSpacing = 60;
 	boreLength = 100;
+
+	backPlateThickeness = 5;
+	backPlateLength = bearingBlockSpacing+35;
+
+	endstopMountHeight = 24;
+	endstopMountWidth = 16;
+	endstopMountLength = 27;
+	endstopHoleDiameter = 19;
     
 	difference() {
-		cube([30,5,bearingBlockSpacing+35], center = true);
+		// back plate
+		union() {
+		cube([30,backPlateThickeness,backPlateLength], center = true);
+			translate([-8,endstopMountHeight/2-backPlateThickeness/2,backPlateLength/2+endstopMountWidth/2]) cube([endstopMountLength,endstopMountHeight,endstopMountWidth], center = true);
+		}
 	union() {
 	rotate(90, [1,0,0])	{
+		// linear bearing mount holes
 		for (spacing = [bearingBlockSpacing/2, -bearingBlockSpacing/2]) 
 		for (holeVerSpacing = [bearingBlockHoleVerSpacing/2, -bearingBlockHoleVerSpacing/2])
 		for (holeHorSpacing = [bearingBlockHoleHorSpacing/2, -bearingBlockHoleHorSpacing/2])	{
         translate([holeHorSpacing,spacing+holeVerSpacing,0])
             cylinder(r = bearingBlockHoleDiameter/2, h = boreLength, center = true);
-	}
-
+		}
+		// slide mount holes
 		for (holeVerSpacing = [ySlideMountHoleVerSpacing/2, -ySlideMountHoleVerSpacing/2])
 		for (holeHorSpacing = [ySlideMountHoleHorSpacing/2, -ySlideMountHoleHorSpacing/2])	{
         translate([holeHorSpacing,holeVerSpacing,0])
