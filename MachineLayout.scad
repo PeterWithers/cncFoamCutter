@@ -131,17 +131,38 @@ module yRailMount() {
 
 	backPlateThickeness = 5;
 	backPlateLength = bearingBlockSpacing+35;
+	backPlateWidth = 30;
 
 	endstopMountHeight = 24;
 	endstopMountWidth = 16;
 	endstopMountLength = 27;
-	endstopHoleDiameter = 19;
+	endstopHoleSpacing = 19;
+	endstopHoleDiameter = 2;
     
 	difference() {
-		// back plate
 		union() {
-		cube([30,backPlateThickeness,backPlateLength], center = true);
-			translate([-8,endstopMountHeight/2-backPlateThickeness/2,backPlateLength/2+endstopMountWidth/2]) cube([endstopMountLength,endstopMountHeight,endstopMountWidth], center = true);
+		// back plate
+		cube([backPlateWidth,backPlateThickeness,backPlateLength], center = true);
+		// endstop mount
+			translate([-8,endstopMountHeight/2-backPlateThickeness/2,backPlateLength/2-1+endstopMountWidth/2]) {
+		intersection() {
+			difference() {
+			union() {
+				cube([endstopMountLength,endstopMountHeight,endstopMountWidth], center = true);
+				translate([-backPlateWidth/2+8.5,0,-10])cube([1,endstopMountHeight,endstopMountWidth], center = true);
+			}
+			union() {
+				rotate(90, [1,0,0])	{
+					// endstop mount holes
+					for (spacing = [endstopHoleSpacing/2, -endstopHoleSpacing/2]) 
+					translate([spacing,0,-endstopMountHeight/2])
+		        	    		cylinder(r = endstopHoleDiameter/2, h = 20, center = true);
+				}
+					}
+				}
+				translate([0,0,-6]) rotate(30, [1,0,0]) cube([endstopMountLength,endstopMountHeight*2,endstopMountWidth-3], center = true);
+			}
+		}
 		}
 	union() {
 	rotate(90, [1,0,0])	{
