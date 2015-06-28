@@ -115,10 +115,47 @@ module wire() {
         translate([0,0,-xRailSeparation/4])
             cylinder(r = 0.5, h = xRailSeparation/2, center = true);
 }
+
+module yRailMount() {
+	// mount holes
+	bearingBlockHoleHorSpacing = 18;
+	bearingBlockHoleVerSpacing = 24;
+	bearingBlockHoleDiameter = 5;
+		
+	ySlideMountHoleHorSpacing = 7;
+	ySlideMountHoleVerSpacing = 48;
+	ySlideMountHoleDiameter = 3;
+
+	bearingBlockSpacing = 60;
+	boreLength = 100;
+    
+	difference() {
+		cube([30,5,bearingBlockSpacing+35], center = true);
+	union() {
+	rotate(90, [1,0,0])	{
+		for (spacing = [bearingBlockSpacing/2, -bearingBlockSpacing/2]) 
+		for (holeVerSpacing = [bearingBlockHoleVerSpacing/2, -bearingBlockHoleVerSpacing/2])
+		for (holeHorSpacing = [bearingBlockHoleHorSpacing/2, -bearingBlockHoleHorSpacing/2])	{
+        translate([holeHorSpacing,spacing+holeVerSpacing,0])
+            cylinder(r = bearingBlockHoleDiameter/2, h = boreLength, center = true);
+	}
+
+		for (holeVerSpacing = [ySlideMountHoleVerSpacing/2, -ySlideMountHoleVerSpacing/2])
+		for (holeHorSpacing = [ySlideMountHoleHorSpacing/2, -ySlideMountHoleHorSpacing/2])	{
+        translate([holeHorSpacing,holeVerSpacing,0])
+            cylinder(r = ySlideMountHoleDiameter/2, h = boreLength, center = true);
+				}
+			}
+		}
+	}
+}
+
 module yRail() {
 	rotate(90, [0,0,1]) {
             translate([100,20,0]) {
-                cube([50,10,100], center = true);
+                yRailMount();
+                cube([15,15,100], center = true);
+                translate([0,5,0]) cube([19,25,5], center = true);
                 for (offset = [-50, 50]) {
                     translate([0,-20,offset]) rotate(90, [0,1,0]) rotate(180, [1,0,0]){
                     linearBearing();
@@ -157,9 +194,10 @@ module assembly() {
 	#zRail();
 	#endBlocks();
 }
-exampleFoamSize();
-assembly();
+//exampleFoamSize();
+//assembly();
 
 //stepperMotor();
 //linearBearing();
 //yRail();
+yRailMount();
