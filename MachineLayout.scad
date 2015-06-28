@@ -155,7 +155,7 @@ module yRailMount() {
 				rotate(90, [1,0,0])	{
 					// endstop mount holes
 					for (spacing = [endstopHoleSpacing/2, -endstopHoleSpacing/2]) 
-					translate([spacing,0,-endstopMountHeight/2])
+					translate([spacing-0.5,-4,-endstopMountHeight/2])
 		        	    		cylinder(r = endstopHoleDiameter/2, h = 20, center = true);
 				}
 					}
@@ -181,6 +181,10 @@ module yRailMount() {
 				}
 			}
 		}
+		// timing belt attachment holes
+			for (spacing = [backPlateWidth/2-5, -backPlateWidth/2+5]) 
+				translate([spacing,0,0])
+					cube([3,10,8], center = true);
 	}
 }
 
