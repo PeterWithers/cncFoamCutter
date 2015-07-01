@@ -19,16 +19,21 @@ module exampleFoamSize() {
 }
 
 module stepperMotor() {
-	stepperWidth = 50;
-	stepperLength = 60;
+	stepperWidth = 42;
+	stepperLength = 40;
+	stepperShoulder = 2;
+	stepperShoulderDiameter = 22;
 	stepperShaft = 5;
-	stepperShaftLenght = 30;
+	stepperShaftLenght = 64;
 	stepperBoltDist = 42;
-	stepperBolt = 4;
+	stepperBolt = 3;
 	stepperBoltLength = 10;
 	cube([stepperWidth, stepperWidth, stepperLength], center = true);
-	translate([0,0,stepperShaftLenght]) {
+	translate([0,0,stepperShaftLenght-stepperLength]) {
 		cylinder(r = stepperShaft/2, h = stepperLength, center = true);
+	}
+	translate([0,0,stepperShoulder]) {
+		cylinder(r = stepperShoulderDiameter/2, h = stepperShoulder+stepperLength, center = true);
 	}
 	for (rotation = [0, 90, 180, 270]) {
 		rotate(rotation+45, [0,0,1]) translate([0,stepperBoltDist/2,stepperBoltLength]) {
@@ -38,17 +43,22 @@ module stepperMotor() {
 }
 
 module linearBearing() {
-	blockWidth = 20;
+	blockWidth = 35;
+	blockHeight = 21.5;
 	blockLength = 30;
-	rodHoleSize = 8;
-	rodHoleOffset = 5;
+	rodHoleSize = 8+11;
+	rodHoleOffset = 11;
 	blockBoltDist = 42;
 	blockBolt = 2;
 	stepperBoltLength = 10;
-	cube([blockWidth, blockWidth, blockLength], center = true);
-	translate([0,rodHoleOffset,0]) {
-		cylinder(r = rodHoleSize/2, h = blockLength*2, center = true);
-	}
+	shoulderHeight = blockHeight-rodHoleSize/2;
+	//%translate([0,rodHoleSize/4,0]) cube([blockWidth, blockHeight, blockLength], center = true);
+	//hull() {
+		cube([blockWidth, shoulderHeight, blockLength], center = true);
+		translate([0,shoulderHeight/2,0]) {
+			cylinder(r = rodHoleSize/2, h = blockLength, center = true);
+		}
+	//}
 	//for (rotation = [0, 90, 180, 270]) {
 	//	rotate(rotation+45, [0,0,1]) translate([0,blockBoltDist/2,stepperBoltLength]) {
 	//		cylinder(r = blockBolt/2.0, h = blockLength, center = true);
@@ -58,12 +68,19 @@ module linearBearing() {
 
 
 module xRailEndPlate() {
-	translate([0,xRailLength/2,0]) {
-			cube([50,5,150], center = true);
+for (spacing = [xRailLength/2, -xRailLength/2]) 
+	translate([0,spacing,0]) {
+			cube([5,15,100], center = true);
+	for (spacing = [30, -30]) 
+		translate([0,0,spacing]) {
+			rotate(90, [1,0,0])
+			difference() {
+			cylinder(r = xRailDiameter/2+5, h = 20, center = true);
+			translate([0,0,15]) cylinder(r = xRailDiameter/2+1, h = 20, center = true);
+			}
+		}
 	}
-	translate([0,-xRailLength/2,0]) {
-			cube([50,5,150], center = true);
-	}
+	translate([50,xRailLength/2+30,0]) rotate(90, [0,-1,0]) stepperMotor();
 }
 
 module yRailEndPlate() {
@@ -98,10 +115,10 @@ module solidRod(railDiameter, railLength) {
 module xRail() {
     translate([xRailSeparation/2,0,0]) {
             rotate(90, [1,0,0]) {
-                    translate([0,-50,0]) {
+                    translate([0,-30,0]) {
                             solidRod(xRailDiameter, xRailLength);
                     }
-                    translate([0,50,0]) {
+                    translate([0,30,0]) {
                             solidRod(xRailDiameter, xRailLength);
                     }
             }
@@ -195,7 +212,7 @@ module yRailSlide() {
 
 module yRail() {
 	rotate(90, [0,0,1]) {
-            translate([100,20,0]) {
+            translate([100,25,0]) {
                 translate([0,-7,0]) yRailMount();
                 translate([0,4,0]) yRailSlide();
                 for (offset = [-30, 30]) {
@@ -236,10 +253,11 @@ module assembly() {
 	#zRail();
 	#endBlocks();
 }
-exampleFoamSize();
-assembly();
+//exampleFoamSize();
+//assembly();
 
 //stepperMotor();
 //linearBearing();
 //yRail();
+translate([-300,-150,0]) xRail();
 //rotate(90, [1,1,0]) yRailMount();
