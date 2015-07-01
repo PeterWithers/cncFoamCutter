@@ -71,9 +71,9 @@ module xRodMount() {
 	union() {
 	hull() {
 		cube([5,15,75], center = true);
-		translate([0,45/2-15/2,75/2]) rotate(90, [1,0,0]) cube([5,15,45], center = true);
+		translate([0,45/2-15/2,-75/2]) rotate(90, [1,0,0]) cube([5,15,45], center = true);
 	}
-	translate([0,45/2-15/2,75/2+7]) rotate(90, [1,0,0]) cube([25,5,45], center = true);
+	translate([0,45/2-15/2,-75/2-7]) rotate(90, [1,0,0]) cube([25,5,45], center = true);
 	}
 	union(){
 	for (spacing = [30, -30]) 
