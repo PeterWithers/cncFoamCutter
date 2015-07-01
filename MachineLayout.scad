@@ -188,13 +188,17 @@ module yRailMount() {
 	}
 }
 
+module yRailSlide() {
+    cube([15,15,90], center = true);
+    translate([0,5,0]) cube([19,25,5], center = true);
+}
+
 module yRail() {
 	rotate(90, [0,0,1]) {
             translate([100,20,0]) {
-                yRailMount();
-                cube([15,15,100], center = true);
-                translate([0,5,0]) cube([19,25,5], center = true);
-                for (offset = [-50, 50]) {
+                translate([0,-7,0]) yRailMount();
+                translate([0,4,0]) yRailSlide();
+                for (offset = [-30, 30]) {
                     translate([0,-20,offset]) rotate(90, [0,1,0]) rotate(180, [1,0,0]){
                     linearBearing();
                     }
@@ -232,10 +236,10 @@ module assembly() {
 	#zRail();
 	#endBlocks();
 }
-//exampleFoamSize();
-//assembly();
+exampleFoamSize();
+assembly();
 
 //stepperMotor();
 //linearBearing();
 //yRail();
-yRailMount();
+//rotate(90, [1,1,0]) yRailMount();
