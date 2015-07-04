@@ -84,6 +84,30 @@ module xRodMountIdler() {
         rotate(90, [0,1,0]) translate([8,-4,7]) cylinder(r = 1.5, h = 30, center = true);
     }
 }
+module xRodMountMotor() {
+    difference() {
+        union() {
+            xRodMount();
+            rotate(90, [0,1,0]) translate([8,25,7]) {
+                cylinder(r = 4, h = 20, center = true);
+                translate([0,0,-7]) hull() {
+                    for (angle = [0, 90, 180, 270]) {
+                        rotate(angle, [0,0,1]) rotate(45, [0,0,1]) 
+                            translate([15,0,0]) 
+                                cylinder(r = 12, h = 5, center = true);
+                    }
+                }
+                translate([0,0,-30]) %stepperMotor();
+            }
+        }
+        rotate(90, [0,1,0]) translate([8,25,7]) union() {
+            cylinder(r = 12, h = 30, center = true);
+            for (angle = [0, 90, 180, 270]) {
+                        rotate(angle, [0,0,1]) rotate(45, [0,0,1]) translate([21,0,0]) cylinder(r = 2, h = 30, center = true);
+            }
+        }
+    }
+}
 
 module xRodMount() {
     difference() {
@@ -299,5 +323,6 @@ module assembly() {
 //linearBearing();
 //yRail();
 //translate([-300,-150,0]) xRail();
-rotate(180, [1,0,0]) xRodMountIdler();
+//rotate(180, [1,0,0]) xRodMountIdler();
+rotate(180, [1,0,0]) xRodMountMotor();
 //rotate(90, [1,0,0]) yRailMount();
