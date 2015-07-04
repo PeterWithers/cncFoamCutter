@@ -66,6 +66,25 @@ module linearBearing() {
 	//}
 }
 
+module xRodMountIdler() {
+    difference() {
+        union() {
+            xRodMount();
+            rotate(90, [0,1,0]) translate([8,-4,7]) {
+                intersection () {
+                    union() {
+                        translate([0,0,-6]) cylinder(r = 6, h = 5, center = true);
+                        cylinder(r = 4, h = 20, center = true);
+                    }
+                    translate([0,4,-1.5]) cube([15,15,10], center = true);
+                }
+                %ballBearing(0, 0, 0);
+            }
+        }
+        rotate(90, [0,1,0]) translate([8,-4,7]) cylinder(r = 1.5, h = 30, center = true);
+    }
+}
+
 module xRodMount() {
     difference() {
     union() {
@@ -90,23 +109,11 @@ module xRodMount() {
 			translate([0,0,5]) cylinder(d1 = xRailDiameter-1, d2=xRailDiameter+1, h = 10, center = true);
 			}
             }
-
-            rotate(90, [0,1,0]) translate([8,-4,7]) {
-                intersection () {
-                    union() {
-                    translate([0,0,-6]) cylinder(r = 6, h = 5, center = true);
-                    cylinder(r = 4, h = 20, center = true);
-                    }
-                    translate([0,4,-1.5]) cube([15,15,10], center = true);
-		}
-		%ballBearing(0, 0, 0);
-            }
         }
-        rotate(90, [0,1,0]) translate([8,-4,7]) cylinder(r = 1.5, h = 30, center = true);
-		rotate(90, [0,0,1]) translate([6,8,-50]) cylinder(r = 2, h = 30, center = true);
-		rotate(90, [0,0,1]) translate([6,-8,-50]) cylinder(r = 2, h = 30, center = true);
-		rotate(90, [0,0,1]) translate([30,8,-50]) cylinder(r = 2, h = 30, center = true);
-		rotate(90, [0,0,1]) translate([30,-8,-50]) cylinder(r = 2, h = 30, center = true);
+	rotate(90, [0,0,1]) translate([6,8,-50]) cylinder(r = 2, h = 30, center = true);
+	rotate(90, [0,0,1]) translate([6,-8,-50]) cylinder(r = 2, h = 30, center = true);
+	rotate(90, [0,0,1]) translate([30,8,-50]) cylinder(r = 2, h = 30, center = true);
+	rotate(90, [0,0,1]) translate([30,-8,-50]) cylinder(r = 2, h = 30, center = true);
     }
 }
 
@@ -292,5 +299,5 @@ module assembly() {
 //linearBearing();
 //yRail();
 //translate([-300,-150,0]) xRail();
-rotate(180, [1,0,0]) xRodMount();
+rotate(180, [1,0,0]) xRodMountIdler();
 //rotate(90, [1,0,0]) yRailMount();
