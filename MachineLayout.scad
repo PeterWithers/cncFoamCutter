@@ -87,7 +87,7 @@ module xRodMount() {
 			rotate(90, [1,0,0])
 			difference() {
 			cylinder(r = xRailDiameter/2+5, h = 10, center = true);
-			translate([0,0,5]) cylinder(r = xRailDiameter/2+1, h = 10, center = true);
+			translate([0,0,5]) cylinder(d1 = xRailDiameter-1, d2=xRailDiameter+1, h = 10, center = true);
 			}
             }
 
