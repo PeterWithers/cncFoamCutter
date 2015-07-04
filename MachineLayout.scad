@@ -67,6 +67,8 @@ module linearBearing() {
 }
 
 module xRodMount() {
+    difference() {
+    union() {
 	difference() {
 	union() {
 	hull() {
@@ -80,14 +82,32 @@ module xRodMount() {
 		translate([0,-3,spacing]) cube([10,10,10], center = true);
 	}
 	}
-	for (spacing = [30, -30]) 
+            for (spacing = [30, -30]) 
 		translate([0,-2.5,spacing]) {
 			rotate(90, [1,0,0])
 			difference() {
 			cylinder(r = xRailDiameter/2+5, h = 10, center = true);
 			translate([0,0,5]) cylinder(r = xRailDiameter/2+1, h = 10, center = true);
 			}
+            }
+
+            rotate(90, [0,1,0]) translate([8,-4,7]) {
+                intersection () {
+                    union() {
+                    translate([0,0,-6]) cylinder(r = 4.5, h = 5, center = true);
+                    cylinder(r = 3.5, h = 20, center = true);
+                    }
+                    translate([0,4,-1.5]) cube([15,15,10], center = true);
 		}
+		%ballBearing(0, 0, 0);
+            }
+        }
+        rotate(90, [0,1,0]) translate([8,-4,7]) cylinder(r = 1.5, h = 30, center = true);
+		rotate(90, [0,0,1]) translate([6,8,-50]) cylinder(r = 2, h = 30, center = true);
+		rotate(90, [0,0,1]) translate([6,-8,-50]) cylinder(r = 2, h = 30, center = true);
+		rotate(90, [0,0,1]) translate([30,8,-50]) cylinder(r = 2, h = 30, center = true);
+		rotate(90, [0,0,1]) translate([30,-8,-50]) cylinder(r = 2, h = 30, center = true);
+    }
 }
 
 module xRailEndPlate() {
@@ -166,7 +186,7 @@ module yRailMount() {
 	endstopMountWidth = 16;
 	endstopMountLength = 27;
 	endstopHoleSpacing = 19;
-	endstopHoleDiameter = 2;
+	endstopHoleDiameter = 3;
     
 	difference() {
 		union() {
@@ -177,7 +197,7 @@ module yRailMount() {
 		intersection() {
 			difference() {
 			union() {
-				cube([endstopMountLength,endstopMountHeight,endstopMountWidth], center = true);
+				translate([0,0,-2.5]) cube([endstopMountLength,endstopMountHeight,endstopMountWidth-5], center = true);
 				translate([-backPlateWidth/2+8.5,0,-10])cube([1,endstopMountHeight,endstopMountWidth], center = true);
 			}
 			union() {
@@ -189,7 +209,7 @@ module yRailMount() {
 				}
 					}
 				}
-				translate([0,0,-6]) rotate(30, [1,0,0]) cube([endstopMountLength,endstopMountHeight*2,endstopMountWidth-3], center = true);
+			translate([0,0,-6]) rotate(30, [1,0,0]) cube([endstopMountLength,endstopMountHeight*2,endstopMountWidth-3], center = true);
 			}
 		}
 		}
@@ -271,6 +291,6 @@ module assembly() {
 //stepperMotor();
 //linearBearing();
 //yRail();
-translate([-300,-150,0]) xRail();
-//rotate(180, [1,0,0]) xRodMount();
+//translate([-300,-150,0]) xRail();
+rotate(180, [1,0,0]) xRodMount();
 //rotate(90, [1,1,0]) yRailMount();
