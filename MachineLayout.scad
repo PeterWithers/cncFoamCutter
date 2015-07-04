@@ -94,8 +94,8 @@ module xRodMount() {
             rotate(90, [0,1,0]) translate([8,-4,7]) {
                 intersection () {
                     union() {
-                    translate([0,0,-6]) cylinder(r = 4.5, h = 5, center = true);
-                    cylinder(r = 3.5, h = 20, center = true);
+                    translate([0,0,-6]) cylinder(r = 6, h = 5, center = true);
+                    cylinder(r = 4, h = 20, center = true);
                     }
                     translate([0,4,-1.5]) cube([15,15,10], center = true);
 		}
@@ -293,4 +293,4 @@ module assembly() {
 //yRail();
 //translate([-300,-150,0]) xRail();
 rotate(180, [1,0,0]) xRodMount();
-//rotate(90, [1,1,0]) yRailMount();
+//rotate(90, [1,0,0]) yRailMount();
