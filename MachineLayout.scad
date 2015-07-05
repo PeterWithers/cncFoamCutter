@@ -103,7 +103,7 @@ module xRodMountMotor() {
         rotate(90, [0,1,0]) translate([8,25,7]) union() {
             cylinder(r = 12, h = 30, center = true);
             for (angle = [0, 90, 180, 270]) {
-                        rotate(angle, [0,0,1]) rotate(45, [0,0,1]) translate([21,0,0]) cylinder(r = 2, h = 30, center = true);
+                        rotate(angle, [0,0,1]) rotate(45, [0,0,1]) translate([22,0,0]) cylinder(r = 2, h = 30, center = true);
             }
         }
     }
@@ -130,7 +130,7 @@ module xRodMount() {
 			rotate(90, [1,0,0])
 			difference() {
 			cylinder(r = xRailDiameter/2+5, h = 10, center = true);
-			translate([0,0,5]) cylinder(d1 = xRailDiameter-1, d2=xRailDiameter+1, h = 10, center = true);
+			translate([0,0,3]) cylinder(d1 = xRailDiameter, d2=xRailDiameter+1, h = 5, center = true);
 			}
             }
         }
