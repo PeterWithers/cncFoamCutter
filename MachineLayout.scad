@@ -36,7 +36,7 @@ module stepperMotor() {
 		cylinder(r = stepperShoulderDiameter/2, h = stepperShoulder+stepperLength, center = true);
 	}
 	for (rotation = [0, 90, 180, 270]) {
-		rotate(rotation+45, [0,0,1]) translate([0,stepperBoltDist/2,stepperBoltLength]) {
+		rotate(rotation+45, [0,0,1]) translate([0,stepperBoltDist/2+1,stepperBoltLength]) {
 			cylinder(r = stepperBolt/2.0, h = stepperLength, center = true);
 		}
 	}
@@ -70,25 +70,31 @@ module xRodMountIdler() {
     difference() {
         union() {
             xRodMount();
-            rotate(90, [0,1,0]) translate([8,-4,7]) {
+            rotate(90, [0,1,0]) translate([0,-4,6]) {
                 intersection () {
                     union() {
-                        translate([0,0,-6]) cylinder(r = 6, h = 5, center = true);
-                        cylinder(r = 4, h = 20, center = true);
+                        translate([0,0,-2.5]) cylinder(r1 = 6, r2 = 2 , h = 2, center = true);
+                        cylinder(r = 2.4, h = 20, center = true);
+     	               translate([0,-6,0]) cube([0.5,15,7], center = true);
                     }
-                    translate([0,4,-1.5]) cube([15,15,10], center = true);
+                    translate([0,4,-1.5]) cube([15,15,7], center = true);
                 }
-                %ballBearing(0, 0, 0);
+                %ballBearingSmall(0, 0, 0);
             }
+			translate([-5,0.5,7]) endStopPosts();
         }
-        rotate(90, [0,1,0]) translate([8,-4,7]) cylinder(r = 1.5, h = 30, center = true);
+        union() {
+            rotate(90, [0,1,0]) translate([0,-4,7]) cylinder(r = 1, h = 30, center = true);
+            translate([-7,0.5,7]) endStop();
+        }
     }
 }
+
 module xRodMountMotor() {
     difference() {
         union() {
             xRodMount();
-            rotate(90, [0,1,0]) translate([8,25,7]) {
+            rotate(90, [0,1,0]) translate([0,25,7]) {
                 cylinder(r = 4, h = 20, center = true);
                 translate([0,0,-7]) hull() {
                     for (angle = [0, 90, 180, 270]) {
@@ -100,7 +106,7 @@ module xRodMountMotor() {
                 translate([0,0,-30]) %stepperMotor();
             }
         }
-        rotate(90, [0,1,0]) translate([8,25,7]) union() {
+        rotate(90, [0,1,0]) translate([0,25,7]) union() {
             cylinder(r = 12, h = 30, center = true);
             for (angle = [0, 90, 180, 270]) {
                         rotate(angle, [0,0,1]) rotate(45, [0,0,1]) translate([22,0,0]) cylinder(r = 2, h = 30, center = true);
@@ -117,7 +123,14 @@ module xRodMount() {
 	hull() {
 		cube([5,15,75], center = true);
 		translate([0,45/2-15/2,-75/2]) rotate(90, [1,0,0]) cube([5,15,45], center = true);
-	}
+	}        
+        hull() {
+            translate([0,45/2-15/2-22,-75/2-7]) rotate(90, [1,0,0]) 
+            {
+                cube([25,5,1], center = true);
+                translate([0,30,0]) cube([5,5,1], center = true);
+            }
+        }
 	translate([0,45/2-15/2,-75/2-7]) rotate(90, [1,0,0]) cube([25,5,45], center = true);
 	}
 	union(){
@@ -142,9 +155,8 @@ module xRodMount() {
 }
 
 module xRailEndPlate() {
-	translate([0,-xRailLength/2,0]) rotate(180, [0,0,1]) xRodMount();
-	translate([0,xRailLength/2,0]) xRodMount();
-	translate([50,xRailLength/2+30,0]) rotate(90, [0,-1,0]) stepperMotor();
+	translate([0,-xRailLength/2,0]) rotate(180, [0,0,1]) xRodMountIdler();
+	translate([0,xRailLength/2,0]) xRodMountMotor();
 }
 module yRailEndPlate() {
 	translate([10,300,62]) {
@@ -152,6 +164,15 @@ module yRailEndPlate() {
 	}
 	translate([10,300,-62]) {
 			cube([50,50,10], center = true);
+	}
+}
+
+module ballBearingSmall(rotation, distance, offset) {
+	translate([offset,distance,0])
+	rotate(rotation, [1,0,0])
+	difference() {
+    		cylinder(r = 5, h = 4, center = true);
+	    cylinder(r = 2.4, h = 4 + 1, center = true);
 	}
 }
 
@@ -194,6 +215,26 @@ module wire() {
     rotate(90, [1,0,0])
         translate([0,0,-xRailSeparation/4])
             cylinder(r = 0.5, h = xRailSeparation/2, center = true);
+}
+
+module endStopPosts() {
+    endstopHoleSpacing = 19;
+    endstopPostDiameter = 6;
+    endstopPostLength = 6;
+    rotate(90, [0,1,0])
+        for (spacing = [endstopHoleSpacing/2, -endstopHoleSpacing/2]) 
+            translate([spacing-6.5,-5,0])
+                cube([endstopPostDiameter-2, endstopPostDiameter, endstopPostLength], center = true);
+}
+
+module endStop() {
+    endstopHoleSpacing = 19;
+    endstopHoleDiameter = 2;
+    %cube([9,16,39], center = true);
+    rotate(90, [0,1,0])
+        for (spacing = [endstopHoleSpacing/2, -endstopHoleSpacing/2]) 
+            translate([spacing-6.5,-5,5])
+                #cylinder(r = endstopHoleDiameter/2, h = 20, center = true);
 }
 
 module yRailMount() {
@@ -243,7 +284,7 @@ module yRailMount() {
 			translate([0,0,-6]) rotate(30, [1,0,0]) cube([endstopMountLength,endstopMountHeight*2,endstopMountWidth-3], center = true);
 			}
 		}
-		}
+                }
 	union() {
 	rotate(90, [1,0,0])	{
 		// linear bearing mount holes
@@ -323,6 +364,6 @@ module assembly() {
 //linearBearing();
 //yRail();
 //translate([-300,-150,0]) xRail();
-//rotate(180, [1,0,0]) xRodMountIdler();
-rotate(180, [1,0,0]) xRodMountMotor();
+//rotate(90, [1,0,0]) xRodMountIdler();
+rotate(90, [1,0,0]) xRodMountMotor();
 //rotate(90, [1,0,0]) yRailMount();
