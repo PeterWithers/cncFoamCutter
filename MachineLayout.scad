@@ -245,7 +245,7 @@ module yRailSlideMount() {
 		
 	ySlideMountHoleHorSpacing = 7;
 	ySlideMountHoleVerSpacing = 48;
-	ySlideMountHoleDiameter = 3;
+	ySlideMountHoleDiameter = 2;
 
 	bearingBlockSpacing = 60;
 	boreLength = 100;
