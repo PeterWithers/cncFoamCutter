@@ -233,11 +233,11 @@ module endStop() {
     %cube([9,16,39], center = true);
     rotate(90, [0,1,0])
         for (spacing = [endstopHoleSpacing/2, -endstopHoleSpacing/2]) 
-            translate([spacing-6.5,-5,5])
-                #cylinder(r = endstopHoleDiameter/2, h = 20, center = true);
+            translate([spacing-6.5,-5,0])
+                #cylinder(r = endstopHoleDiameter/2, h = 10, center = true);
 }
 
-module yRailMount() {
+module yRailSlideMount() {
 	// mount holes
 	bearingBlockHoleHorSpacing = 18;
 	bearingBlockHoleVerSpacing = 24;
@@ -265,26 +265,25 @@ module yRailMount() {
 		// back plate
 		cube([backPlateWidth,backPlateThickeness,backPlateLength], center = true);
 		// endstop mount
-			translate([-8,endstopMountHeight/2-backPlateThickeness/2,backPlateLength/2-1+endstopMountWidth/2]) {
-		intersection() {
-			difference() {
+                translate([-8,endstopMountHeight/2-backPlateThickeness/2,backPlateLength/2-1+endstopMountWidth/2]) {
+                    intersection() {
 			union() {
-				translate([0,0,-2.5]) cube([endstopMountLength,endstopMountHeight,endstopMountWidth-5], center = true);
-				translate([-backPlateWidth/2+8.5,0,-10])cube([1,endstopMountHeight,endstopMountWidth], center = true);
-			}
+				translate([8,0,-3]) cube([endstopMountLength+3,endstopMountHeight,endstopMountWidth-8], center = true);
+				translate([-backPlateWidth/2+8.5,0,-10])cube([1,endstopMountHeight,endstopMountWidth+5], center = true);
+                                translate([backPlateWidth/2+7.5,0,-10])cube([1,endstopMountHeight,endstopMountWidth+5], center = true);
+                        }
 			union() {
-				rotate(90, [1,0,0])	{
-					// endstop mount holes
-					for (spacing = [endstopHoleSpacing/2, -endstopHoleSpacing/2]) 
-					translate([spacing-0.5,-4,-endstopMountHeight/2])
-		        	    		cylinder(r = endstopHoleDiameter/2, h = 20, center = true);
-				}
-					}
-				}
-			translate([0,0,-6]) rotate(30, [1,0,0]) cube([endstopMountLength,endstopMountHeight*2,endstopMountWidth-3], center = true);
-			}
-		}
+                            translate([8,0,-8]) rotate(30, [1,0,0]) cube([endstopMountLength+3,endstopMountHeight*2,endstopMountWidth-3], center = true);
+                        }
+                    }
+                    difference() {
+                        // endstop mount posts
+                        translate([15,endstopMountHeight/2+3,0]) rotate(90, [0,-1,0]) rotate(90, [0,0,-1]) endStopPosts();
+                        // endstop mount holes
+                        translate([15,endstopMountHeight/2+4.5,0]) rotate(90, [0,-1,0]) rotate(90, [0,0,-1]) #endStop();
+                    }
                 }
+            }
 	union() {
 	rotate(90, [1,0,0])	{
 		// linear bearing mount holes
@@ -294,8 +293,12 @@ module yRailMount() {
         translate([holeHorSpacing,spacing+holeVerSpacing,0])
             cylinder(r = bearingBlockHoleDiameter/2, h = boreLength, center = true);
 		}
+                // stepper cavity
+                translate([0,46+6,-12]) rotate(90, [1,0,0]) cylinder(d = 16, h = 12, center = true);
+                translate([0,46+6,-7.5]) rotate(90, [1,0,0]) cube([16,10,10], center = true);
+                translate([5,46+6,-12]) rotate(90, [1,0,0]) cube([10,10,10], center = true);
 		// slide mount holes
-		for (holeVerSpacing = [ySlideMountHoleVerSpacing/2, -ySlideMountHoleVerSpacing/2])
+		translate([0,2,0]) for (holeVerSpacing = [ySlideMountHoleVerSpacing/2, -ySlideMountHoleVerSpacing/2])
 		for (holeHorSpacing = [ySlideMountHoleHorSpacing/2, -ySlideMountHoleHorSpacing/2])	{
         translate([holeHorSpacing,holeVerSpacing,0])
             cylinder(r = ySlideMountHoleDiameter/2, h = boreLength, center = true);
@@ -304,7 +307,7 @@ module yRailMount() {
 		}
 		// timing belt attachment holes
 			for (spacing = [backPlateWidth/2-5, -backPlateWidth/2+5]) 
-				translate([spacing,0,0])
+				translate([spacing,0,5])
 					cube([3,10,8], center = true);
 	}
 }
@@ -317,7 +320,7 @@ module yRailSlide() {
 module yRail() {
 	rotate(90, [0,0,1]) {
             translate([100,25,0]) {
-                translate([0,-7,0]) yRailMount();
+                translate([0,-7,0]) yRailSlideMount();
                 translate([0,4,0]) yRailSlide();
                 for (offset = [-30, 30]) {
                     translate([0,-20,offset]) rotate(90, [0,1,0]) rotate(180, [1,0,0]){
@@ -366,4 +369,4 @@ module assembly() {
 //translate([-300,-150,0]) xRail();
 //rotate(90, [1,0,0]) xRodMountIdler();
 //rotate(90, [1,0,0]) xRodMountMotor();
-rotate(90, [1,0,0]) yRailMount();
+rotate(90, [1,0,0]) yRailSlideMount();
