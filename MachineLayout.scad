@@ -365,5 +365,5 @@ module assembly() {
 //yRail();
 //translate([-300,-150,0]) xRail();
 //rotate(90, [1,0,0]) xRodMountIdler();
-rotate(90, [1,0,0]) xRodMountMotor();
-//rotate(90, [1,0,0]) yRailMount();
+//rotate(90, [1,0,0]) xRodMountMotor();
+rotate(90, [1,0,0]) yRailMount();
