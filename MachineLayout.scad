@@ -264,6 +264,8 @@ module yRailSlideMount() {
 		union() {
 		// back plate
 		cube([backPlateWidth,backPlateThickeness,backPlateLength], center = true);
+                translate([0,1.5,3-backPlateLength/2]) cube([backPlateWidth/3,backPlateThickeness + 3, 6], center = true);
+                for (slideBlockX = [5.5, -5.5]) for (slideBlockY = [37, -27]) translate([slideBlockX,0.5,slideBlockY]) cube([2,backPlateThickeness + 1, 7], center = true);
 		// endstop mount
                 translate([-8,endstopMountHeight/2-backPlateThickeness/2,backPlateLength/2-1+endstopMountWidth/2]) {
                     intersection() {
@@ -298,11 +300,11 @@ module yRailSlideMount() {
                 translate([0,46+6,-7.5]) rotate(90, [1,0,0]) cube([16,10,10], center = true);
                 translate([5,46+6,-12]) rotate(90, [1,0,0]) cube([10,10,10], center = true);
 		// slide mount holes
-		translate([0,2,0]) for (holeVerSpacing = [ySlideMountHoleVerSpacing/2, -ySlideMountHoleVerSpacing/2])
+		/*translate([0,2,0]) for (holeVerSpacing = [ySlideMountHoleVerSpacing/2, -ySlideMountHoleVerSpacing/2])
 		for (holeHorSpacing = [ySlideMountHoleHorSpacing/2, -ySlideMountHoleHorSpacing/2])	{
         translate([holeHorSpacing,holeVerSpacing,0])
             cylinder(r = ySlideMountHoleDiameter/2, h = boreLength, center = true);
-				}
+				}*/
 			}
 		}
 		// timing belt attachment holes
@@ -368,6 +370,7 @@ module assembly() {
 //yRail();
 //translate([-300,-150,0]) xRail();
 
+target = "yRailSlideMount";
 if (target == "xRodMountIdler") {
     rotate(90, [1,0,0]) xRodMountIdler();
 } else if (target == "xRodMountMotor") {
