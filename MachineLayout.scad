@@ -367,6 +367,11 @@ module assembly() {
 //linearBearing();
 //yRail();
 //translate([-300,-150,0]) xRail();
-//rotate(90, [1,0,0]) xRodMountIdler();
-//rotate(90, [1,0,0]) xRodMountMotor();
-rotate(90, [1,0,0]) yRailSlideMount();
+
+if (target == "xRodMountIdler") {
+    rotate(90, [1,0,0]) xRodMountIdler();
+} else if (target == "xRodMountMotor") {
+    rotate(90, [1,0,0]) xRodMountMotor();
+} else if (target == "yRailSlideMount") {
+    rotate(90, [1,0,0]) yRailSlideMount();
+}
