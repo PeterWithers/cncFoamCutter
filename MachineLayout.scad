@@ -70,21 +70,21 @@ module xRodMountIdler() {
     difference() {
         union() {
             xRodMount();
-            rotate(90, [0,1,0]) translate([0,-4,6]) {
+            rotate(90, [0,1,0]) translate([0,10,6]) {
                 intersection () {
                     union() {
                         translate([0,0,-2.5]) cylinder(r1 = 6, r2 = 2 , h = 2, center = true);
                         cylinder(r = 2.4, h = 20, center = true);
      	               translate([0,-6,0]) cube([0.5,15,7], center = true);
                     }
-                    translate([0,4,-1.5]) cube([15,15,7], center = true);
+                    translate([0,0,-1.5]) cube([15,15,7], center = true);
                 }
                 %ballBearingSmall(0, 0, 0);
             }
 			translate([-5,0.5,7]) endStopPosts();
         }
         union() {
-            rotate(90, [0,1,0]) translate([0,-4,7]) cylinder(r = 1, h = 30, center = true);
+            rotate(90, [0,1,0]) translate([0,10,7]) cylinder(r = 1, h = 30, center = true);
             translate([-7,0.5,7]) endStop();
         }
     }
@@ -120,18 +120,21 @@ module xRodMount() {
     union() {
 	difference() {
 	union() {
-	hull() {
-		cube([5,15,75], center = true);
-		translate([0,45/2-15/2,-75/2]) rotate(90, [1,0,0]) cube([5,15,45], center = true);
-	}        
-        hull() {
-            translate([0,45/2-15/2-22,-75/2-7]) rotate(90, [1,0,0]) 
-            {
-                cube([25,5,1], center = true);
-                translate([0,30,0]) cube([5,5,1], center = true);
+            hull() {
+                    cube([5,15,75], center = true);
+                    translate([0,45/2-15/2,-75/2]) rotate(90, [1,0,0]) cube([5,15,45], center = true);
             }
-        }
-	translate([0,45/2-15/2,-75/2-7]) rotate(90, [1,0,0]) cube([25,5,45], center = true);
+            hull() {
+                translate([0,45/2-15/2-22,-75/2-7]) rotate(90, [1,0,0]) 
+                {
+                    cube([25,5,1], center = true);
+                    translate([0,30,0]) cube([5,5,1], center = true);
+                }
+            }
+            hull() {
+                translate([0,45/2-15/2,-75/2-7]) rotate(90, [1,0,0]) cube([25,5,45], center = true);
+                translate([0,45/2-15/2,-75/2]) rotate(90, [1,0,0]) cube([5,15,45], center = true);
+            }   
 	}
 	union(){
 	for (spacing = [30, -30]) 
@@ -280,7 +283,7 @@ module yRailSlideMount() {
                     }
                     difference() {
                         // endstop mount posts
-                        translate([15,endstopMountHeight/2+3,0]) rotate(90, [0,-1,0]) rotate(90, [0,0,-1]) endStopPosts();
+                        translate([15,endstopMountHeight/2+2.9,0]) rotate(90, [0,-1,0]) rotate(90, [0,0,-1]) endStopPosts();
                         // endstop mount holes
                         translate([15,endstopMountHeight/2+4.5,0]) rotate(90, [0,-1,0]) rotate(90, [0,0,-1]) #endStop();
                     }
