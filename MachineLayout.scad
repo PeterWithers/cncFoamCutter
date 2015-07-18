@@ -268,7 +268,12 @@ module yRailSlideMount() {
 		// back plate
 		cube([backPlateWidth,backPlateThickeness,backPlateLength], center = true);
                 translate([0,1.5,3-backPlateLength/2]) cube([backPlateWidth/3,backPlateThickeness + 3, 6], center = true);
-                for (slideBlockX = [5.5, -5.5]) for (slideBlockY = [37, -27]) translate([slideBlockX,0.5,slideBlockY]) cube([2,backPlateThickeness + 1, 7], center = true);
+                // slide mount tabs
+                for (slideBlockX = [6.7, -6.7]) {
+                    for (slideBlockY = [37, -27]) 
+                        translate([slideBlockX,0.5,slideBlockY]) 
+                            cube([2,backPlateThickeness + 1, 7.5], center = true);
+                }
 		// endstop mount
                 translate([-8,endstopMountHeight/2-backPlateThickeness/2,backPlateLength/2-1+endstopMountWidth/2]) {
                     intersection() {
