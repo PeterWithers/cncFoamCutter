@@ -316,9 +316,10 @@ module yRailSlideMount() {
 			}
 		}
 		// timing belt attachment holes
-			for (spacing = [backPlateWidth/2-5, -backPlateWidth/2+5]) 
-				translate([spacing,0,5])
-					cube([3,10,8], center = true);
+                    translate([0,7.5-1.5,5]) cube([18,10,5], center = true);
+                    for (spacing = [backPlateWidth/2-5, -backPlateWidth/2+5]) 
+                        translate([spacing,0,5])
+                                cube([3,10,8], center = true);
 	}
 }
 
