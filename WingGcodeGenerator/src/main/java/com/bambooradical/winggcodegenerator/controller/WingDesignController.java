@@ -18,10 +18,12 @@ public class WingDesignController {
 
     @RequestMapping("/WingDesignView")
     public String greeting(@RequestParam(value = "chord", required = false, defaultValue = "120") int chord, Model model) {
-        model.addAttribute("chord", chord);
-        final AerofoilDataAG36 aerofoilData = new AerofoilDataAG36();
+        final AerofoilDataAG36 aerofoilData = new AerofoilDataAG36(chord);
+        model.addAttribute("aerofoilchord", aerofoilData.getChord());
         model.addAttribute("aerofoilname", aerofoilData.getName());
-        model.addAttribute("aerofoildata", aerofoilData.getPoints());
+        model.addAttribute("aerofoildata", aerofoilData.toSvgPoints());
+        model.addAttribute("diagramheight", aerofoilData.getChord());
+        model.addAttribute("diagramwidth", aerofoilData.getChord() * 1.2);
         return "WingDesignView";
     }
 }

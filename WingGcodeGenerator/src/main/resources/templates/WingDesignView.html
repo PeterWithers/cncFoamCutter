@@ -17,6 +17,11 @@ Copyright (C) 2015 Peter Withers
     <br/>
     <h13 th:text="'Chord: ' + ${aerofoilchord}" />
     <br/>
+    <form action="#" method="get">
+        <input type="text" id="chord" name="chord" th:value="${aerofoilchord}" />
+        <button type="submit">Update</button>
+    </form>
+    <br/>
     <svg th:attr="height=${diagramheight}, width=${diagramwidth}" style="width: 100%">
     <polyline th:attr="points=${aerofoildata}" style="fill:none;stroke:black;stroke-width:1" />
     </svg>

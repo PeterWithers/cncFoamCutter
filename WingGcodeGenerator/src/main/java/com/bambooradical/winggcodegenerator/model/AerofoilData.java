@@ -11,10 +11,16 @@ public class AerofoilData {
 
     private final String name;
     private final double[][] points;
+    private final int chord;
 
-    public AerofoilData(String name, double[][] points) {
+    public AerofoilData(String name, double[][] points, int chord) {
         this.name = name;
         this.points = points;
+        this.chord = chord;
+    }
+
+    public int getChord() {
+        return chord;
     }
 
     public String getName() {
@@ -25,4 +31,14 @@ public class AerofoilData {
         return points;
     }
 
+    public String toSvgPoints() {
+        StringBuilder builder = new StringBuilder();
+        for (double[] currentPoint : points) {
+            builder.append(currentPoint[0] * chord);
+            builder.append(",");
+            builder.append((1 - currentPoint[1]) * chord);
+            builder.append(" ");
+        }
+        return builder.toString();
+    }
 }

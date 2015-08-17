@@ -9,7 +9,7 @@ package com.bambooradical.winggcodegenerator.model;
  */
 public class AerofoilDataAG36 extends AerofoilData {
 
-    public AerofoilDataAG36() {
+    public AerofoilDataAG36(int chord) {
         super("AG36",
                 new double[][]{
                     {1.000003, 0.002671},
@@ -192,6 +192,6 @@ public class AerofoilDataAG36 extends AerofoilData {
                     {0.984906, 0.000000},
                     {0.994731, 0.000000},
                     {1.000000, 0.000001}
-                });
+                }, chord);
     }
 }
