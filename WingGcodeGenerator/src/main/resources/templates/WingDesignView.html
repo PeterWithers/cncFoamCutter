@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Peter Withers
+-->
+<!--
+  @since Aug 17, 2015 8:40:10 PM (creation date)
+  @author Peter Withers <peter@bambooradical.com>
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Wing Design View</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+    <h13 th:text="'Aerofoil: ' + ${aerofoilname}" />
+    <br/>
+    <h13 th:text="'Chord: ' + ${aerofoilchord}" />
+    <br/>
+    <svg th:attr="height=${diagramheight}, width=${diagramwidth}" style="width: 100%">
+    <polyline th:attr="points=${aerofoildata}" style="fill:none;stroke:black;stroke-width:1" />
+    </svg>
+</body>
+</html>
