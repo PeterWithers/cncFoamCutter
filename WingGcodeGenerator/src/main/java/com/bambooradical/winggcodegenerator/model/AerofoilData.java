@@ -31,6 +31,15 @@ public class AerofoilData {
         return points;
     }
 
+    public Bounds getSvgBounds() {
+        final Bounds bounds = new Bounds(points[0][0] * chord, (1 - points[0][1]) * chord);
+        for (double[] current : points) {
+            bounds.updateX(current[0] * chord);
+            bounds.updateY((1 - current[1]) * chord);
+        }
+        return bounds;
+    }
+
     public String toSvgPoints() {
         StringBuilder builder = new StringBuilder();
         for (double[] currentPoint : points) {
