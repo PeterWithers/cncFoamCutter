@@ -27,6 +27,7 @@ public class WingDesignController {
             @RequestParam(value = "rootChord", required = false, defaultValue = "120") int rootChord,
             @RequestParam(value = "tipChord", required = false, defaultValue = "120") int tipChord,
             @RequestParam(value = "wingSpan", required = false, defaultValue = "120") int wingSpan,
+            @RequestParam(value = "diagramScale", required = false, defaultValue = "50") int diagramScale,
             Model model) {
         final AerofoilDataAG36 tipAerofoilData = new AerofoilDataAG36(tipChord);
         final AerofoilDataAG36 rootAerofoilData = new AerofoilDataAG36(rootChord);
@@ -47,8 +48,7 @@ public class WingDesignController {
         final Bounds svgBounds = machineData.getSvgBounds(viewAngle);
         model.addAttribute("svgbounds", svgBounds.getMinX() + " " + svgBounds.getMinY() + " " + svgBounds.getWidth() + " " + svgBounds.getHeight());
         model.addAttribute("aerofoilbounds", svgBounds);
-        model.addAttribute("diagramheight", "100%");
-        model.addAttribute("diagramwidth", "100%");
+        model.addAttribute("diagramScale", diagramScale);
         return "WingDesignView";
     }
 }
