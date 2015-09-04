@@ -34,9 +34,9 @@ public class MachineData {
     }
 
     public Bounds getSvgBounds(int viewAngle) {
-        final Bounds bounds = new Bounds(0, 0);
-        bounds.updateX(machineDepth + viewAngle);
-        bounds.updateY(machineHeight + wireLength);
+        final Bounds bounds = new Bounds(-5, -5);
+        bounds.updateX(machineDepth + viewAngle + 5);
+        bounds.updateY(machineHeight + wireLength + 5);
         return bounds;
     }
 
@@ -47,7 +47,7 @@ public class MachineData {
         builder.append(0);
         builder.append(" ");
 
-        builder.append(machineDepth+viewAngle);
+        builder.append(machineDepth + viewAngle);
         builder.append(",");
         builder.append(0);
         builder.append(" ");
@@ -59,7 +59,7 @@ public class MachineData {
 
         builder.append(0);
         builder.append(",");
-        builder.append(machineHeight+viewAngle);
+        builder.append(machineHeight);
         builder.append(" ");
 
         builder.append(viewAngle);
@@ -67,14 +67,59 @@ public class MachineData {
         builder.append(0);
         builder.append(" ");
 
-        builder.append(0);
+        builder.append(viewAngle);
+        builder.append(",");
+        builder.append(wireLength);
+        builder.append(" ");
+
+        builder.append(machineDepth + viewAngle);
         builder.append(",");
         builder.append(wireLength);
         builder.append(" ");
 
         builder.append(machineDepth);
         builder.append(",");
+        builder.append(wireLength + machineHeight);
+        builder.append(" ");
+
+        builder.append(0);
+        builder.append(",");
+        builder.append(wireLength + machineHeight);
+        builder.append(" ");
+
+        builder.append(viewAngle);
+        builder.append(",");
         builder.append(wireLength);
+        builder.append(" ");
+
+        builder.append(0);
+        builder.append(",");
+        builder.append(wireLength + machineHeight);
+        builder.append(" ");
+
+        builder.append(0);
+        builder.append(",");
+        builder.append(machineHeight);
+        builder.append(" ");
+
+        builder.append(machineDepth);
+        builder.append(",");
+        builder.append(machineHeight);
+        builder.append(" ");
+
+        builder.append(machineDepth);
+        builder.append(",");
+        builder.append(wireLength + machineHeight);
+        builder.append(" ");
+        
+        builder.append(machineDepth + viewAngle);
+        builder.append(",");
+        builder.append(wireLength);
+        builder.append(" ");
+        
+        builder.append(machineDepth + viewAngle);
+        builder.append(",");
+        builder.append(0);
         builder.append(" ");
 
         return builder.toString();
