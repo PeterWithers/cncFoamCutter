@@ -40,12 +40,12 @@ public class AerofoilData {
         return bounds;
     }
 
-    public String toSvgPoints() {
+    public String toSvgPoints(int xOffset, int yOffset) {
         StringBuilder builder = new StringBuilder();
         for (double[] currentPoint : points) {
-            builder.append(currentPoint[0] * chord);
+            builder.append((currentPoint[0] * chord + xOffset));
             builder.append(",");
-            builder.append((1 - currentPoint[1]) * chord);
+            builder.append(((1 - currentPoint[1]) * chord + yOffset));
             builder.append(" ");
         }
         return builder.toString();

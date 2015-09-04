@@ -13,18 +13,27 @@ Copyright (C) 2015 Peter Withers
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body>
+        <header>Wing Design View</header>
     <h13 th:text="'Aerofoil: ' + ${aerofoilname}" />
     <br/>
-    <h13 th:text="'Chord: ' + ${aerofoilchord}" />
-    <br/>
+    <!--<h13 th:text="'Chord: ' + ${aerofoilchord}" />-->
+    <!--<br/>-->
     <form action="#" method="get">
-        <input type="text" id="chord" name="chord" th:value="${aerofoilchord}" />
+        viewAngle <input type="number" id="viewAngle" name="viewAngle" th:value="${viewAngle}" /><br/>
+        machine depth <input type="number" id="machineDepth" name="machineDepth" th:value="${machineData.getMachineDepth()}" /><br/>
+        machine height <input type="number" id="machineHeight" name="machineHeight" th:value="${machineData.getMachineHeight()}" /><br/>
+        wire length <input type="number" id="wireLength" name="wireLength" th:value="${machineData.getWireLength()}" /><br/>
+        WingSpan  <input type="text" id="wingSpan" name="wingSpan" th:value="${wingSpan}" /><br/>
+        Root Chord <input type="text" id="rootChord" name="rootChord" th:value="${rootChord}" /><br/>
+        Tip Chord <input type="text" id="tipChord" name="tipChord" th:value="${tipChord}" /><br/>
         <button type="submit">Update</button>
     </form>
     <br/>
     <svg th:attr="height=${diagramheight}, width=${diagramwidth}, viewBox=${svgbounds}" style="width: 100%">
-    <polyline th:attr="points=${aerofoildata}" style="fill:none;stroke:black;stroke-width:1" />
-    <rect th:attr="x=${aerofoilbounds.getMinX()}, y=${aerofoilbounds.getMinY()}, width=${aerofoilbounds.getMaxX()}, height=${aerofoilbounds.getMaxY()}" style="fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />
+    <polyline th:attr="points=${machineSvgPoints}" style="fill:none;stroke:grey;stroke-width:1" />
+    <polyline th:attr="points=${rootAerofoilData}" style="fill:none;stroke:black;stroke-width:1" />
+    <polyline th:attr="points=${tipAerofoilData}" style="fill:none;stroke:black;stroke-width:1" />
+    <!--<rect th:attr="x=${aerofoilbounds.getMinX()}, y=${aerofoilbounds.getMinY()}, width=${aerofoilbounds.getMaxX()}, height=${aerofoilbounds.getMaxY()}" style="fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />-->
     </svg>
 </body>
 </html>
