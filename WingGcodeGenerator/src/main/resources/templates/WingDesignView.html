@@ -6,7 +6,7 @@ Copyright (C) 2015 Peter Withers
   @since Aug 17, 2015 8:40:10 PM (creation date)
   @author Peter Withers <peter@bambooradical.com>
 -->
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>Wing Design View</title>
         <meta charset="UTF-8"/>
@@ -14,27 +14,52 @@ Copyright (C) 2015 Peter Withers
     </head>
     <body>
         <header>Wing Design View</header>
-    <h13 th:text="'Aerofoil: ' + ${aerofoilname}" />
-    <br/>
-    <!--<h13 th:text="'Chord: ' + ${aerofoilchord}" />-->
-    <!--<br/>-->
-    <form action="#" method="get">
-        viewAngle <input type="number" id="viewAngle" name="viewAngle" th:value="${viewAngle}" /><br/>
-        machine depth <input type="number" id="machineDepth" name="machineDepth" th:value="${machineData.getMachineDepth()}" /><br/>
-        machine height <input type="number" id="machineHeight" name="machineHeight" th:value="${machineData.getMachineHeight()}" /><br/>
-        wire length <input type="number" id="wireLength" name="wireLength" th:value="${machineData.getWireLength()}" /><br/>
-        WingSpan  <input type="text" id="wingSpan" name="wingSpan" th:value="${wingSpan}" /><br/>
-        Root Chord <input type="text" id="rootChord" name="rootChord" th:value="${rootChord}" /><br/>
-        Tip Chord <input type="text" id="tipChord" name="tipChord" th:value="${tipChord}" /><br/>
-        Diagram Scale <input type="text" id="diagramScale" name="diagramScale" th:value="${diagramScale}" /><br/>
-        <button type="submit">Update</button>
-    </form>
-    <br/>
-    <svg th:attr="viewBox=${svgbounds}, style='width: ' + ${diagramScale} + '%'">
-    <polyline th:attr="points=${machineSvgPoints}" style="fill:none;stroke:grey;stroke-width:1" />
-    <polyline th:attr="points=${rootAerofoilData}" style="fill:none;stroke:black;stroke-width:1" />
-    <polyline th:attr="points=${tipAerofoilData}" style="fill:none;stroke:black;stroke-width:1" />
-    <!--<rect th:attr="x=${aerofoilbounds.getMinX()}, y=${aerofoilbounds.getMinY()}, width=${aerofoilbounds.getMaxX()}, height=${aerofoilbounds.getMaxY()}" style="fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />-->
-    </svg>
-</body>
+        <span th:text="'Aerofoil: ' + ${aerofoilname}"></span>
+        <br/>
+        <!--<h13 th:text="'Chord: ' + ${aerofoilchord}" />-->
+        <!--<br/>-->
+        <form action="#" method="get">
+            <table>
+                <tr><td>
+                        View Angle</td><td><input type="number" id="viewAngle" name="viewAngle" th:value="${viewAngle}" />
+                    </td></tr><tr><td>
+                        Machine Depth</td><td><input type="number" id="machineDepth" name="machineDepth" th:value="${machineData.getMachineDepth()}" />
+                    </td></tr><tr><td> 
+                        Machine Height</td><td><input type="number" id="machineHeight" name="machineHeight" th:value="${machineData.getMachineHeight()}" />
+                    </td></tr><tr><td>
+                        Wire Length</td><td><input type="number" id="wireLength" name="wireLength" th:value="${machineData.getWireLength()}" />
+                    </td></tr><tr><td>
+                        Initial Cut Length</td><td><input type="number" id="initialCutLength" name="initialCutLength" th:value="${initialCutLength}" />
+                    </td></tr><tr><td>
+                        Wing Length</td><td><input type="number" id="wingLength" name="wingLength" th:value="${wingLength}" />
+                    </td></tr><tr><td>
+                        Root Chord</td><td><input type="number" id="rootChord" name="rootChord" th:value="${rootChord}" />
+                    </td></tr><tr><td> 
+                        Tip Chord</td><td><input type="number" id="tipChord" name="tipChord" th:value="${tipChord}" />
+                    </td></tr><tr><td> 
+                        Diagram Scale</td><td><input type="number" id="diagramScale" name="diagramScale" th:value="${diagramScale}" />
+                    </td></tr><tr><td>
+                        Cutting Speed</td><td><input type="number" id="cuttingSpeed" name="cuttingSpeed" th:value="${cuttingSpeed}" />
+                    </td></tr><tr><td>
+                        Heater %</td><td><input type="number" id="heaterPercent" name="heaterPercent" th:value="${heaterPercent}" />
+                        <button type="submit">Update</button>
+                    </td></tr>
+            </table>
+        </form>
+        <br/>
+        <svg th:attr="viewBox=${svgbounds}, style='width: ' + ${diagramScale} + '%'">
+            <polyline th:attr="points=${machineSvgPoints}" style="fill:none;stroke:grey;stroke-width:1" />
+            <polyline th:attr="points=${rootAerofoilData}" style="fill:none;stroke:black;stroke-width:1" />
+            <polyline th:attr="points=${tipAerofoilData}" style="fill:none;stroke:black;stroke-width:1" />
+            <!--<rect th:attr="x=${aerofoilbounds.getMinX()}, y=${aerofoilbounds.getMinY()}, width=${aerofoilbounds.getMaxX()}, height=${aerofoilbounds.getMaxY()}" style="fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />-->
+            <line x1="0" y1="0" x2="50" y2="50" style="stroke:rgb(0,0,0);stroke-width:20;" > 
+                <animate attributeName="x2" from="50" to="100" begin="1s" dur="2s" /> 
+                <animate attributeName="x1" from="0" to="100" begin="1s" dur="2s" /> 
+                <animate attributeName="y2" from="50" to="100" begin="1s" dur="2s" /> 
+                <animate attributeName="y1" from="0" to="100" begin="1s" dur="2s" /> 
+            </line> 
+        </svg>
+        <br/>
+        <textarea  rows="100" cols="100" th:text="${gcode}"></textarea>
+    </body>
 </html>

@@ -36,18 +36,18 @@ public class MachineData {
     public Bounds getSvgBounds(int viewAngle) {
         final Bounds bounds = new Bounds(-5, -5);
         bounds.updateX(machineDepth + viewAngle + 5);
-        bounds.updateY(machineHeight + wireLength + 5);
+        bounds.updateY(machineHeight + wireLength - viewAngle + 5);
         return bounds;
     }
 
     public String toSvgPoints(int viewAngle) {
         StringBuilder builder = new StringBuilder();
-        builder.append(viewAngle);
+        builder.append(0);
         builder.append(",");
         builder.append(0);
         builder.append(" ");
 
-        builder.append(machineDepth + viewAngle);
+        builder.append(machineDepth);
         builder.append(",");
         builder.append(0);
         builder.append(" ");
@@ -62,39 +62,39 @@ public class MachineData {
         builder.append(machineHeight);
         builder.append(" ");
 
-        builder.append(viewAngle);
+        builder.append(0);
         builder.append(",");
         builder.append(0);
         builder.append(" ");
 
         builder.append(viewAngle);
         builder.append(",");
-        builder.append(wireLength);
+        builder.append(wireLength - viewAngle);
         builder.append(" ");
 
         builder.append(machineDepth + viewAngle);
         builder.append(",");
-        builder.append(wireLength);
+        builder.append(wireLength - viewAngle);
         builder.append(" ");
 
-        builder.append(machineDepth);
+        builder.append(machineDepth + viewAngle);
         builder.append(",");
-        builder.append(wireLength + machineHeight);
-        builder.append(" ");
-
-        builder.append(0);
-        builder.append(",");
-        builder.append(wireLength + machineHeight);
+        builder.append(wireLength - viewAngle + machineHeight);
         builder.append(" ");
 
         builder.append(viewAngle);
         builder.append(",");
-        builder.append(wireLength);
+        builder.append(wireLength - viewAngle + machineHeight);
         builder.append(" ");
 
-        builder.append(0);
+        builder.append(viewAngle);
         builder.append(",");
-        builder.append(wireLength + machineHeight);
+        builder.append(wireLength - viewAngle);
+        builder.append(" ");
+
+        builder.append(viewAngle);
+        builder.append(",");
+        builder.append(wireLength - viewAngle + machineHeight);
         builder.append(" ");
 
         builder.append(0);
@@ -107,17 +107,17 @@ public class MachineData {
         builder.append(machineHeight);
         builder.append(" ");
 
+        builder.append(machineDepth + viewAngle);
+        builder.append(",");
+        builder.append(wireLength - viewAngle + machineHeight);
+        builder.append(" ");
+
+        builder.append(machineDepth + viewAngle);
+        builder.append(",");
+        builder.append(wireLength - viewAngle);
+        builder.append(" ");
+
         builder.append(machineDepth);
-        builder.append(",");
-        builder.append(wireLength + machineHeight);
-        builder.append(" ");
-        
-        builder.append(machineDepth + viewAngle);
-        builder.append(",");
-        builder.append(wireLength);
-        builder.append(" ");
-        
-        builder.append(machineDepth + viewAngle);
         builder.append(",");
         builder.append(0);
         builder.append(" ");
