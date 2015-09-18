@@ -8,16 +8,28 @@ import java.util.ArrayList;
 
 /**
  * @since Sep 11, 2015 21:33:06 PM (creation date)
- * @author Peter Withers <peter.withers@mpi.nl>
+ * @author Peter Withers <peter@bambooradical.com>
  */
 public class GcodeGenerator {
 
     ArrayList<double[]> xYpath;
     ArrayList<double[]> zEpath;
 
-    public GcodeGenerator(AerofoilData aerofoilDataRoot, AerofoilData aerofoilDataTip) {
-        xYpath = aerofoilDataRoot.getTransformedPoints(0, 0);
-        zEpath = aerofoilDataTip.getTransformedPoints(0, 0);
+    public GcodeGenerator(AerofoilData aerofoilDataRoot, AerofoilData aerofoilDataTip, int machineHeight, int initialCutHeight, int initialCutLength) {
+        xYpath = aerofoilDataRoot.getTransformedPoints(initialCutLength, machineHeight - initialCutHeight);
+        zEpath = aerofoilDataTip.getTransformedPoints(initialCutLength, machineHeight - initialCutHeight);
+        xYpath.add(0, new double[]{0, 0});
+        zEpath.add(0, new double[]{0, 0});
+        xYpath.add(1, new double[]{0, machineHeight - initialCutHeight});
+        zEpath.add(1, new double[]{0, machineHeight - initialCutHeight});
+//        xYpath.add(2, new double[]{initialCutLength, machineHeight - initialCutHeight});
+//        zEpath.add(2, new double[]{initialCutLength, machineHeight - initialCutHeight});
+//        xYpath.add(new double[]{initialCutLength, machineHeight - initialCutHeight});
+//        zEpath.add(new double[]{initialCutLength, machineHeight - initialCutHeight});
+        xYpath.add(new double[]{0, machineHeight - initialCutHeight});
+        zEpath.add(new double[]{0, machineHeight - initialCutHeight});
+        xYpath.add(new double[]{0, 0});
+        zEpath.add(new double[]{0, 0});
     }
 
     public String toSvgXy() {

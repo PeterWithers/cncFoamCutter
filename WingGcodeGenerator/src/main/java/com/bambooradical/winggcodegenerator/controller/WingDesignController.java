@@ -30,7 +30,7 @@ public class WingDesignController {
             @RequestParam(value = "rootChord", required = false, defaultValue = "120") int rootChord,
             @RequestParam(value = "tipChord", required = false, defaultValue = "120") int tipChord,
             @RequestParam(value = "wingLength", required = false, defaultValue = "120") int wingLength,
-            @RequestParam(value = "diagramScale", required = false, defaultValue = "50") int diagramScale,
+            @RequestParam(value = "diagramScale", required = false, defaultValue = "100") int diagramScale,
             @RequestParam(value = "cuttingSpeed", required = false, defaultValue = "250") int cuttingSpeed,
             @RequestParam(value = "heaterPercent", required = false, defaultValue = "100") int heaterPercent,
             Model model) {
