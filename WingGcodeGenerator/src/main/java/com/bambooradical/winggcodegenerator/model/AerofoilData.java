@@ -31,9 +31,13 @@ public class AerofoilData {
 
     public ArrayList<double[]> getTransformedPoints(int xOffset, int yOffset) {
         final Bounds svgBounds = getSvgBounds();
+//            final double initialX = svgBounds.getMaxX();
+//            final double initialY = svgBounds.getMaxY();
+        final double initialX = points[0][0];
+        final double initialY = points[0][1];
         ArrayList<double[]> transformedPoints = new ArrayList<>();
         for (double[] currentPoint : points) {
-            transformedPoints.add(new double[]{(svgBounds.getMaxX() - currentPoint[0]) * chord + xOffset, (svgBounds.getMaxY() - currentPoint[1]) * chord + yOffset});
+            transformedPoints.add(new double[]{(initialX - currentPoint[0]) * chord + xOffset, (initialY - currentPoint[1]) * chord + yOffset});
         }
         return transformedPoints;
     }

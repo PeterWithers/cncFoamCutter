@@ -7,7 +7,7 @@ package com.bambooradical.winggcodegenerator.model;
 
 /**
  * @since Sep 4, 2015 21:10:22 PM (creation date)
- * @author Peter Withers <peter.withers@mpi.nl>
+ * @author Peter Withers <peter@bambooradical.com>
  */
 public class MachineData {
 
