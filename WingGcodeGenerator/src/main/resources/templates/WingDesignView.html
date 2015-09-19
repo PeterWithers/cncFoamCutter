@@ -131,12 +131,12 @@ Copyright (C) 2015 Peter Withers
                 $("#settings").hide();
                 $("#diagram").show();
             });
-            $('html').click(function () {
-                $("#settings").hide();
-            });
-            $('#settings').click(function (event) {
-                event.stopPropagation();
-            });
+//            $('diagramPanel').click(function () {
+//                $("#settings").hide();
+//            });
+//            $('#settings').click(function (event) {
+//                event.stopPropagation();
+//            });
         </script>
     </head>
     <body>
@@ -186,6 +186,7 @@ Copyright (C) 2015 Peter Withers
                                 Cutting Speed</td><td><input type="number" id="cuttingSpeed" name="cuttingSpeed" th:value="${cuttingSpeed}" />
                             </td></tr><tr><td>
                                 Heater %</td><td><input type="number" id="heaterPercent" name="heaterPercent" th:value="${heaterPercent}" />
+                            </td></tr><tr><td></td><td>
                                 <button id="saveButton">Update</button>
                             </td></tr>
                     </table>
