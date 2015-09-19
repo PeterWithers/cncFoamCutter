@@ -11,57 +11,189 @@ Copyright (C) 2015 Peter Withers
         <title>Wing Design View</title>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <style>
+            body {
+                background: #202020;
+                color: rgba(255, 255, 255, 0.5);
+            }
+            header {
+                background: #4a389d;
+                padding: 20px;
+            }
+            #diagramPanel {
+                width: 100%;
+                height: 100%;
+                position: relative;
+            }
+            #settings {
+                /*width: 100%;*/
+                /*height: 100%;*/
+                position: absolute;
+                top: 0;
+                left: 0;                
+                border-color: #5d86b1;
+                color: #bccfe4;
+                background: #042649;
+                border-width: 1px;
+                border-style: solid;
+                padding: 5px;
+                margin: 20px;
+            }
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+            }
+            li {
+                display: inline;
+            }
+            #menu, button {
+                border-color: #985cb4;
+            }
+            #menu a, button {
+                width: 60px;
+                background: #33024a;
+                color: #d8bbe5;
+                border: #752e97;
+                border-style: solid;
+                border-width: 1px;
+                margin: 10px;
+                padding: 5px;
+            }
+            #menu a:hover, button:hover {
+                background: #d8bbe5;
+                color: #33024a;
+            }
+            #menu a.sel {
+                background: #985cb4;
+                color: #33024a;
+            }
+            #diagramPanel {
+                padding: 5px;
+            }
+            .machineLines {
+                fill: none;
+                stroke: grey;
+                stroke-width: 1; 
+            }
+            .aerofoilShapes {
+                fill: grey;
+                stroke: grey;
+                stroke-width: 1; 
+            }
+            .ncPathLines {
+                fill: none;
+                stroke: #7566ba;
+                stroke-width: 2; 
+            }
+            #footer {
+                color: #bccfe4;
+                background: #042649;
+                border-color: #5d86b1;
+                margin: 10px 0 10px 0;
+                padding: 5px 0;
+                text-align: center;
+                border-top: 1px solid;
+                border-bottom: 1px solid;
+            }
+            #footer a {
+                color: #bccfe4;
+                background: transparent;
+            }
+            #footer a:hover {
+                color: #b29310;
+                background: #fff6ce;
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $("#saveButton").click(function () {
+                    $.post("#", $("#settingsForm").serialize());
+                });
+                $("#settingsButton").click(function () {
+                    $("#gcodeArea").hide();
+                    $("#settings").show();
+                    $("#diagram").show();
+                    event.stopPropagation();
+                });
+                $("#diagramButton").click(function () {
+                    $("#gcodeArea").hide();
+                    $("#settings").hide();
+                    $("#diagram").show();
+                });
+                $("#gcodeButton").click(function () {
+                    $("#gcodeArea").show();
+                    $("#settings").hide();
+                    $("#diagram").hide();
+                });
+                $("#gcodeArea").hide();
+                $("#settings").hide();
+                $("#diagram").show();
+            });
+            $('html').click(function () {
+                $("#settings").hide();
+            });
+            $('#settings').click(function (event) {
+                event.stopPropagation();
+            });
+        </script>
     </head>
     <body>
-        <header>Wing Design View</header>
-        <span th:text="'Aerofoil: ' + ${aerofoilname}"></span>
+        <header>
+            <div>Wing Design View</div>
+        </header>
+        <ul id="menu"><li><a id="settingsButton">Settings</a></li><li><a id="diagramButton">Diagram</a></li><li><a id="gcodeButton">GCODE</a></li></ul>
+        <div id="diagramPanel">
+            <!--<h13 th:text="'Chord: ' + ${aerofoilchord}" />-->
+            <br/>
+            <svg id="diagram" th:attr="viewBox=${svgbounds}, style='width: ' + ${diagramScale} + '%'">
+                <polyline class="machineLines" th:attr="points=${machineSvgPoints}" />
+                <polyline class="aerofoilShapes" th:attr="points=${rootAerofoilData}" />
+                <polyline class="aerofoilShapes" th:attr="points=${tipAerofoilData}" />
+                <!--<rect th:attr="x=${aerofoilbounds.getMinX()}, y=${aerofoilbounds.getMinY()}, width=${aerofoilbounds.getMaxX()}, height=${aerofoilbounds.getMaxY()}" style="fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />-->
+                <polyline class="ncPathLines" th:attr="points=${gcodeXY}" stroke-dasharray="20,10,5,5,5,10">
+                    <animate attributeName="stroke-dashoffset" from="55" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
+                </polyline>
+                <polyline class="ncPathLines" th:attr="points=${gcodeZE}, transform=${transformZE}" stroke-dasharray="20,10,5,5,5,10">
+                    <animate attributeName="stroke-dashoffset" from="55" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
+                </polyline>
+            </svg>
+            <div id="settings">
+                <form id="settingsForm" action="#" method="get">
+                    <table>
+                        <tr><td>
+                                View Angle</td><td><input type="number" id="viewAngle" name="viewAngle" th:value="${viewAngle}" />
+                            </td></tr><tr><td>
+                                Machine Depth</td><td><input type="number" id="machineDepth" name="machineDepth" th:value="${machineData.getMachineDepth()}" />
+                            </td></tr><tr><td> 
+                                Machine Height</td><td><input type="number" id="machineHeight" name="machineHeight" th:value="${machineData.getMachineHeight()}" />
+                            </td></tr><tr><td>
+                                Wire Length</td><td><input type="number" id="wireLength" name="wireLength" th:value="${machineData.getWireLength()}" />
+                            </td></tr><tr><td>
+                                Initial Cut Height</td><td><input type="number" id="initialCutHeight" name="initialCutHeight" th:value="${initialCutHeight}" />
+                            </td></tr><tr><td>
+                                Initial Cut Length</td><td><input type="number" id="initialCutLength" name="initialCutLength" th:value="${initialCutLength}" />
+                            </td></tr><tr><td>
+                                Wing Length</td><td><input type="number" id="wingLength" name="wingLength" th:value="${wingLength}" />
+                            </td></tr><tr><td>
+                                Root Chord</td><td><input type="number" id="rootChord" name="rootChord" th:value="${rootChord}" />
+                            </td></tr><tr><td> 
+                                Tip Chord</td><td><input type="number" id="tipChord" name="tipChord" th:value="${tipChord}" />
+                            </td></tr><tr><td> 
+                                Diagram Scale</td><td><input type="number" id="diagramScale" name="diagramScale" th:value="${diagramScale}" />
+                            </td></tr><tr><td>
+                                Cutting Speed</td><td><input type="number" id="cuttingSpeed" name="cuttingSpeed" th:value="${cuttingSpeed}" />
+                            </td></tr><tr><td>
+                                Heater %</td><td><input type="number" id="heaterPercent" name="heaterPercent" th:value="${heaterPercent}" />
+                                <button id="saveButton">Update</button>
+                            </td></tr>
+                    </table>
+                </form>
+            </div>
+        </div>
         <br/>
-        <!--<h13 th:text="'Chord: ' + ${aerofoilchord}" />-->
-        <!--<br/>-->
-        <form action="#" method="get">
-            <table>
-                <tr><td>
-                        View Angle</td><td><input type="number" id="viewAngle" name="viewAngle" th:value="${viewAngle}" />
-                    </td></tr><tr><td>
-                        Machine Depth</td><td><input type="number" id="machineDepth" name="machineDepth" th:value="${machineData.getMachineDepth()}" />
-                    </td></tr><tr><td> 
-                        Machine Height</td><td><input type="number" id="machineHeight" name="machineHeight" th:value="${machineData.getMachineHeight()}" />
-                    </td></tr><tr><td>
-                        Wire Length</td><td><input type="number" id="wireLength" name="wireLength" th:value="${machineData.getWireLength()}" />
-                    </td></tr><tr><td>
-                        Initial Cut Height</td><td><input type="number" id="initialCutHeight" name="initialCutHeight" th:value="${initialCutHeight}" />
-                    </td></tr><tr><td>
-                        Initial Cut Length</td><td><input type="number" id="initialCutLength" name="initialCutLength" th:value="${initialCutLength}" />
-                    </td></tr><tr><td>
-                        Wing Length</td><td><input type="number" id="wingLength" name="wingLength" th:value="${wingLength}" />
-                    </td></tr><tr><td>
-                        Root Chord</td><td><input type="number" id="rootChord" name="rootChord" th:value="${rootChord}" />
-                    </td></tr><tr><td> 
-                        Tip Chord</td><td><input type="number" id="tipChord" name="tipChord" th:value="${tipChord}" />
-                    </td></tr><tr><td> 
-                        Diagram Scale</td><td><input type="number" id="diagramScale" name="diagramScale" th:value="${diagramScale}" />
-                    </td></tr><tr><td>
-                        Cutting Speed</td><td><input type="number" id="cuttingSpeed" name="cuttingSpeed" th:value="${cuttingSpeed}" />
-                    </td></tr><tr><td>
-                        Heater %</td><td><input type="number" id="heaterPercent" name="heaterPercent" th:value="${heaterPercent}" />
-                        <button type="submit">Update</button>
-                    </td></tr>
-            </table>
-        </form>
-        <br/>
-        <svg th:attr="viewBox=${svgbounds}, style='width: ' + ${diagramScale} + '%'">
-            <polyline th:attr="points=${machineSvgPoints}" style="fill:none;stroke:grey;stroke-width:1" />
-            <polyline th:attr="points=${rootAerofoilData}" style="fill:none;stroke:black;stroke-width:1" />
-            <polyline th:attr="points=${tipAerofoilData}" style="fill:none;stroke:black;stroke-width:1" />
-            <!--<rect th:attr="x=${aerofoilbounds.getMinX()}, y=${aerofoilbounds.getMinY()}, width=${aerofoilbounds.getMaxX()}, height=${aerofoilbounds.getMaxY()}" style="fill:blue;stroke:pink;stroke-width:5;fill-opacity:0.1;stroke-opacity:0.9" />-->
-            <polyline th:attr="points=${gcodeXY}" stroke-dasharray="20,10,5,5,5,10" style="fill:none;stroke:blue;stroke-width:2">
-                <animate attributeName="stroke-dashoffset" from="55" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
-            </polyline>
-            <polyline th:attr="points=${gcodeZE}, transform=${transformZE}" stroke-dasharray="20,10,5,5,5,10" style="fill:none;stroke:blue;stroke-width:2">
-                <animate attributeName="stroke-dashoffset" from="55" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
-            </polyline>
-        </svg>
-        <br/>
-        <textarea  rows="100" cols="100" th:text="${gcode}"></textarea>
+        <textarea id="gcodeArea" rows="100" cols="100" th:text="${gcode}"></textarea>
+        <div id="footer" th:text="'Aerofoil: ' + ${aerofoilname} + ' | Wing length: ' + ${wingLength} + ' | Root chord: ' + ${rootChord} + ' | Tip chord: ' + ${tipChord}"></div>
     </body>
 </html>
