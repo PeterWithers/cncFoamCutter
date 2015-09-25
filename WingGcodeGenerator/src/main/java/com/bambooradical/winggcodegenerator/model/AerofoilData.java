@@ -36,7 +36,8 @@ public class AerofoilData {
         final double initialX = points[0][0];
         final double initialY = points[0][1];
         ArrayList<double[]> transformedPoints = new ArrayList<>();
-        for (double[] currentPoint : points) {
+        for (int index = points.length - 1; index > -1; index--) {
+            double[] currentPoint = points[index];
             transformedPoints.add(new double[]{(initialX - currentPoint[0]) * chord + xOffset, (initialY - currentPoint[1]) * chord + yOffset});
         }
         return transformedPoints;

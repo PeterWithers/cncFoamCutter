@@ -4,6 +4,7 @@
 package com.bambooradical.winggcodegenerator.util;
 
 import com.bambooradical.winggcodegenerator.model.AerofoilData;
+import com.bambooradical.winggcodegenerator.model.MachineData;
 import java.util.ArrayList;
 
 /**
@@ -54,11 +55,11 @@ public class GcodeGenerator {
         return builder.toString();
     }
 
-    public String toGcode(final int cuttingSpeed, final int heaterPercent) {
+    public String toGcode(MachineData machineData) {
         StringBuilder builder = new StringBuilder();
         startGcode(builder);
-        setHeat(builder, heaterPercent);
-        pause(builder, 60);
+        setHeat(builder, machineData.getHeaterPercent());
+        pause(builder, 5);
         beep(builder);
         pause(builder, 5);
         // todo: this will not reliably work with differing aerofoils
@@ -68,11 +69,13 @@ public class GcodeGenerator {
             move(builder,
                     currentPointRoot[0], currentPointRoot[1],
                     currentPointTip[0], currentPointTip[1],
-                    cuttingSpeed);
+                    machineData);
         }
-        setHeat(builder, 0);
+        waitForCurrentMovesToFinish(builder);
         beep(builder);
         pause(builder, 1);
+        setHeat(builder, 0);
+        disableSteppers(builder);
         beep(builder);
         return builder.toString();
     }
@@ -91,11 +94,20 @@ public class GcodeGenerator {
         builder.append("G4 S").append(seconds).append("\n");;
     }
 
+    private void waitForCurrentMovesToFinish(StringBuilder builder) {
+        builder.append("M400 # wait for current moves to finish").append("\n");;
+    }
+
+    private void disableSteppers(StringBuilder builder) {
+        // todo: this is not supported by repetier
+        builder.append("M18 # disable motors\n");
+    }
+
     private void beep(StringBuilder builder) {
         builder.append("M300 S200 P100 # beep\n");
     }
 
-    private void move(StringBuilder builder, double x, double y, double z, double e, double speed) {
-        builder.append("G1 X").append(x).append(" Y").append(y).append(" Z").append(z).append(" E").append(e).append(" F").append(speed).append("\n");
+    private void move(StringBuilder builder, double x, double y, double z, double e, MachineData machineData) {
+        builder.append("G1 ").append(machineData.getHorizontalAxis1()).append(x).append(" ").append(machineData.getVerticalAxis1()).append(y).append(" ").append(machineData.getHorizontalAxis2()).append(z).append(" ").append(machineData.getVerticalAxis2()).append(e).append(" F").append(machineData.getCuttingSpeed()).append("\n");
     }
 }

@@ -33,15 +33,18 @@ public class WingDesignController {
             @RequestParam(value = "diagramScale", required = false, defaultValue = "100") int diagramScale,
             @RequestParam(value = "cuttingSpeed", required = false, defaultValue = "250") int cuttingSpeed,
             @RequestParam(value = "heaterPercent", required = false, defaultValue = "100") int heaterPercent,
+            @RequestParam(value = "verticalAxis1", required = false, defaultValue = "Y") char verticalAxis1,
+            @RequestParam(value = "horizontalAxis1", required = false, defaultValue = "X") char horizontalAxis1,
+            @RequestParam(value = "verticalAxis2", required = false, defaultValue = "Z") char verticalAxis2,
+            @RequestParam(value = "horizontalAxis2", required = false, defaultValue = "E") char horizontalAxis2,
             Model model) {
         final AerofoilDataAG36 tipGcodeAerofoilData = new AerofoilDataAG36((int) (rootChord + ((((double) tipChord - rootChord) / wingLength) * wireLength)));
         final AerofoilDataAG36 tipAerofoilData = new AerofoilDataAG36(tipChord);
         final AerofoilDataAG36 rootAerofoilData = new AerofoilDataAG36(rootChord);
-        final MachineData machineData = new MachineData(machineDepth, machineHeight, wireLength);
+        final MachineData machineData = new MachineData(machineDepth, machineHeight, wireLength, verticalAxis1, horizontalAxis1, verticalAxis2, horizontalAxis2, viewAngle, cuttingSpeed, heaterPercent);
         model.addAttribute("machineData", machineData);
         model.addAttribute("initialCutHeight", initialCutHeight);
         model.addAttribute("initialCutLength", initialCutLength);
-        model.addAttribute("machineSvgPoints", machineData.toSvgPoints(viewAngle));
         model.addAttribute("viewAngle", viewAngle);
         model.addAttribute("rootChord", rootAerofoilData.getChord());
         model.addAttribute("tipChord", tipAerofoilData.getChord());
@@ -52,15 +55,14 @@ public class WingDesignController {
         model.addAttribute("tipAerofoilData", tipAerofoilData.toSvgPoints(initialCutLength + (int) (viewAngle * percentOfWire), (int) ((machineHeight - initialCutHeight) + (wireLength - viewAngle) * (percentOfWire))));
         model.addAttribute("cuttingSpeed", cuttingSpeed);
         model.addAttribute("heaterPercent", heaterPercent);
-        final Bounds svgBounds = machineData.getSvgBounds(viewAngle);
+        final Bounds svgBounds = machineData.getSvgBounds();
         model.addAttribute("svgbounds", svgBounds.getMinX() + " " + svgBounds.getMinY() + " " + svgBounds.getWidth() + " " + svgBounds.getHeight());
-        model.addAttribute("aerofoilbounds", svgBounds);
         model.addAttribute("diagramScale", diagramScale);
         final GcodeGenerator gcodeGenerator = new GcodeGenerator(rootAerofoilData, tipGcodeAerofoilData, machineHeight, initialCutHeight, initialCutLength);
         model.addAttribute("gcodeXY", gcodeGenerator.toSvgXy());
         model.addAttribute("gcodeZE", gcodeGenerator.toSvgZe());
         model.addAttribute("transformZE", "translate(" + (int) (viewAngle) + "," + (int) (wireLength - viewAngle) + ")");
-        model.addAttribute("gcode", gcodeGenerator.toGcode(cuttingSpeed, heaterPercent));
+        model.addAttribute("gcode", gcodeGenerator.toGcode(machineData));
         return "WingDesignView";
     }
 }
