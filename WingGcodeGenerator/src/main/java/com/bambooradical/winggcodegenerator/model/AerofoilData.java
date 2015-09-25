@@ -3,33 +3,58 @@
  */
 package com.bambooradical.winggcodegenerator.model;
 
+
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
 
 /**
  * @since Aug 17, 2015 9:59:18 PM (creation date)
  * @author Peter Withers <peter@bambooradical.com>
  */
+@Entity
 public class AerofoilData {
 
-    private final String name;
-    private final double[][] points;
-    private final int chord;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+    private String name;
+    @Lob
+    private double[][] points;
 
-    public AerofoilData(String name, double[][] points, int chord) {
-        this.name = name;
-        this.points = points;
-        this.chord = chord;
+    public AerofoilData() {
     }
 
-    public int getChord() {
-        return chord;
+    public AerofoilData(String name, double[][] points) {
+        this.name = name;
+        this.points = points;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public double[][] getPoints() {
+        return points;
+    }
+
+    public void setPoints(double[][] points) {
+        this.points = points;
     }
 
     public String getName() {
         return name;
     }
 
-    public ArrayList<double[]> getTransformedPoints(int xOffset, int yOffset) {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+//    @Transient
+    public ArrayList<double[]> getTransformedPoints(int xOffset, int yOffset, int chord) {
         final Bounds svgBounds = getSvgBounds();
 //            final double initialX = svgBounds.getMaxX();
 //            final double initialY = svgBounds.getMaxY();
@@ -43,6 +68,7 @@ public class AerofoilData {
         return transformedPoints;
     }
 
+//    @Transient
     public Bounds getSvgBounds() {
         final Bounds bounds = new Bounds(points[0][0], (points[0][1]));
         for (double[] current : points) {
@@ -52,10 +78,11 @@ public class AerofoilData {
         return bounds;
     }
 
-    public String toSvgPoints(int xOffset, int yOffset) {
+//    @Transient
+    public String toSvgPoints(int xOffset, int yOffset, int chord) {
         final Bounds svgBounds = getSvgBounds();
         StringBuilder builder = new StringBuilder();
-        for (double[] currentPoint : getTransformedPoints(xOffset, yOffset)) {
+        for (double[] currentPoint : getTransformedPoints(xOffset, yOffset, chord)) {
             builder.append(currentPoint[0]);
             builder.append(",");
             builder.append(currentPoint[1]);

@@ -11,7 +11,7 @@ Copyright (C) 2015 Peter Withers
         <title>Wing Design View</title>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <style>
+        <style th:fragment="stylesection">
             body {
                 background: #202020;
                 color: rgba(255, 255, 255, 0.5);
@@ -170,10 +170,25 @@ Copyright (C) 2015 Peter Withers
                     <animate attributeName="stroke-dashoffset" from="55" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
                 </polyline>
             </svg>
+            <!--<svg th:fragment="rootAerofoilData" id="rootAerofoilSvg" th:attr="viewBox=${rootAerofoilBounds}, style='width: ' + ${diagramScale} + '%'"><polyline class="aerofoilShapes" th:attr="points=${rootAerofoilData}" /></svg>-->
             <div id="settings">
                 <form id="settingsForm" action="#" method="get">
                     <table>
                         <tr><td>
+                                Root Aerofoil</td><td>
+                                <select id="rootAerofoilId" name="rootAerofoil">
+                                    <option th:each="aerofoil : ${aerofoilList}" 
+                                            th:value="${aerofoil.getId()}" 
+                                            th:text="${aerofoil.getName()}"></option>
+                                </select>
+                            </td></tr><tr><td>
+                                Tip Aerofoil</td><td>
+                                <select id="tipAerofoilId" name="tipAerofoil">
+                                    <option th:each="aerofoil : ${aerofoilList}" 
+                                            th:value="${aerofoil.getId()}" 
+                                            th:text="${aerofoil.getName()}"></option>
+                                </select>
+                            </td></tr><tr><td>
                                 View Angle</td><td><input type="number" id="viewAngle" name="viewAngle" th:value="${viewAngle}" />
                             </td></tr><tr><td>
                                 Machine Depth</td><td><input type="number" id="machineDepth" name="machineDepth" th:value="${machineData.getMachineDepth()}" />
@@ -208,6 +223,9 @@ Copyright (C) 2015 Peter Withers
                             </td></tr><tr><td><button type="reset">Reset</button></td><td><button type="submit" id="saveButton">Update</button>
                             </td></tr>
                     </table>
+                </form>
+                <form method="POST" enctype="multipart/form-data" action="#">
+                    Aerofoil Dat: <input type="file" name="datFile" id="datFile"/><button type="submit" id="uploadButton">Upload</button>
                 </form>
             </div>
         </div>
