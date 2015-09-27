@@ -79,6 +79,7 @@ public class WingDesignController {
 //        model.addAttribute("rootAerofoilBounds", rootBounds.getMinX() + " " + rootBounds.getMinY() + " " + rootBounds.getWidth() + " " + rootBounds.getHeight());
         float percentOfWire = (float) wingLength / wireLength;
         model.addAttribute("tipAerofoilData", tipAerofoilData.toSvgPoints(initialCutLength + (int) (viewAngle * percentOfWire), (int) ((machineHeight - initialCutHeight) + (wireLength - viewAngle) * (percentOfWire)), tipChord));
+        model.addAttribute("wingLinesData", tipAerofoilData.toSvgLines(initialCutLength, machineHeight - initialCutHeight, rootChord, initialCutLength + (int) (viewAngle * percentOfWire), (int) ((machineHeight - initialCutHeight) + (wireLength - viewAngle) * (percentOfWire)), tipChord));
         model.addAttribute("cuttingSpeed", cuttingSpeed);
         model.addAttribute("heaterPercent", heaterPercent);
         final Bounds svgBounds = machineData.getSvgBounds();

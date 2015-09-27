@@ -80,12 +80,27 @@ public class AerofoilData {
 
 //    @Transient
     public String toSvgPoints(int xOffset, int yOffset, int chord) {
-        final Bounds svgBounds = getSvgBounds();
         StringBuilder builder = new StringBuilder();
         for (double[] currentPoint : getTransformedPoints(xOffset, yOffset, chord)) {
             builder.append(currentPoint[0]);
             builder.append(",");
             builder.append(currentPoint[1]);
+            builder.append(" ");
+        }
+        return builder.toString();
+    }
+    public String toSvgLines(int xOffsetRoot, int yOffsetRoot, int chordRoot, int xOffsetTip, int yOffsetTip, int chordTip) {
+        StringBuilder builder = new StringBuilder();
+        final ArrayList<double[]> transformedPointsRoot = getTransformedPoints(xOffsetRoot, yOffsetRoot, chordRoot);
+        final ArrayList<double[]> transformedPointsTip = getTransformedPoints(xOffsetTip, yOffsetTip, chordTip);
+        for (int index = 0; index < transformedPointsRoot.size(); index++) {
+            builder.append(transformedPointsRoot.get(index)[0]);
+            builder.append(",");
+            builder.append(transformedPointsRoot.get(index)[1]);
+            builder.append(" ");
+            builder.append(transformedPointsTip.get(index)[0]);
+            builder.append(",");
+            builder.append(transformedPointsTip.get(index)[1]);
             builder.append(" ");
         }
         return builder.toString();
