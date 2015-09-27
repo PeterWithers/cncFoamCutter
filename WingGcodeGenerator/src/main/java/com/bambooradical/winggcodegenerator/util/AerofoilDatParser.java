@@ -22,7 +22,7 @@ public class AerofoilDatParser {
         final ArrayList<double[]> dataPoints = new ArrayList<>();
         String line;
         while ((line = reader.readLine()) != null) {
-            final String[] splitLine = line.trim().split("[^0-9\\.]+");
+            final String[] splitLine = line.trim().split("[^0-9\\.-]+");
             if (splitLine.length != 2) {
                 break;
             }

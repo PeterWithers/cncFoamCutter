@@ -172,22 +172,25 @@ Copyright (C) 2015 Peter Withers
             </svg>
             <!--<svg th:fragment="rootAerofoilData" id="rootAerofoilSvg" th:attr="viewBox=${rootAerofoilBounds}, style='width: ' + ${diagramScale} + '%'"><polyline class="aerofoilShapes" th:attr="points=${rootAerofoilData}" /></svg>-->
             <div id="settings">
+                <form method="POST" enctype="multipart/form-data" action="#">
+                    Aerofoil Dat: <input type="file" name="datFile" id="datFile"/><button type="submit" id="uploadButton">Upload</button>
+                </form>
                 <form id="settingsForm" action="#" method="get">
                     <table>
                         <tr><td>
-                                Root Aerofoil</td><td>
+                                Aerofoil</td><td>
                                 <select id="rootAerofoilId" name="rootAerofoil">
                                     <option th:each="aerofoil : ${aerofoilList}" 
                                             th:value="${aerofoil.getId()}" 
                                             th:text="${aerofoil.getName()}"></option>
                                 </select>
-                            </td></tr><tr><td>
-                                Tip Aerofoil</td><td>
-                                <select id="tipAerofoilId" name="tipAerofoil">
-                                    <option th:each="aerofoil : ${aerofoilList}" 
-                                            th:value="${aerofoil.getId()}" 
-                                            th:text="${aerofoil.getName()}"></option>
-                                </select>
+                                <!--                            </td></tr><tr><td>
+                                                                Tip Aerofoil</td><td>
+                                                                <select id="tipAerofoilId" name="tipAerofoil">
+                                                                    <option th:each="aerofoil : ${aerofoilList}" 
+                                                                            th:value="${aerofoil.getId()}" 
+                                                                            th:text="${aerofoil.getName()}"></option>
+                                                                </select>-->
                             </td></tr><tr><td>
                                 View Angle</td><td><input type="number" id="viewAngle" name="viewAngle" th:value="${viewAngle}" />
                             </td></tr><tr><td>
@@ -223,9 +226,6 @@ Copyright (C) 2015 Peter Withers
                             </td></tr><tr><td><button type="reset">Reset</button></td><td><button type="submit" id="saveButton">Update</button>
                             </td></tr>
                     </table>
-                </form>
-                <form method="POST" enctype="multipart/form-data" action="#">
-                    Aerofoil Dat: <input type="file" name="datFile" id="datFile"/><button type="submit" id="uploadButton">Upload</button>
                 </form>
             </div>
         </div>
