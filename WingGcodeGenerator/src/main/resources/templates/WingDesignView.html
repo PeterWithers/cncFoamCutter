@@ -25,7 +25,7 @@ Copyright (C) 2015 Peter Withers
                 height: 100%;
                 position: relative;
             }
-            #settings {
+            #wingSettings, #machineSettings, #uploadArea {
                 /*width: 100%;*/
                 /*height: 100%;*/
                 position: absolute;
@@ -124,24 +124,47 @@ Copyright (C) 2015 Peter Withers
 //                        $("#diagram").empty().append(content);
 //                    });
 //                });
-                $("#settingsButton").click(function () {
+                $("#machineButton").click(function () {
                     $("#gcodeArea").hide();
-                    $("#settings").show();
+                    $("#machineSettings").show();
+                    $("#wingSettings").hide();
                     $("#diagram").show();
-                    event.stopPropagation();
+                    $("#uploadArea").hide();
+//                    event.stopPropagation();
+                });
+                $("#wingButton").click(function () {
+                    $("#gcodeArea").hide();
+                    $("#machineSettings").hide();
+                    $("#wingSettings").show();
+                    $("#diagram").show();
+                    $("#uploadArea").hide();
+//                    event.stopPropagation();
                 });
                 $("#diagramButton").click(function () {
                     $("#gcodeArea").hide();
-                    $("#settings").hide();
+                    $("#machineSettings").hide();
+                    $("#wingSettings").hide();
                     $("#diagram").show();
+                    $("#uploadArea").hide();
                 });
                 $("#gcodeButton").click(function () {
                     $("#gcodeArea").show();
-                    $("#settings").hide();
+                    $("#MachineSettings").hide();
+                    $("#wingSettings").hide();
                     $("#diagram").hide();
+                    $("#uploadArea").hide();
                 });
+                $("#addAerofoilButton").click(function () {
+                    $("#uploadArea").show();
+                    $("#gcodeArea").hide();
+                    $("#wingSettings").hide();
+                    $("#machineSettings").hide();
+                    $("#diagram").show();
+                });
+                $("#uploadArea").hide();
                 $("#gcodeArea").hide();
-                $("#settings").hide();
+                $("#wingSettings").hide();
+                $("#machineSettings").hide();
                 $("#diagram").show();
             });
 //            $('diagramPanel').click(function () {
@@ -156,11 +179,11 @@ Copyright (C) 2015 Peter Withers
         <header>
             <div>Wing Design View</div>
         </header>
-        <ul id="menu"><li><a id="settingsButton">Settings</a></li><li><a id="diagramButton">Diagram</a></li><li><a id="gcodeButton">GCODE</a></li></ul>
+        <ul id="menu"><li><a id="machineButton">Machine Settings</a></li><li><a id="wingButton">Wing Settings</a></li><li><a id="diagramButton">Diagram</a></li><li><a id="gcodeButton">GCODE</a></li><li><a id="addAerofoilButton">Add Aerofoil</a></li></ul>
         <div id="diagramPanel">
             <!--<h13 th:text="'Chord: ' + ${aerofoilchord}" />-->
             <br/>
-            <svg id="diagram" th:attr="viewBox=${svgbounds}, style='width: ' + ${diagramScale} + '%'">
+            <svg id="diagram" th:attr="viewBox=${svgbounds}, style='width: ' + ${machineData.getDiagramScale()} + '%'">
                 <polyline class="machineLines" th:attr="points=${machineData.toSvgPoints()}" />
                 <text class="machineLabels" th:attr="x=${machineData.getHorizontalAxis1SvgPointX()}, y=${machineData.getHorizontalAxis1SvgPointY() + 15}" th:text="${machineData.getHorizontalAxis1()}">Q</text>
                 <text class="machineLabels" th:attr="x=${machineData.getVerticalAxis1SvgPointX() - 15}, y=${machineData.getVerticalAxis1SvgPointY()}" th:text="${machineData.getVerticalAxis1()}">Q</text>
@@ -176,11 +199,18 @@ Copyright (C) 2015 Peter Withers
                     <animate attributeName="stroke-dashoffset" from="55" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
                 </polyline>
             </svg>
-            <!--<svg th:fragment="rootAerofoilData" id="rootAerofoilSvg" th:attr="viewBox=${rootAerofoilBounds}, style='width: ' + ${diagramScale} + '%'"><polyline class="aerofoilShapes" th:attr="points=${rootAerofoilData}" /></svg>-->
-            <div id="settings">
+            <!--<svg th:fragment="rootAerofoilData" id="rootAerofoilSvg" th:attr="viewBox=${rootAerofoilBounds}, style='width: ' + ${machineData.getDiagramScale()} + '%'"><polyline class="aerofoilShapes" th:attr="points=${rootAerofoilData}" /></svg>-->
+            <div id="machineSettings">
+                <form action="#" th:action="@{/WingDesignView}" th:object="${machineData}" method="get">
+                    <input type="text" th:field="*{viewAngle}" />
+                </form>
+            </div>
+            <div id="uploadArea">
                 <form method="POST" enctype="multipart/form-data" action="#">
                     Aerofoil Dat: <input type="file" name="datFile" id="datFile"/><button type="submit" id="uploadButton">Upload</button>
                 </form>
+            </div>
+            <div id="wingSettings">
                 <form id="settingsForm" action="#" method="get">
                     <table>
                         <tr><td>
@@ -198,7 +228,7 @@ Copyright (C) 2015 Peter Withers
                                                                             th:text="${aerofoil.getName()}"></option>
                                                                 </select>-->
                             </td></tr><tr><td>
-                                View Angle</td><td><input type="number" id="viewAngle" name="viewAngle" th:value="${viewAngle}" />
+                                View Angle</td><td><input type="number" id="viewAngle" name="viewAngle" th:value="${machineData.getViewAngle()}" />
                             </td></tr><tr><td>
                                 Machine Depth</td><td><input type="number" id="machineDepth" name="machineDepth" th:value="${machineData.getMachineDepth()}" />
                             </td></tr><tr><td> 
@@ -206,9 +236,9 @@ Copyright (C) 2015 Peter Withers
                             </td></tr><tr><td>
                                 Wire Length</td><td><input type="number" id="wireLength" name="wireLength" th:value="${machineData.getWireLength()}" />
                             </td></tr><tr><td>
-                                Initial Cut Height</td><td><input type="number" id="initialCutHeight" name="initialCutHeight" th:value="${initialCutHeight}" />
+                                Initial Cut Height</td><td><input type="number" id="initialCutHeight" name="initialCutHeight" th:value="${machineData.getInitialCutHeight()}" />
                             </td></tr><tr><td>
-                                Initial Cut Length</td><td><input type="number" id="initialCutLength" name="initialCutLength" th:value="${initialCutLength}" />
+                                Initial Cut Length</td><td><input type="number" id="initialCutLength" name="initialCutLength" th:value="${machineData.getInitialCutLength()}" />
                             </td></tr><tr><td>
                                 Horizontal Axis 1</td><td><input type="text" maxlength="1" id="horizontalAxis1" name="horizontalAxis1" th:value="${machineData.getHorizontalAxis1()}" />
                             </td></tr><tr><td>
@@ -224,11 +254,11 @@ Copyright (C) 2015 Peter Withers
                             </td></tr><tr><td> 
                                 Tip Chord</td><td><input type="number" id="tipChord" name="tipChord" th:value="${tipChord}" />
                             </td></tr><tr><td> 
-                                Diagram Scale</td><td><input type="number" id="diagramScale" name="diagramScale" th:value="${diagramScale}" />
+                                Diagram Scale</td><td><input type="number" id="diagramScale" name="diagramScale" th:value="${machineData.getDiagramScale()}" />
                             </td></tr><tr><td>
-                                Cutting Speed</td><td><input type="number" id="cuttingSpeed" name="cuttingSpeed" th:value="${cuttingSpeed}" />
+                                Cutting Speed</td><td><input type="number" id="cuttingSpeed" name="cuttingSpeed" th:value="${machineData.getCuttingSpeed()}" />
                             </td></tr><tr><td>
-                                Heater %</td><td><input type="number" id="heaterPercent" name="heaterPercent" th:value="${heaterPercent}" />
+                                Heater %</td><td><input type="number" id="heaterPercent" name="heaterPercent" th:value="${machineData.getHeaterPercent()}" />
                             </td></tr><tr><td><button type="reset">Reset</button></td><td><button type="submit" id="saveButton">Update</button>
                             </td></tr>
                     </table>

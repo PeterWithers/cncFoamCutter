@@ -5,35 +5,34 @@
  */
 package com.bambooradical.winggcodegenerator.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * @since Sep 4, 2015 21:10:22 PM (creation date)
  * @author Peter Withers <peter@bambooradical.com>
  */
+@Entity
 public class MachineData {
 
-    private final int machineDepth;
-    private final int machineHeight;
-    private final int wireLength;
-    private final char verticalAxis1;
-    private final char horizontalAxis1;
-    private final char verticalAxis2;
-    private final char horizontalAxis2;
-    private final int viewAngle;
-    private final int cuttingSpeed;
-    private final int heaterPercent;
-
-    public MachineData(int machineDepth, int machineHeight, int wireLength, char verticalAxis1, char horizontalAxis1, char verticalAxis2, char horizontalAxis2, int viewAngle, int cuttingSpeed, int heaterPercent) {
-        this.machineDepth = machineDepth;
-        this.machineHeight = machineHeight;
-        this.wireLength = wireLength;
-        this.verticalAxis1 = verticalAxis1;
-        this.horizontalAxis1 = horizontalAxis1;
-        this.verticalAxis2 = verticalAxis2;
-        this.horizontalAxis2 = horizontalAxis2;
-        this.viewAngle = viewAngle;
-        this.cuttingSpeed = cuttingSpeed;
-        this.heaterPercent = heaterPercent;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+    private int machineDepth = 350;
+    private int machineHeight = 100;
+    private int wireLength = 600;
+    private char verticalAxis1 = 'Y';
+    private char horizontalAxis1 = 'X';
+    private char verticalAxis2 = 'Z';
+    private char horizontalAxis2 = 'E';
+    private int viewAngle = 500;
+    private int cuttingSpeed = 250;
+    private int heaterPercent = 100;
+    private int initialCutHeight = 50;
+    private int initialCutLength = 10;
+    private int diagramScale = 100;
 
     public int getCuttingSpeed() {
         return cuttingSpeed;
@@ -108,6 +107,74 @@ public class MachineData {
 
     public int getVerticalAxis2SvgPointY() {
         return (wireLength - viewAngle + (machineHeight / 2));
+    }
+
+    public int getViewAngle() {
+        return viewAngle;
+    }
+
+    public int getInitialCutHeight() {
+        return initialCutHeight;
+    }
+
+    public int getInitialCutLength() {
+        return initialCutLength;
+    }
+
+    public int getDiagramScale() {
+        return diagramScale;
+    }
+
+    public void setMachineDepth(int machineDepth) {
+        this.machineDepth = machineDepth;
+    }
+
+    public void setMachineHeight(int machineHeight) {
+        this.machineHeight = machineHeight;
+    }
+
+    public void setWireLength(int wireLength) {
+        this.wireLength = wireLength;
+    }
+
+    public void setVerticalAxis1(char verticalAxis1) {
+        this.verticalAxis1 = verticalAxis1;
+    }
+
+    public void setHorizontalAxis1(char horizontalAxis1) {
+        this.horizontalAxis1 = horizontalAxis1;
+    }
+
+    public void setVerticalAxis2(char verticalAxis2) {
+        this.verticalAxis2 = verticalAxis2;
+    }
+
+    public void setHorizontalAxis2(char horizontalAxis2) {
+        this.horizontalAxis2 = horizontalAxis2;
+    }
+
+    public void setViewAngle(int viewAngle) {
+        this.viewAngle = viewAngle;
+    }
+
+    public void setCuttingSpeed(int cuttingSpeed) {
+        this.cuttingSpeed = cuttingSpeed;
+    }
+
+    public void setHeaterPercent(int heaterPercent) {
+        this.heaterPercent = heaterPercent;
+    }
+
+    public void setInitialCutHeight(int initialCutHeight) {
+        this.initialCutHeight = initialCutHeight;
+    }
+
+    public void setInitialCutLength(int initialCutLength) {
+        this.initialCutLength = initialCutLength;
+    }
+
+    public void setDiagramScale(int diagramScale) {
+        this.diagramScale = diagramScale;
     }
 
     public String toSvgPoints() {
