@@ -202,32 +202,13 @@ Copyright (C) 2015 Peter Withers
             <!--<svg th:fragment="rootAerofoilData" id="rootAerofoilSvg" th:attr="viewBox=${rootAerofoilBounds}, style='width: ' + ${machineData.getDiagramScale()} + '%'"><polyline class="aerofoilShapes" th:attr="points=${rootAerofoilData}" /></svg>-->
             <div id="machineSettings">
                 <form action="#" th:action="@{/WingDesignView}" th:object="${machineData}" method="get">
-                    <input type="text" th:field="*{viewAngle}" />
-                </form>
-            </div>
-            <div id="uploadArea">
-                <form method="POST" enctype="multipart/form-data" action="#">
-                    Aerofoil Dat: <input type="file" name="datFile" id="datFile"/><button type="submit" id="uploadButton">Upload</button>
-                </form>
-            </div>
-            <div id="wingSettings">
-                <form id="settingsForm" action="#" method="get">
+                    <input type="hidden" th:field="${wingData.rootAerofoil}" />
+                    <input type="hidden" th:field="${wingData.tipAerofoil}" />
+                    <input type="hidden" th:field="${wingData.wingLength}" />
+                    <input type="hidden" th:field="${wingData.rootChord}" />
+                    <input type="hidden" th:field="${wingData.tipChord}" /> ̰
                     <table>
                         <tr><td>
-                                Aerofoil</td><td>
-                                <select id="rootAerofoilId" name="rootAerofoil">
-                                    <option th:each="aerofoil : ${aerofoilList}" 
-                                            th:value="${aerofoil.getId()}" 
-                                            th:text="${aerofoil.getName()}"></option>
-                                </select>
-                                <!--                            </td></tr><tr><td>
-                                                                Tip Aerofoil</td><td>
-                                                                <select id="tipAerofoilId" name="tipAerofoil">
-                                                                    <option th:each="aerofoil : ${aerofoilList}" 
-                                                                            th:value="${aerofoil.getId()}" 
-                                                                            th:text="${aerofoil.getName()}"></option>
-                                                                </select>-->
-                            </td></tr><tr><td>
                                 View Angle</td><td><input type="number" id="viewAngle" name="viewAngle" th:value="${machineData.getViewAngle()}" />
                             </td></tr><tr><td>
                                 Machine Depth</td><td><input type="number" id="machineDepth" name="machineDepth" th:value="${machineData.getMachineDepth()}" />
@@ -247,18 +228,58 @@ Copyright (C) 2015 Peter Withers
                                 Horizontal Axis 2</td><td><input type="text" maxlength="1" id="horizontalAxis2" name="horizontalAxis2" th:value="${machineData.getHorizontalAxis2()}" />
                             </td></tr><tr><td>
                                 Vertical Axis 2</td><td><input type="text" maxlength="1" id="verticalAxis2" name="verticalAxis2" th:value="${machineData.getVerticalAxis2()}" />
+                            </td></tr><tr><td>       
+                                Diagram Scale</td><td><input type="number" id="diagramScale" name="diagramScale" th:value="${machineData.getDiagramScale()}" />
+                            </td></tr><tr><td>
+                                Cutting Speed</td><td><input type="number" id="cuttingSpeed" name="cuttingSpeed" th:value="${machineData.getCuttingSpeed()}" />
+                            </td></tr><tr><td>
+                                Heater %</td><td><input type="number" id="heaterPercent" name="heaterPercent" th:value="${machineData.getHeaterPercent()}" />
+                            </td></tr><tr><td><button type="reset">Reset</button></td><td><button type="submit" id="saveButton">Update</button>
+                            </td></tr>
+                    </table>
+                </form>
+            </div>
+            <div id="uploadArea">
+                <form method="POST" enctype="multipart/form-data" action="#">
+                    Aerofoil Dat: <input type="file" name="datFile" id="datFile"/><button type="submit" id="uploadButton">Upload</button>
+                </form>
+            </div>
+            <div id="wingSettings">
+                <form id="settingsForm" action="#" th:object="${machineData}" method="get">
+                    <input type="hidden" th:field="${machineData.viewAngle}" />
+                    <input type="hidden" th:field="${machineData.machineDepth}" />
+                    <input type="hidden" th:field="${machineData.machineHeight}" />
+                    <input type="hidden" th:field="${machineData.wireLength}" />
+                    <input type="hidden" th:field="${machineData.initialCutHeight}" />
+                    <input type="hidden" th:field="${machineData.initialCutLength}" />
+                    <input type="hidden" th:field="${machineData.horizontalAxis1}" />
+                    <input type="hidden" th:field="${machineData.verticalAxis1}" />
+                    <input type="hidden" th:field="${machineData.horizontalAxis2}" />
+                    <input type="hidden" th:field="${machineData.verticalAxis2}" />
+                    <input type="hidden" th:field="${machineData.diagramScale}" />
+                    <input type="hidden" th:field="${machineData.cuttingSpeed}" />
+                    <input type="hidden" th:field="${machineData.heaterPercent}" />
+                    <table>
+                        <tr><td>
+                                Aerofoil</td><td>
+                                <select id="rootAerofoilId" name="rootAerofoil">
+                                    <option th:each="aerofoil : ${aerofoilList}" 
+                                            th:value="${aerofoil.getId()}" 
+                                            th:text="${aerofoil.getName()}"></option>
+                                </select>
+                                <!--                            </td></tr><tr><td>
+                                                                Tip Aerofoil</td><td>
+                                                                <select id="tipAerofoilId" name="tipAerofoil">
+                                                                    <option th:each="aerofoil : ${aerofoilList}" 
+                                                                            th:value="${aerofoil.getId()}" 
+                                                                            th:text="${aerofoil.getName()}"></option>
+                                                                </select>-->
                             </td></tr><tr><td>
                                 Wing Length</td><td><input type="number" id="wingLength" name="wingLength" th:value="${wingLength}" />
                             </td></tr><tr><td>
                                 Root Chord</td><td><input type="number" id="rootChord" name="rootChord" th:value="${rootChord}" />
                             </td></tr><tr><td> 
                                 Tip Chord</td><td><input type="number" id="tipChord" name="tipChord" th:value="${tipChord}" />
-                            </td></tr><tr><td> 
-                                Diagram Scale</td><td><input type="number" id="diagramScale" name="diagramScale" th:value="${machineData.getDiagramScale()}" />
-                            </td></tr><tr><td>
-                                Cutting Speed</td><td><input type="number" id="cuttingSpeed" name="cuttingSpeed" th:value="${machineData.getCuttingSpeed()}" />
-                            </td></tr><tr><td>
-                                Heater %</td><td><input type="number" id="heaterPercent" name="heaterPercent" th:value="${machineData.getHeaterPercent()}" />
                             </td></tr><tr><td><button type="reset">Reset</button></td><td><button type="submit" id="saveButton">Update</button>
                             </td></tr>
                     </table>
