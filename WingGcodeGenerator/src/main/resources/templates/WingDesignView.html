@@ -206,7 +206,7 @@ Copyright (C) 2015 Peter Withers
                     <input type="hidden" th:field="${wingData.tipAerofoil}" />
                     <input type="hidden" th:field="${wingData.wingLength}" />
                     <input type="hidden" th:field="${wingData.rootChord}" />
-                    <input type="hidden" th:field="${wingData.tipChord}" /> ̰
+                    <input type="hidden" th:field="${wingData.tipChord}" />
                     <table>
                         <tr><td>
                                 View Angle</td><td><input type="number" id="viewAngle" name="viewAngle" th:value="${machineData.getViewAngle()}" />
@@ -275,11 +275,11 @@ Copyright (C) 2015 Peter Withers
                                                                             th:text="${aerofoil.getName()}"></option>
                                                                 </select>-->
                             </td></tr><tr><td>
-                                Wing Length</td><td><input type="number" id="wingLength" name="wingLength" th:value="${wingLength}" />
+                                Wing Length</td><td><input type="number" id="wingLength" name="wingLength" th:value="${wingData.wingLength}" />
                             </td></tr><tr><td>
-                                Root Chord</td><td><input type="number" id="rootChord" name="rootChord" th:value="${rootChord}" />
+                                Root Chord</td><td><input type="number" id="rootChord" name="rootChord" th:value="${wingData.rootChord}" />
                             </td></tr><tr><td> 
-                                Tip Chord</td><td><input type="number" id="tipChord" name="tipChord" th:value="${tipChord}" />
+                                Tip Chord</td><td><input type="number" id="tipChord" name="tipChord" th:value="${wingData.tipChord}" />
                             </td></tr><tr><td><button type="reset">Reset</button></td><td><button type="submit" id="saveButton">Update</button>
                             </td></tr>
                     </table>
