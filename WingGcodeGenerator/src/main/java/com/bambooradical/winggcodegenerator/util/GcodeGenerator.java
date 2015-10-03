@@ -80,6 +80,26 @@ public class GcodeGenerator {
         return builder.toString();
     }
 
+    public String generateTestGcode(MachineData machineData, int thickness, int startPwm, int endPwm, int startFeed, int endFeed) {
+        StringBuilder builder = new StringBuilder();
+        startGcode(builder);
+        int steps = 50 / thickness;
+        move(builder, 0, 0, 0, 0, machineData);
+        move(builder, 0, 50, 50, 0, machineData);
+        for (int currentStep = 0; currentStep < steps; currentStep++) {
+            int pwm = (((endPwm - startPwm) / steps) * currentStep) + startPwm;
+            int height = 50 - ((50 / steps) * currentStep);
+            setHeat(builder, pwm);
+            move(builder, currentStep % 2 * 50, height, height, currentStep % 2 * 50, machineData);
+            waitForCurrentMovesToFinish(builder);
+        }
+        waitForCurrentMovesToFinish(builder);
+        setHeat(builder, 0);
+        disableSteppers(builder);
+        beep(builder);
+        return builder.toString();
+    }
+
     private void startGcode(StringBuilder builder) {
         builder.append("G21 # M117 Set Units to Millimeters\n");
     }
