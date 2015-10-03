@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Peter Withers
+-->
+
+<!--
+ * @since Oct 3, 2015 10:42:04 PM (creation date)
+ * @author <peter@bambooradical.com>
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Path Editor</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script>
+            var move = function (evt) {
+                if (evt.buttons !== 0) {
+                    event.target.setAttribute('cx', evt.clientX - 5);
+                    event.target.setAttribute('cy', evt.clientY - 5);
+                }
+            }
+            var start = function (evt) {
+                console.log('start dragging');
+            }
+            var stop = function (evt) {
+                console.log('finished dragging');
+            }
+        </script>
+        <style>
+            circle {
+                cursor: move;
+            }
+        </style>
+
+    </head>
+    <body>
+        <svg>
+            <circle id="dragHandle0" cx="30" cy="0" r="10" stroke="none" fill="blue" onmousedown="start(evt)" onmousemove="move(evt)" onmouseup="stop(evt)" onmouseout="move(evt)" />
+            <circle id="dragHandle1" cx="0" cy="0" r="10" stroke="none" fill="blue" onmousedown="start(evt)" onmousemove="move(evt)" onmouseup="stop(evt)" onmouseout="move(evt)" />
+            <circle id="dragHandle2" cx="10" cy="50" r="10" stroke="none" fill="red" onmousedown="start(evt)" onmousemove="move(evt)" onmouseup="stop(evt)" onmouseout="move(evt)" />
+            <circle id="dragHandle3" cx="50" cy="50" r="10" stroke="none" fill="red" onmousedown="start(evt)" onmousemove="move(evt)" onmouseup="stop(evt)" onmouseout="move(evt)" />
+        </svg>
+    </body>
+</html>
