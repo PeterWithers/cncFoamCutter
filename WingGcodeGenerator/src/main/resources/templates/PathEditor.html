@@ -18,6 +18,10 @@ Copyright (C) 2015 Peter Withers
                 if (evt.buttons !== 0) {
                     event.target.setAttribute('cx', evt.clientX - 5);
                     event.target.setAttribute('cy', evt.clientY - 5);
+                    $("#bezierPath").attr('d', 'M' + $("#dragHandle0").attr("cx") + ','+ $("#dragHandle0").attr("cy") +
+                            ' C' + $("#dragHandle1").attr("cx") + ','+ $("#dragHandle1").attr("cy") +
+                            ' ' + $("#dragHandle2").attr("cx") + ','+ $("#dragHandle2").attr("cy") +
+                            ' ' + $("#dragHandle3").attr("cx") + ','+ $("#dragHandle3").attr("cy"));
                 }
             }
             var start = function (evt) {
@@ -36,6 +40,7 @@ Copyright (C) 2015 Peter Withers
     </head>
     <body>
         <svg>
+            <path id="bezierPath" stroke="black" stroke-width="3" fill="none" d="M0,0 C20,10 50,10 50,20"/>
             <circle id="dragHandle0" cx="30" cy="0" r="10" stroke="none" fill="blue" onmousedown="start(evt)" onmousemove="move(evt)" onmouseup="stop(evt)" onmouseout="move(evt)" />
             <circle id="dragHandle1" cx="0" cy="0" r="10" stroke="none" fill="blue" onmousedown="start(evt)" onmousemove="move(evt)" onmouseup="stop(evt)" onmouseout="move(evt)" />
             <circle id="dragHandle2" cx="10" cy="50" r="10" stroke="none" fill="red" onmousedown="start(evt)" onmousemove="move(evt)" onmouseup="stop(evt)" onmouseout="move(evt)" />
