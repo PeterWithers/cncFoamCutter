@@ -288,6 +288,6 @@ Copyright (C) 2015 Peter Withers
         </div>
         <br/>
         <textarea id="gcodeArea" rows="100" cols="100" th:text="${gcode}"></textarea>
-        <div id="footer" th:text="'Aerofoil: ' + ${aerofoilname} + ' | Wing length: ' + ${wingLength} + ' | Root chord: ' + ${rootChord} + ' | Tip chord: ' + ${tipChord}"></div>
+        <div id="footer" th:text="'Aerofoil: ' + ${aerofoilname} + ' | Wing length: ' + ${wingData.wingLength} + ' | Root chord: ' + ${wingData.rootChord} + ' | Tip chord: ' + ${wingData.tipChord}"></div>
     </body>
 </html>
