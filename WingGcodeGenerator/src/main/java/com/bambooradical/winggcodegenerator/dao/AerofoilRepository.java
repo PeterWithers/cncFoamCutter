@@ -1,13 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Copyright (C) 2015 Peter Withers
  */
 
 package com.bambooradical.winggcodegenerator.dao;
 
 import com.bambooradical.winggcodegenerator.model.AerofoilData;
-import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -17,6 +14,4 @@ import org.springframework.data.repository.CrudRepository;
 public interface AerofoilRepository  extends CrudRepository<AerofoilData, Long> {
 
     AerofoilData findByName(String name);
-//    List<String> selectDistinctNameDesc();
-
 }

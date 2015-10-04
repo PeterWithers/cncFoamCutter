@@ -83,6 +83,8 @@ public class WingDesignController {
     public String aerofoilImport(@RequestParam("datFile") MultipartFile datFile, Model model, HttpServletRequest request) throws IOException {
         model.addAttribute("diagramScale", 100);
         final AerofoilData uploadedAerofoil = new AerofoilDatParser().parseFile(datFile);
+        uploadedAerofoil.setAccessDate(new java.util.Date());
+        uploadedAerofoil.setRemoteAddress(request.getRequestURI());
         aerofoilRepository.save(uploadedAerofoil);
         model.addAttribute("rootAerofoilData", uploadedAerofoil.toSvgPoints(0, 1, 100));
         final Bounds rootBounds = uploadedAerofoil.getSvgBounds();

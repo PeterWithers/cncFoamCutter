@@ -3,13 +3,14 @@
  */
 package com.bambooradical.winggcodegenerator.model;
 
-
 import java.util.ArrayList;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.Temporal;
 
 /**
  * @since Aug 17, 2015 9:59:18 PM (creation date)
@@ -21,6 +22,11 @@ public class AerofoilData {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date accessDate;
+    private String remoteAddress;
+    private boolean isBezier = false;
+    private boolean isEditable = false;
     private String name;
     @Lob
     private double[][] points;
@@ -35,6 +41,38 @@ public class AerofoilData {
 
     public long getId() {
         return id;
+    }
+
+    public Date getAccessDate() {
+        return accessDate;
+    }
+
+    public void setAccessDate(Date accessDate) {
+        this.accessDate = accessDate;
+    }
+
+    public String getRemoteAddress() {
+        return remoteAddress;
+    }
+
+    public void setRemoteAddress(String remoteAddress) {
+        this.remoteAddress = remoteAddress;
+    }
+
+    public boolean isIsBezier() {
+        return isBezier;
+    }
+
+    public void setIsBezier(boolean isBezier) {
+        this.isBezier = isBezier;
+    }
+
+    public boolean isIsEditable() {
+        return isEditable;
+    }
+
+    public void setIsEditable(boolean isEditable) {
+        this.isEditable = isEditable;
     }
 
     public double[][] getPoints() {
@@ -89,6 +127,7 @@ public class AerofoilData {
         }
         return builder.toString();
     }
+
     public String toSvgLines(int xOffsetRoot, int yOffsetRoot, int chordRoot, int xOffsetTip, int yOffsetTip, int chordTip) {
         StringBuilder builder = new StringBuilder();
         final ArrayList<double[]> transformedPointsRoot = getTransformedPoints(xOffsetRoot, yOffsetRoot, chordRoot);
