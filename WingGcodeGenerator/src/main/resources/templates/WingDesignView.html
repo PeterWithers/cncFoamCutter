@@ -93,9 +93,10 @@ Copyright (C) 2015 Peter Withers
                 stroke-width: 2; 
             }
             .dragHandle {
-                 stroke: none;
-                 fill: blue; 
-                 cursor: move;
+                stroke-width: 0.1; 
+                stroke: #985cb4;
+                fill: #33024a;
+                cursor: move;
             }
             #footer {
                 color: #bccfe4;
@@ -133,6 +134,7 @@ Copyright (C) 2015 Peter Withers
                     $("#wingSettings").hide();
                     $("#diagram").show();
                     $("#uploadArea").hide();
+                    $("#editPanel").hide();
 //                    event.stopPropagation();
                 });
                 $("#wingButton").click(function () {
@@ -141,6 +143,7 @@ Copyright (C) 2015 Peter Withers
                     $("#wingSettings").show();
                     $("#diagram").show();
                     $("#uploadArea").hide();
+                    $("#editPanel").hide();
 //                    event.stopPropagation();
                 });
                 $("#diagramButton").click(function () {
@@ -149,6 +152,7 @@ Copyright (C) 2015 Peter Withers
                     $("#wingSettings").hide();
                     $("#diagram").show();
                     $("#uploadArea").hide();
+                    $("#editPanel").hide();
                 });
                 $("#gcodeButton").click(function () {
                     $("#gcodeArea").show();
@@ -156,14 +160,25 @@ Copyright (C) 2015 Peter Withers
                     $("#wingSettings").hide();
                     $("#diagram").hide();
                     $("#uploadArea").hide();
+                    $("#editPanel").hide();
                 });
                 $("#addAerofoilButton").click(function () {
                     $("#uploadArea").show();
+                    $("#editPanel").hide();
                     $("#gcodeArea").hide();
                     $("#wingSettings").hide();
                     $("#machineSettings").hide();
                     $("#diagram").show();
                 });
+                $("#editAerofoilButton").click(function () {
+                    $("#uploadArea").hide();
+                    $("#gcodeArea").hide();
+                    $("#wingSettings").hide();
+                    $("#machineSettings").hide();
+                    $("#diagram").hide();
+                    $("#editPanel").show();
+                });
+                $("#editPanel").hide();
                 $("#uploadArea").hide();
                 $("#gcodeArea").hide();
                 $("#wingSettings").hide();
