@@ -16,7 +16,12 @@ Copyright (C) 2015 Peter Withers
     </head>
     <body>
         <div th:fragment="pathEditor">
-            <svg id="editPanel" viewBox="-25 -25 150 50">
+            <div id="pathEditorForm">
+                <form method="POST" action="#">                    
+                    <input type="text" name="datText" id="datText"/><label><input type="checkbox" name="isBezier" id="isBezier" value="isBezier"/>Bezier</label><button type="submit" id="saveButton">Upload</button>
+                </form>
+            </div>
+            <svg id="editSvgPanel" viewBox="-25 -25 150 50">
                 <path class="aerofoilEditLines" id="bezierPath" d="M0,0 C20,10 50,10 50,20"/>
                 <circle class="dragHandle" id="dragHandle0" cx="0" cy="0" r="2" />
                 <circle class="dragHandle" id="dragHandle1" cx="10" cy="10" r="2" onmousedown="start(evt)" onmousemove="move(evt)" onmouseup="stop(evt)" onmouseout="move(evt)" />
@@ -28,17 +33,22 @@ Copyright (C) 2015 Peter Withers
             <script>
                 var move = function (evt) {
                     if (evt.buttons !== 0) {
-                        event.target.setAttribute('cx', (evt.offsetX * 150 / $("#editPanel")[0].clientWidth) - 25);
-                        event.target.setAttribute('cy', (evt.offsetY * 150 / $("#editPanel")[0].clientWidth) - 25);
+                        event.target.setAttribute('cx', (evt.offsetX * 150 / $("#editSvgPanel")[0].clientWidth) - 25);
+                        event.target.setAttribute('cy', (evt.offsetY * 150 / $("#editSvgPanel")[0].clientWidth) - 25);
+                        updatePath();
+                    }
+                }
+                var updatePath = function () {
                         $("#dragHandle3").attr("cx", 100);
-                        $("#bezierPath").attr('d', 'M' + $("#dragHandle0").attr("cx") + ',' + $("#dragHandle0").attr("cy") +
+                        var pathString = 'M' + $("#dragHandle0").attr("cx") + ',' + $("#dragHandle0").attr("cy") +
                                 ' C' + $("#dragHandle1").attr("cx") + ',' + $("#dragHandle1").attr("cy") +
                                 ' ' + $("#dragHandle2").attr("cx") + ',' + $("#dragHandle2").attr("cy") +
                                 ' ' + $("#dragHandle3").attr("cx") + ',' + $("#dragHandle3").attr("cy") +
                                 ' C' + $("#dragHandle4").attr("cx") + ',' + $("#dragHandle4").attr("cy") +
                                 ' ' + $("#dragHandle5").attr("cx") + ',' + $("#dragHandle5").attr("cy") +
-                                ' ' + $("#dragHandle0").attr("cx") + ',' + $("#dragHandle0").attr("cy"));
-                    }
+                                ' ' + $("#dragHandle0").attr("cx") + ',' + $("#dragHandle0").attr("cy")
+                        $("#bezierPath").attr('d', pathString);                    
+                        $("#datText").val(pathString);                    
                 }
                 var start = function (evt) {
                     console.log('start dragging');
@@ -46,6 +56,7 @@ Copyright (C) 2015 Peter Withers
                 var stop = function (evt) {
                     console.log('finished dragging');
                 }
+                updatePath();
             </script>
         </div>
     </body>
