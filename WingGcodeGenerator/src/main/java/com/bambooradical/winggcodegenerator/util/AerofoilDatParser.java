@@ -16,6 +16,21 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public class AerofoilDatParser {
 
+    public AerofoilData parseString(final String datText, final String aerofoilName) throws IOException, NumberFormatException {
+        final ArrayList<double[]> dataPoints = new ArrayList<>();
+        for (String pointString : datText.split(" ")) {
+            pointString = pointString.replaceAll("[^0-9\\.,-]+", "");
+            final String[] splitLine = pointString.trim().split(",");
+            if (splitLine.length != 2) {
+                break;
+            }
+            final double xPoint = Double.parseDouble(splitLine[0]);
+            final double yPoint = Double.parseDouble(splitLine[1]);
+            dataPoints.add(new double[]{xPoint, yPoint});
+        }
+        return new AerofoilData(aerofoilName, dataPoints.toArray(new double[][]{}));
+    }
+
     public AerofoilData parseFile(final MultipartFile datFile) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(datFile.getInputStream()));
         final String aerofoilName = reader.readLine();

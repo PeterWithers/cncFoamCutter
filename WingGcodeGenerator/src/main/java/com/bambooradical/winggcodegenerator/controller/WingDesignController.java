@@ -96,6 +96,22 @@ public class WingDesignController {
         return "redirect:" + referer;
     }
 
+    @RequestMapping(value = "/saveAerofoil", method = RequestMethod.POST)
+    public String aerofoilSave(@RequestParam("datText") String datText,
+            @RequestParam(value = "aerofoilName", required = true) final String aerofoilName,
+            @RequestParam(value = "isBezier", required = false, defaultValue = "false") final boolean isBezier,
+            @RequestParam(value = "isBezier", required = false, defaultValue = "false") final boolean isEditable,
+            HttpServletRequest request) throws IOException {
+        final AerofoilData uploadedAerofoil = new AerofoilDatParser().parseString(datText, aerofoilName);
+        uploadedAerofoil.setAccessDate(new java.util.Date());
+        uploadedAerofoil.setRemoteAddress(request.getRequestURI());
+        uploadedAerofoil.setIsEditable(isEditable);
+        uploadedAerofoil.setIsBezier(isBezier);
+        aerofoilRepository.save(uploadedAerofoil);
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
+    }
+
     @RequestMapping(value = "/download",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})

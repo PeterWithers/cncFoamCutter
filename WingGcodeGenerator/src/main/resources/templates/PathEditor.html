@@ -17,8 +17,12 @@ Copyright (C) 2015 Peter Withers
     <body>
         <div th:fragment="pathEditor">
             <div id="pathEditorForm">
-                <form method="POST" action="#">                    
-                    <input type="text" name="datText" id="datText"/><label><input type="checkbox" onchange="updatePath()" checked="true" name="isBezier" id="isBezier" value="isBezier"/>Bezier</label><button type="submit" id="saveButton">Upload</button>
+                <form method="POST" action="#" th:action="@{/saveAerofoil}">                    
+                    <input type="text" name="datText" id="datText"/>
+                    <label><input type="text" name="aerofoilName" id="aerofoilName"/>Aerofoil Name</label>
+                    <label><input type="checkbox" onchange="updatePath()" checked="true" name="isEditable" id="isEditable" value="true"/>Editable</label>
+                    <label><input type="checkbox" onchange="updatePath()" checked="true" name="isBezier" id="isBezier" value="true"/>Bezier</label>
+                    <button type="submit" id="saveButton">Upload</button>
                 </form>
             </div>
             <svg id="editSvgPanel" viewBox="-25 -25 150 50"  onmousemove="move(evt)">
@@ -52,9 +56,16 @@ Copyright (C) 2015 Peter Withers
                             ' ' + $("#dragHandle3").attr("cx") + ',' + $("#dragHandle3").attr("cy") +
                             ' ' + pathType + $("#dragHandle4").attr("cx") + ',' + $("#dragHandle4").attr("cy") +
                             ' ' + $("#dragHandle5").attr("cx") + ',' + $("#dragHandle5").attr("cy") +
-                            ' ' + $("#dragHandle0").attr("cx") + ',' + $("#dragHandle0").attr("cy")
+                            ' ' + $("#dragHandle0").attr("cx") + ',' + $("#dragHandle0").attr("cy");
                     $("#bezierPath").attr('d', pathString);
-                    $("#datText").val(pathString);
+                    var tabString = (100 - $("#dragHandle0").attr("cx")) / 100 + ',' + (100 - $("#dragHandle0").attr("cy")) / 100 +
+                            ' ' + (100 - $("#dragHandle1").attr("cx")) / 100 + ',' + (100 - $("#dragHandle1").attr("cy")) / 100 +
+                            ' ' + (100 - $("#dragHandle2").attr("cx")) / 100 + ',' + (100 - $("#dragHandle2").attr("cy")) / 100 +
+                            ' ' + (100 - $("#dragHandle3").attr("cx")) / 100 + ',' + (100 - $("#dragHandle3").attr("cy")) / 100 +
+                            ' ' + (100 - $("#dragHandle4").attr("cx")) / 100 + ',' + (100 - $("#dragHandle4").attr("cy")) / 100 +
+                            ' ' + (100 - $("#dragHandle5").attr("cx")) / 100 + ',' + (100 - $("#dragHandle5").attr("cy")) / 100 +
+                            ' ' + (100 - $("#dragHandle0").attr("cx")) / 100 + ',' + (100 - $("#dragHandle0").attr("cy")) / 100;                    
+                    $("#datText").val(tabString);
                 }
                 var start = function (evt) {
                     targetHandle = event.target;
