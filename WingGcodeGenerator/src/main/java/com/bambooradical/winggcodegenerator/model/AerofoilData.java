@@ -92,9 +92,9 @@ public class AerofoilData {
     }
 
 //    @Transient
-    public ArrayList<double[]> getTransformedPoints(int xOffset, int yOffset, int chord) {
+    public ArrayList<double[]> getTransformedPoints(int xOffset, int yOffset, int chord, int sweep) {
         ArrayList<double[]> transformedPoints = new ArrayList<>();
-        final double initialX = points[0][0];
+        final double initialX = points[0][0] + (sweep / chord);
         final double initialY = points[0][1];
         if (isBezier != null && isBezier) {
             // linear
@@ -163,9 +163,9 @@ public class AerofoilData {
     }
 
 //    @Transient
-    public String toSvgPoints(int xOffset, int yOffset, int chord) {
+    public String toSvgPoints(int xOffset, int yOffset, int chord, int sweep) {
         StringBuilder builder = new StringBuilder();
-        for (double[] currentPoint : getTransformedPoints(xOffset, yOffset, chord)) {
+        for (double[] currentPoint : getTransformedPoints(xOffset, yOffset, chord, sweep)) {
             builder.append(currentPoint[0]);
             builder.append(",");
             builder.append(currentPoint[1]);
@@ -174,10 +174,10 @@ public class AerofoilData {
         return builder.toString();
     }
 
-    public String toSvgLines(int xOffsetRoot, int yOffsetRoot, int chordRoot, int xOffsetTip, int yOffsetTip, int chordTip) {
+    public String toSvgLines(int xOffsetRoot, int yOffsetRoot, int chordRoot, int xOffsetTip, int yOffsetTip, int chordTip, int sweep) {
         StringBuilder builder = new StringBuilder();
-        final ArrayList<double[]> transformedPointsRoot = getTransformedPoints(xOffsetRoot, yOffsetRoot, chordRoot);
-        final ArrayList<double[]> transformedPointsTip = getTransformedPoints(xOffsetTip, yOffsetTip, chordTip);
+        final ArrayList<double[]> transformedPointsRoot = getTransformedPoints(xOffsetRoot, yOffsetRoot, chordRoot, 0);
+        final ArrayList<double[]> transformedPointsTip = getTransformedPoints(xOffsetTip, yOffsetTip, chordTip, sweep);
         for (int index = 0; index < transformedPointsRoot.size(); index++) {
             builder.append(transformedPointsRoot.get(index)[0]);
             builder.append(",");

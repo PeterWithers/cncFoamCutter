@@ -14,6 +14,8 @@ public class WingData {
     private int wingLength = 120;
     private long rootAerofoil = 1;
     private long tipAerofoil = 1;
+    private int tipSweep = 0;
+    private int tipWash = 0;
 
     public int getRootChord() {
         return rootChord;
@@ -54,4 +56,20 @@ public class WingData {
     public void setTipAerofoil(long tipAerofoil) {
         this.tipAerofoil = tipAerofoil;
     }
+
+    public int getTipSweep() {
+        return tipSweep;
+    }
+
+    public void setTipSweep(int tipSweep) {
+        this.tipSweep = tipSweep;
+    }
+
+    public int getTipWash() {
+        return tipWash;
+    }
+
+    public void setTipWash(int tipWash) {
+        this.tipWash = tipWash;
+    }   
 }

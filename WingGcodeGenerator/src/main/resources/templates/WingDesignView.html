@@ -296,7 +296,8 @@ Copyright (C) 2015 Peter Withers
                                 <select id="rootAerofoilId" name="rootAerofoil">
                                     <option th:each="aerofoil : ${aerofoilList}" 
                                             th:value="${aerofoil.getId()}" 
-                                            th:text="${aerofoil.getName()}"></option>
+                                            th:text="${aerofoil.getName()}"
+                                            th:selected="${aerofoil.getId()==aerofoilid}"></option>
                                 </select>
                                 <!--                            </td></tr><tr><td>
                                                                 Tip Aerofoil</td><td>
@@ -306,11 +307,22 @@ Copyright (C) 2015 Peter Withers
                                                                             th:text="${aerofoil.getName()}"></option>
                                                                 </select>-->
                             </td></tr><tr><td>
+                                Bed Alignment</td><td>
+                                <select id="bedAlignment" name="bedAlignment">
+                                    <option value="left">left</option>
+                                    <option value="centre">centre</option>
+                                    <option value="right">right</option>
+                                </select>
+                            </td></tr><tr><td>
                                 Wing Length</td><td><input type="number" id="wingLength" name="wingLength" th:value="${wingData.wingLength}" />
                             </td></tr><tr><td>
                                 Root Chord</td><td><input type="number" id="rootChord" name="rootChord" th:value="${wingData.rootChord}" />
                             </td></tr><tr><td> 
                                 Tip Chord</td><td><input type="number" id="tipChord" name="tipChord" th:value="${wingData.tipChord}" />
+                            </td></tr><tr><td> 
+                                Sweep</td><td><input type="number" id="tipSweep" name="tipSweep" th:value="${wingData.tipSweep}" />
+                            </td></tr><tr><td> 
+                                Wash</td><td><input type="number" id="tipWash" name="tipWash" th:value="${wingData.tipWash}" />
                             </td></tr><tr><td><button type="reset">Reset</button></td><td><button type="submit" id="saveButton">Update</button>
                             </td></tr>
                     </table>

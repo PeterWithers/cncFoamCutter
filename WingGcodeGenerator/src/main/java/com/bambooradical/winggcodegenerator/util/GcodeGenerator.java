@@ -16,9 +16,9 @@ public class GcodeGenerator {
     ArrayList<double[]> xYpath;
     ArrayList<double[]> zEpath;
 
-    public GcodeGenerator(AerofoilData aerofoilDataRoot, final int rootChord, AerofoilData aerofoilDataTip, final int tipGcodeChord, int machineHeight, int initialCutHeight, int initialCutLength) {
-        xYpath = aerofoilDataRoot.getTransformedPoints(initialCutLength, machineHeight - initialCutHeight, rootChord);
-        zEpath = aerofoilDataTip.getTransformedPoints(initialCutLength, machineHeight - initialCutHeight, tipGcodeChord);
+    public GcodeGenerator(AerofoilData aerofoilDataRoot, final int rootChord, AerofoilData aerofoilDataTip, final int tipGcodeChord, int tipGcodeSweep, int machineHeight, int initialCutHeight, int initialCutLength) {
+        xYpath = aerofoilDataRoot.getTransformedPoints(initialCutLength, machineHeight - initialCutHeight, rootChord, 0);
+        zEpath = aerofoilDataTip.getTransformedPoints(initialCutLength, machineHeight - initialCutHeight, tipGcodeChord, tipGcodeSweep);
         xYpath.add(0, new double[]{0, 0});
         zEpath.add(0, new double[]{0, 0});
         xYpath.add(1, new double[]{0, machineHeight - initialCutHeight});
