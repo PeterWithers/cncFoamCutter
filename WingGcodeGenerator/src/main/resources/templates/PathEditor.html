@@ -19,22 +19,22 @@ Copyright (C) 2015 Peter Withers
             <div id="pathEditorForm">
                 <form method="POST" action="#" th:action="@{/saveAerofoil}">                    
                     <input type="text" name="datText" id="datText"/>
-                    <label><input type="text" name="aerofoilName" id="aerofoilName"/>Aerofoil Name</label>
+                    <label>Aerofoil Name<input type="text" name="aerofoilName" id="aerofoilName" /></label>
                     <label><input type="checkbox" onchange="updatePath()" checked="true" name="isEditable" id="isEditable" value="true"/>Editable</label>
                     <label><input type="checkbox" onchange="updatePath()" checked="true" name="isBezier" id="isBezier" value="true"/>Bezier</label>
-                    <button type="submit" id="saveButton">Upload</button>
+                    <button type="submit" id="saveButton">Save</button>
                 </form>
             </div>
-            <svg id="editSvgPanel" viewBox="-25 -25 150 50"  onmousemove="move(evt)">
-                <path class="aerofoilEditLines" id="bezierPath" d="M0,0 C20,10 50,10 50,20"/>
-                <circle class="dragHandle" id="dragHandle0" cx="0" cy="0" r="2" />
-                <circle class="dragHandle" id="dragHandle1" cx="10" cy="10" r="2" onmousedown="start(evt)" />
-                <circle class="dragHandle" id="dragHandle2" cx="90" cy="-10" r="2" onmousedown="start(evt)" />
-                <circle class="dragHandle" id="dragHandle3" cx="100" cy="0" r="2" onmousedown="start(evt)" />
-                <circle class="dragHandle" id="dragHandle4" cx="90" cy="10" r="2" onmousedown="start(evt)" />
-                <circle class="dragHandle" id="dragHandle5" cx="10" cy="10" r="2" onmousedown="start(evt)" />
+            <svg id="editSvgPanel" viewBox="-25 -25 150 50"  onmousemove="move(evt)"><!--touchmove="touchMove(evt)" touchend="stop(evt)"-->
+                <path class="aerofoilEditLines" id="bezierPath" d="M0,0 C10,10 90,-10 100,0 90,10 10,10"/>
+                <!--<circle class="dragHandle" id="dragHandle0" cx="0" cy="0" r="2" />-->
+                <circle th:each="pointXY, loopstatus : ${defaultAerofoilPoints}" class="dragHandle" th:id="${loopstatus.count == 1? 'dragHandleStart' : loopstatus.count == defaultAerofoilPoints.length/2+1 ? 'dragHandleMid' : 'dragHandle'+(loopstatus.count-1)}" th:attr="cx=${pointXY[0]}, cy=${pointXY[1]}" r="2" onmousedown="start(evt)"/>
+                <!--<circle class="dragHandle" id="dragHandle2" cx="90" cy="-10" r="2" onmousedown="start(evt)" touchstart="start(evt)" />-->
+                <!--<circle class="dragHandle" id="dragHandle3" cx="100" cy="0" r="2" onmousedown="start(evt)" touchstart="start(evt)" />-->
+                <!--<circle class="dragHandle" id="dragHandle4" cx="90" cy="10" r="2" onmousedown="start(evt)" touchstart="start(evt)" />-->
+                <!--<circle class="dragHandle" id="dragHandle5" cx="10" cy="10" r="2" onmousedown="start(evt)" touchstart="start(evt)" />-->
             </svg>
-            <script>
+            <script th:inline="javascript">
                 var targetHandle = null;
                 var move = function (evt) {
                     if (targetHandle !== null) {
@@ -47,8 +47,18 @@ Copyright (C) 2015 Peter Withers
                         }
                     }
                 }
+//                var touchMove = function (evt) {
+//                    if (targetHandle !== null) {
+//                        targetHandle.setAttribute('cx', ((evt.touches[0].pageX - $("#editSvgPanel")[0].clientX) * 150 / $("#editSvgPanel")[0].clientWidth) - 25);
+//                        targetHandle.setAttribute('cy', ((evt.touches[0].pageY - $("#editSvgPanel")[0].clientY) * 150 / $("#editSvgPanel")[0].clientWidth) - 25);
+//                        updatePath();
+//                        evt.preventDefault();
+//                    }
+//                }
                 var updatePath = function () {
-                    $("#dragHandle3").attr("cx", 100);
+                    $("#dragHandleStart").attr("cx", 0);
+                    $("#dragHandleStart").attr("cy", 0);
+                    $("#dragHandleMid").attr("cx", 100);
                     var pathType = ($("#isBezier").prop('checked')) ? "C" : "";
                     var pathString = 'M' + $("#dragHandle0").attr("cx") + ',' + $("#dragHandle0").attr("cy") +
                             ' ' + pathType + $("#dragHandle1").attr("cx") + ',' + $("#dragHandle1").attr("cy") +
@@ -64,12 +74,16 @@ Copyright (C) 2015 Peter Withers
                             ' ' + (100 - $("#dragHandle3").attr("cx")) / 100 + ',' + (100 - $("#dragHandle3").attr("cy")) / 100 +
                             ' ' + (100 - $("#dragHandle4").attr("cx")) / 100 + ',' + (100 - $("#dragHandle4").attr("cy")) / 100 +
                             ' ' + (100 - $("#dragHandle5").attr("cx")) / 100 + ',' + (100 - $("#dragHandle5").attr("cy")) / 100 +
-                            ' ' + (100 - $("#dragHandle0").attr("cx")) / 100 + ',' + (100 - $("#dragHandle0").attr("cy")) / 100;                    
+                            ' ' + (100 - $("#dragHandle0").attr("cx")) / 100 + ',' + (100 - $("#dragHandle0").attr("cy")) / 100;
                     $("#datText").val(tabString);
                 }
                 var start = function (evt) {
-                    targetHandle = event.target;
+                    targetHandle = evt.target;
+//                    evt.preventDefault();
                 }
+//                var stop = function (evt) {
+//                    targetHandle = null;
+//                }
                 updatePath();
             </script>
         </div>
