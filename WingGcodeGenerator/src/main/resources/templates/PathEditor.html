@@ -60,21 +60,22 @@ Copyright (C) 2015 Peter Withers
                     $("#dragHandleStart").attr("cy", 0);
                     $("#dragHandleMid").attr("cx", 100);
                     var pathType = ($("#isBezier").prop('checked')) ? "C" : "";
-                    var pathString = 'M' + $("#dragHandle0").attr("cx") + ',' + $("#dragHandle0").attr("cy") +
-                            ' ' + pathType + $("#dragHandle1").attr("cx") + ',' + $("#dragHandle1").attr("cy") +
-                            ' ' + $("#dragHandle2").attr("cx") + ',' + $("#dragHandle2").attr("cy") +
-                            ' ' + $("#dragHandle3").attr("cx") + ',' + $("#dragHandle3").attr("cy") +
-                            ' ' + pathType + $("#dragHandle4").attr("cx") + ',' + $("#dragHandle4").attr("cy") +
-                            ' ' + $("#dragHandle5").attr("cx") + ',' + $("#dragHandle5").attr("cy") +
-                            ' ' + $("#dragHandle0").attr("cx") + ',' + $("#dragHandle0").attr("cy");
+                    var pathString = 'M';
+                    $(".dragHandle").each(function () {
+                        pathString += $(this).attr("cx") + ',' + $(this).attr("cy") + ' ';
+                    });
+//                            ' ' + pathType + $("#dragHandle1").attr("cx") + ',' + $("#dragHandle1").attr("cy") +
+//                            ' ' + $("#dragHandle2").attr("cx") + ',' + $("#dragHandle2").attr("cy") +
+//                            ' ' + $("#dragHandle3").attr("cx") + ',' + $("#dragHandle3").attr("cy") +
+//                            ' ' + pathType + $("#dragHandle4").attr("cx") + ',' + $("#dragHandle4").attr("cy") +
+//                            ' ' + $("#dragHandle5").attr("cx") + ',' + $("#dragHandle5").attr("cy") +
+                    pathString += $("#dragHandleStart").attr("cx") + ',' + $("#dragHandleStart").attr("cy");
                     $("#bezierPath").attr('d', pathString);
-                    var tabString = (100 - $("#dragHandle0").attr("cx")) / 100 + ',' + (100 - $("#dragHandle0").attr("cy")) / 100 +
-                            ' ' + (100 - $("#dragHandle1").attr("cx")) / 100 + ',' + (100 - $("#dragHandle1").attr("cy")) / 100 +
-                            ' ' + (100 - $("#dragHandle2").attr("cx")) / 100 + ',' + (100 - $("#dragHandle2").attr("cy")) / 100 +
-                            ' ' + (100 - $("#dragHandle3").attr("cx")) / 100 + ',' + (100 - $("#dragHandle3").attr("cy")) / 100 +
-                            ' ' + (100 - $("#dragHandle4").attr("cx")) / 100 + ',' + (100 - $("#dragHandle4").attr("cy")) / 100 +
-                            ' ' + (100 - $("#dragHandle5").attr("cx")) / 100 + ',' + (100 - $("#dragHandle5").attr("cy")) / 100 +
-                            ' ' + (100 - $("#dragHandle0").attr("cx")) / 100 + ',' + (100 - $("#dragHandle0").attr("cy")) / 100;
+                    var tabString = "";
+                    $(".dragHandle").each(function () {
+                        tabString += (100 - $(this).attr("cx")) / 100 + ',' + (100 - $(this).attr("cy")) / 100 + ' ';
+                    });
+                    tabString += (100 - $("#dragHandleStart").attr("cx")) / 100 + ',' + (100 - $("#dragHandleStart").attr("cy")) / 100;
                     $("#datText").val(tabString);
                 }
                 var start = function (evt) {
