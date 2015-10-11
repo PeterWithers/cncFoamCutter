@@ -33,6 +33,7 @@ public class MachineData {
     private int initialCutHeight = 50;
     private int initialCutLength = 10;
     private int diagramScale = 100;
+    private int bedAlignment = 0; // positive values are aligned left offset by the value, nevative values are aligned right offset by the value, zero centre aligns with no offset
 
     public int getCuttingSpeed() {
         return cuttingSpeed;
@@ -175,6 +176,14 @@ public class MachineData {
 
     public void setDiagramScale(int diagramScale) {
         this.diagramScale = diagramScale;
+    }
+
+    public int getBedAlignment() {
+        return bedAlignment;
+    }
+
+    public void setBedAlignment(int bedAlignment) {
+        this.bedAlignment = bedAlignment;
     }
 
     public String toSvgPoints() {
