@@ -221,7 +221,7 @@ Copyright (C) 2015 Peter Withers
                 <text class="machineLabels" th:attr="x=${machineData.getVerticalAxis2SvgPointX() - 15}, y=${machineData.getVerticalAxis2SvgPointY()}" th:text="${machineData.getVerticalAxis2()}">Q</text>
                 <polyline class="aerofoilShapes" th:attr="points=${rootAerofoilData}" />
                 <polyline class="aerofoilLines" th:attr="points=${wingLinesData}" />
-                <polyline class="aerofoilShapes" th:attr="points=${tipAerofoilData}" />
+                <polyline class="aerofoilShapes" th:attr="points=${tipAerofoilSvg}" />
                 <polyline class="ncPathLines" th:attr="points=${gcodeXY}" stroke-dasharray="20,10,5,5,5,10">
                     <animate attributeName="stroke-dashoffset" from="55" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
                 </polyline>
@@ -297,7 +297,7 @@ Copyright (C) 2015 Peter Withers
                                     <option th:each="aerofoil : ${aerofoilList}" 
                                             th:value="${aerofoil.getId()}" 
                                             th:text="${aerofoil.getName()}"
-                                            th:selected="${aerofoil.getId()==aerofoilid}"></option>
+                                            th:selected="${aerofoil.getId()==rootAerofoilData.getId()}"></option>
                                 </select>
                                 <!--                            </td></tr><tr><td>
                                                                 Tip Aerofoil</td><td>
@@ -332,6 +332,6 @@ Copyright (C) 2015 Peter Withers
         </div>
         <br/>
         <textarea id="gcodeArea" rows="100" cols="100" th:text="${gcode}"></textarea>
-        <div id="footer" th:text="'Aerofoil: ' + ${aerofoilname} + ' | Wing length: ' + ${wingData.wingLength} + ' | Root chord: ' + ${wingData.rootChord} + ' | Tip chord: ' + ${wingData.tipChord}"></div>
+        <div id="footer" th:text="'Aerofoil: ' + ${tipAerofoilData.getName()} + ' | Wing length: ' + ${wingData.wingLength} + ' | Root chord: ' + ${wingData.rootChord} + ' | Tip chord: ' + ${wingData.tipChord}"></div>
     </body>
 </html>
