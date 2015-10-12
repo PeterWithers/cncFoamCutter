@@ -41,6 +41,24 @@ public class WingDesignController {
     @Autowired
     AccessDataRepository accessDataRepository;
 
+//    @RequestMapping("/update")
+//    public String update() {
+//        int updateCount = 0;
+//        for (AerofoilData aerofoilData : aerofoilRepository.findAll()) {
+//            if (aerofoilData.isBezier() == null) {
+//                aerofoilData.setBezier(false);
+//                updateCount++;
+//                aerofoilRepository.save(aerofoilData);
+//            }
+//            if (aerofoilData.isEditable() == null) {
+//                aerofoilData.setEditable(false);
+//                updateCount++;
+//                aerofoilRepository.save(aerofoilData);
+//            }
+//        }
+//        return "updated: " + updateCount;
+//    }
+
     @RequestMapping("/WingDesignView")
     public String designView(
             @ModelAttribute MachineData machineData,
@@ -108,8 +126,8 @@ public class WingDesignController {
         final AerofoilData uploadedAerofoil = new AerofoilDatParser().parseString(datText, aerofoilName);
         uploadedAerofoil.setAccessDate(new java.util.Date());
         uploadedAerofoil.setRemoteAddress(request.getRequestURI());
-        uploadedAerofoil.setIsEditable(isEditable);
-        uploadedAerofoil.setIsBezier(isBezier);
+        uploadedAerofoil.setEditable(isEditable);
+        uploadedAerofoil.setBezier(isBezier);
         aerofoilRepository.save(uploadedAerofoil);
         String referer = request.getHeader("Referer");
         return "redirect:" + referer;
