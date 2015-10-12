@@ -65,10 +65,10 @@ public class WingDesignController {
             tipAerofoilData = new AerofoilDataAG36();
         }
         model.addAttribute("aerofoilList", aerofoilRepository.findAll());
-        model.addAttribute("aerofoilname", tipAerofoilData.getName());
-        model.addAttribute("aerofoilid", tipAerofoilData.getId());
+        model.addAttribute("rootAerofoilData", rootAerofoilData);
+        model.addAttribute("tipAerofoilData", tipAerofoilData);
         float percentOfWire = (float) wingData.getWingLength() / machineData.getWireLength();
-        model.addAttribute("tipAerofoilData", tipAerofoilData.toSvgPoints(machineData.getInitialCutLength() + (int) (machineData.getViewAngle() * percentOfWire), (int) ((machineData.getMachineHeight() - machineData.getInitialCutHeight()) + (machineData.getWireLength() - machineData.getViewAngle()) * (percentOfWire)), wingData.getTipChord(), wingData.getTipSweep()));
+        model.addAttribute("tipAerofoilSvg", tipAerofoilData.toSvgPoints(machineData.getInitialCutLength() + (int) (machineData.getViewAngle() * percentOfWire), (int) ((machineData.getMachineHeight() - machineData.getInitialCutHeight()) + (machineData.getWireLength() - machineData.getViewAngle()) * (percentOfWire)), wingData.getTipChord(), wingData.getTipSweep()));
         model.addAttribute("wingLinesData", tipAerofoilData.toSvgLines(machineData.getInitialCutLength(), machineData.getMachineHeight() - machineData.getInitialCutHeight(), wingData.getRootChord(), machineData.getInitialCutLength() + (int) (machineData.getViewAngle() * percentOfWire), (int) ((machineData.getMachineHeight() - machineData.getInitialCutHeight()) + (machineData.getWireLength() - machineData.getViewAngle()) * (percentOfWire)), wingData.getTipChord(), wingData.getTipSweep()));
         final Bounds svgBounds = machineData.getSvgBounds();
         model.addAttribute("svgbounds", svgBounds.getMinX() + " " + svgBounds.getMinY() + " " + svgBounds.getWidth() + " " + svgBounds.getHeight());
@@ -99,9 +99,11 @@ public class WingDesignController {
 
     @RequestMapping(value = "/saveAerofoil", method = RequestMethod.POST)
     public String aerofoilSave(@RequestParam("datText") String datText,
-            @RequestParam(value = "aerofoilName", required = true) final String aerofoilName,
+            @RequestParam(value = "name", required = true) final String aerofoilName,
+            @RequestParam(value = "id", required = false, defaultValue = "-1") final long id,
             @RequestParam(value = "isBezier", required = false, defaultValue = "false") final boolean isBezier,
             @RequestParam(value = "isBezier", required = false, defaultValue = "false") final boolean isEditable,
+            @RequestParam(value = "saveCopy", required = false, defaultValue = "false") final boolean saveCopy,
             HttpServletRequest request) throws IOException {
         final AerofoilData uploadedAerofoil = new AerofoilDatParser().parseString(datText, aerofoilName);
         uploadedAerofoil.setAccessDate(new java.util.Date());
