@@ -19,7 +19,7 @@ public class AerofoilDatParser {
     public AerofoilData parseString(final String datText, final String aerofoilName) throws IOException, NumberFormatException {
         final ArrayList<double[]> dataPoints = new ArrayList<>();
         for (String pointString : datText.split(" ")) {
-            pointString = pointString.replaceAll("[^0-9\\.,-]+", "");
+            pointString = pointString.replaceAll("[^0-9\\.,-e]+", "");
             final String[] splitLine = pointString.trim().split(",");
             if (splitLine.length != 2) {
                 break;
