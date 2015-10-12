@@ -17,18 +17,20 @@ Copyright (C) 2015 Peter Withers
     <body>
         <div th:fragment="pathEditor">
             <div id="pathEditorForm">
-                <form method="POST" action="#" th:action="@{/saveAerofoil}">                    
+                <form th:object="${tipAerofoilData}" method="POST" action="#" th:action="@{/saveAerofoil}">                    
                     <input type="text" name="datText" id="datText"/>
-                    <label>Aerofoil Name<input type="text" name="aerofoilName" id="aerofoilName" /></label>
-                    <label><input type="checkbox" onchange="updatePath()" checked="true" name="isEditable" id="isEditable" value="true"/>Editable</label>
-                    <label><input type="checkbox" onchange="updatePath()" checked="true" name="isBezier" id="isBezier" value="true"/>Bezier</label>
+                    <label>Aerofoil Name<input type="text" th:field="*{name}" /></label>
+                    <label><input type="number" th:field="*{id}" />ID</label>
+                    <label><input type="checkbox" onchange="updatePath()" th:field="*{isEditable}" />Editable</label>
+                    <label><input type="checkbox" onchange="updatePath()" th:field="*{isBezier}" />Bezier</label>
+                    <label><input type="checkbox" checked="true" name="saveCopy" id="saveCopy" value="true"/>Save Copy</label>
                     <button type="submit" id="saveButton">Save</button>
                 </form>
             </div>
             <svg id="editSvgPanel" viewBox="-25 -25 150 50"  onmousemove="move(evt)"><!--touchmove="touchMove(evt)" touchend="stop(evt)"-->
                 <path class="aerofoilEditLines" id="bezierPath" d="M0,0"/>
                 <!--<circle class="dragHandle" id="dragHandle0" cx="0" cy="0" r="2" />-->
-                <circle th:each="pointXY, loopstatus : ${defaultAerofoilPoints}" class="dragHandle" th:id="${loopstatus.count == 1? 'dragHandleStart' : loopstatus.count == defaultAerofoilPoints.length/2+1 ? 'dragHandleMid' : 'dragHandle'+(loopstatus.count-1)}" th:attr="cx=${pointXY[0]}, cy=${pointXY[1]}" r="2" onmousedown="start(evt)"/>
+                <circle th:each="pointXY, loopstatus : ${tipAerofoilData.getPoints()}" class="dragHandle" th:id="${loopstatus.count == 1? 'dragHandleStart' : loopstatus.count == tipAerofoilData.getPoints().length/2+1 ? 'dragHandleMid' : 'dragHandle'+(loopstatus.count-1)}" th:attr="cx=${(1.0-pointXY[0])*100}, cy=${(1-pointXY[1])*100-100}" r="2" onmousedown="start(evt)"/>
                 <!--<circle class="dragHandle" id="dragHandle2" cx="90" cy="-10" r="2" onmousedown="start(evt)" touchstart="start(evt)" />-->
                 <!--<circle class="dragHandle" id="dragHandle3" cx="100" cy="0" r="2" onmousedown="start(evt)" touchstart="start(evt)" />-->
                 <!--<circle class="dragHandle" id="dragHandle4" cx="90" cy="10" r="2" onmousedown="start(evt)" touchstart="start(evt)" />-->
@@ -79,7 +81,7 @@ Copyright (C) 2015 Peter Withers
                     $("#bezierPath").attr('d', pathString);
                     var tabString = "";
                     $(".dragHandle").each(function () {
-                        tabString += (100 - $(this).attr("cx")) / 100 + ',' + (100 - $(this).attr("cy")) / 100 + ' ';
+                        tabString += (100 - $(this).attr("cx")) / 100 + ',' + (((100 - $(this).attr("cy")) / 100) - 1.0) + ' ';
                     });
                     tabString += (100 - $("#dragHandleStart").attr("cx")) / 100 + ',' + (100 - $("#dragHandleStart").attr("cy")) / 100;
                     $("#datText").val(tabString);
