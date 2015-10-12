@@ -25,8 +25,8 @@ public class AerofoilData {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date accessDate;
     private String remoteAddress;
-    private Boolean isBezier = false;
-    private Boolean isEditable = false;
+    private boolean isBezier = false;
+    private boolean isEditable = false;
     private String name;
     @Lob
     private double[][] points;
@@ -59,19 +59,19 @@ public class AerofoilData {
         this.remoteAddress = remoteAddress;
     }
 
-    public boolean isIsBezier() {
+    public boolean isBezier() {
         return isBezier;
     }
 
-    public void setIsBezier(boolean isBezier) {
+    public void setBezier(boolean isBezier) {
         this.isBezier = isBezier;
     }
 
-    public boolean isIsEditable() {
+    public boolean isEditable() {
         return isEditable;
     }
 
-    public void setIsEditable(boolean isEditable) {
+    public void setEditable(boolean isEditable) {
         this.isEditable = isEditable;
     }
 
@@ -96,7 +96,7 @@ public class AerofoilData {
         ArrayList<double[]> transformedPoints = new ArrayList<>();
         final double initialX = points[0][0] + (sweep / chord);
         final double initialY = points[0][1];
-        if (isBezier != null && isBezier) {
+        if (isBezier) {
             // linear
 //            for (int index = points.length - 1; index > 0; index -= 1) {
 //                final double xP0 = points[index - 0][0];
