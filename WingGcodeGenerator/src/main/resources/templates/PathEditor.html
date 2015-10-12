@@ -83,7 +83,7 @@ Copyright (C) 2015 Peter Withers
                     $(".dragHandle").each(function () {
                         tabString += (100 - $(this).attr("cx")) / 100 + ',' + (((100 - $(this).attr("cy")) / 100) - 1.0) + ' ';
                     });
-                    tabString += (100 - $("#dragHandleStart").attr("cx")) / 100 + ',' + (100 - $("#dragHandleStart").attr("cy")) / 100;
+                    tabString += (100 - $("#dragHandleStart").attr("cx")) / 100 + ',' + (((100 - $("#dragHandleStart").attr("cy")) / 100) - 1.0);
                     $("#datText").val(tabString);
                 }
                 var start = function (evt) {
