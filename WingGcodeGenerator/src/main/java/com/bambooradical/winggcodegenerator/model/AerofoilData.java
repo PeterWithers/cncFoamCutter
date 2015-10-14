@@ -118,7 +118,7 @@ public class AerofoilData {
 //                }
 //            }
             // cubic
-            for (int index = points.length - 1; index > 0; index -= 3) {
+            for (int index = points.length - 1; index > 2; index -= 3) {
                 System.out.println("index:" + index);
                 final double xP0 = points[index - 0][0];
                 final double yP0 = points[index - 0][1];
