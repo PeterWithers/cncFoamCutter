@@ -106,12 +106,12 @@ Copyright (C) 2015 Peter Withers
                 fill: #33024a;
                 cursor: move;
             }
-            #dragHandleStart {
+            #dragHandleStart, #dragHandleEnd {
                 cursor: not-allowed;
             }
-            #dragHandleMid {
+/*            #dragHandleMid {
                 cursor: ns-resize;
-            }
+            }*/
             #footer {
                 color: #bccfe4;
                 background: #042649;
@@ -219,7 +219,7 @@ Copyright (C) 2015 Peter Withers
                 <text class="machineLabels" th:attr="x=${machineData.getVerticalAxis1SvgPointX() - 15}, y=${machineData.getVerticalAxis1SvgPointY()}" th:text="${machineData.getVerticalAxis1()}">Q</text>
                 <text class="machineLabels" th:attr="x=${machineData.getHorizontalAxis2SvgPointX()}, y=${machineData.getHorizontalAxis2SvgPointY() + 15}" th:text="${machineData.getHorizontalAxis2()}">Q</text>
                 <text class="machineLabels" th:attr="x=${machineData.getVerticalAxis2SvgPointX() - 15}, y=${machineData.getVerticalAxis2SvgPointY()}" th:text="${machineData.getVerticalAxis2()}">Q</text>
-                <polyline class="aerofoilShapes" th:attr="points=${rootAerofoilData}" />
+                <polyline class="aerofoilShapes" th:attr="points=${rootAerofoilSvg}" />
                 <polyline class="aerofoilLines" th:attr="points=${wingLinesData}" />
                 <polyline class="aerofoilShapes" th:attr="points=${tipAerofoilSvg}" />
                 <polyline class="ncPathLines" th:attr="points=${gcodeXY}" stroke-dasharray="20,10,5,5,5,10">
@@ -238,6 +238,8 @@ Copyright (C) 2015 Peter Withers
                     <input type="hidden" th:field="${wingData.wingLength}" />
                     <input type="hidden" th:field="${wingData.rootChord}" />
                     <input type="hidden" th:field="${wingData.tipChord}" />
+                    <input type="hidden" th:field="${wingData.tipSweep}" />
+                    <input type="hidden" th:field="${wingData.tipWash}" />
                     <table>
                         <tr><td>
                                 View Angle</td><td><input type="number" id="viewAngle" name="viewAngle" th:value="${machineData.getViewAngle()}" />
@@ -332,6 +334,6 @@ Copyright (C) 2015 Peter Withers
         </div>
         <br/>
         <textarea id="gcodeArea" rows="100" cols="100" th:text="${gcode}"></textarea>
-        <div id="footer" th:text="'Aerofoil: ' + ${tipAerofoilData.getName()} + ' | Wing length: ' + ${wingData.wingLength} + ' | Root chord: ' + ${wingData.rootChord} + ' | Tip chord: ' + ${wingData.tipChord}"></div>
+        <div id="footer" th:text="'Aerofoil: ' + ${tipAerofoilData.getName()} + ' | Wing length: ' + ${wingData.wingLength} + ' | Root ' + ${rootAerofoilData.getBounds().getWidth()*wingData.rootChord} + 'x' +${rootAerofoilData.getBounds().getHeight()*wingData.rootChord} + ' | Tip '  + ${tipAerofoilData.getBounds().getWidth()*wingData.tipChord} + 'x' + ${tipAerofoilData.getBounds().getHeight()*wingData.tipChord}"></div>
     </body>
 </html>
