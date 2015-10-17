@@ -111,14 +111,16 @@ public class AerofoilData {
 
     private double[] rotate(double[] point, double washDeg) {
         double wash = Math.toRadians(washDeg);
-        return new double[]{((point[0] - 0.5) * Math.cos(wash) - (point[1] - 0.5) * Math.sin(wash)) + 0.5,
-            ((point[0] + 0) * Math.sin(wash) + (point[1] + 0) * Math.cos(wash)) - 0};
+        double locX = 0.33;
+        double locY = 0;
+        return new double[]{((point[0] - locX) * Math.cos(wash) - (point[1] - locY) * Math.sin(wash)) + locX,
+            ((point[0] - locX) * Math.sin(wash) + (point[1] - locY) * Math.cos(wash)) + locY};
     }
 
     public ArrayList<double[]> getTransformedPoints(int xOffset, int yOffset, int chord, int sweep, double wash) {
         ArrayList<double[]> transformedPoints = new ArrayList<>();
-        final double initialX = rotate(points[0], wash)[0] + (sweep / chord);
-        final double initialY = rotate(points[0], wash)[1];
+        final double initialX = 1 + (sweep / chord);
+        final double initialY = 0;
         if (isBezier) {
             // linear
 //            for (int index = points.length - 1; index > 0; index -= 1) {
