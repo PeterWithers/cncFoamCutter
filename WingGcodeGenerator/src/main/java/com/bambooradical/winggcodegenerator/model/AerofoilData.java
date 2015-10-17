@@ -22,11 +22,13 @@ public class AerofoilData {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    private Long parentId = null;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date accessDate;
     private String remoteAddress;
     private boolean isBezier = false;
     private boolean isEditable = false;
+    private Boolean isHidden = false;
     private String name;
     @Lob
     private double[][] points;
@@ -75,6 +77,22 @@ public class AerofoilData {
         this.isEditable = isEditable;
     }
 
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(boolean isHidden) {
+        this.isHidden = isHidden;
+    }
+
     public double[][] getPoints() {
         return points;
     }
@@ -91,11 +109,16 @@ public class AerofoilData {
         this.name = name;
     }
 
-//    @Transient
-    public ArrayList<double[]> getTransformedPoints(int xOffset, int yOffset, int chord, int sweep) {
+    private double[] rotate(double[] point, double washDeg) {
+        double wash = Math.toRadians(washDeg);
+        return new double[]{((point[0] - 0.5) * Math.cos(wash) - (point[1] - 0.5) * Math.sin(wash)) + 0.5,
+            ((point[0] + 0) * Math.sin(wash) + (point[1] + 0) * Math.cos(wash)) - 0};
+    }
+
+    public ArrayList<double[]> getTransformedPoints(int xOffset, int yOffset, int chord, int sweep, double wash) {
         ArrayList<double[]> transformedPoints = new ArrayList<>();
-        final double initialX = points[0][0] + (sweep / chord);
-        final double initialY = points[0][1];
+        final double initialX = rotate(points[0], wash)[0] + (sweep / chord);
+        final double initialY = rotate(points[0], wash)[1];
         if (isBezier) {
             // linear
 //            for (int index = points.length - 1; index > 0; index -= 1) {
@@ -120,14 +143,14 @@ public class AerofoilData {
             // cubic
             for (int index = points.length - 1; index > 2; index -= 3) {
                 System.out.println("index:" + index);
-                final double xP0 = points[index - 0][0];
-                final double yP0 = points[index - 0][1];
-                final double xP1 = points[index - 1][0];
-                final double yP1 = points[index - 1][1];
-                final double xP2 = points[index - 2][0];
-                final double yP2 = points[index - 2][1];
-                final double xP3 = points[index - 3][0];
-                final double yP3 = points[index - 3][1];
+                final double xP0 = rotate(points[index - 0], wash)[0];
+                final double yP0 = rotate(points[index - 0], wash)[1];
+                final double xP1 = rotate(points[index - 1], wash)[0];
+                final double yP1 = rotate(points[index - 1], wash)[1];
+                final double xP2 = rotate(points[index - 2], wash)[0];
+                final double yP2 = rotate(points[index - 2], wash)[1];
+                final double xP3 = rotate(points[index - 3], wash)[0];
+                final double yP3 = rotate(points[index - 3], wash)[1];
                 for (double t = 0; t <= 1; t += 0.01) {
                     // linear bezier
                     // P0+t*(P1-P0)
@@ -145,7 +168,7 @@ public class AerofoilData {
 //            final double initialX = svgBounds.getMaxX();
 //            final double initialY = svgBounds.getMaxY();
             for (int index = points.length - 1; index > -1; index--) {
-                double[] currentPoint = points[index];
+                double[] currentPoint = rotate(points[index], wash);
                 transformedPoints.add(new double[]{(initialX - currentPoint[0]) * chord + xOffset, (initialY - currentPoint[1]) * chord + yOffset});
             }
         }
@@ -153,7 +176,7 @@ public class AerofoilData {
     }
 
     //    @Transient
-    public Bounds getSvgBounds() {
+    public Bounds getBounds() {
         final Bounds bounds = new Bounds(points[0][0], (points[0][1]));
         for (double[] current : points) {
             bounds.updateX(current[0]);
@@ -163,9 +186,9 @@ public class AerofoilData {
     }
 
 //    @Transient
-    public String toSvgPoints(int xOffset, int yOffset, int chord, int sweep) {
+    public String toSvgPoints(int xOffset, int yOffset, int chord, int sweep, double wash) {
         StringBuilder builder = new StringBuilder();
-        for (double[] currentPoint : getTransformedPoints(xOffset, yOffset, chord, sweep)) {
+        for (double[] currentPoint : getTransformedPoints(xOffset, yOffset, chord, sweep, wash)) {
             builder.append(currentPoint[0]);
             builder.append(",");
             builder.append(currentPoint[1]);
@@ -174,10 +197,10 @@ public class AerofoilData {
         return builder.toString();
     }
 
-    public String toSvgLines(int xOffsetRoot, int yOffsetRoot, int chordRoot, int xOffsetTip, int yOffsetTip, int chordTip, int sweep) {
+    public String toSvgLines(int xOffsetRoot, int yOffsetRoot, int chordRoot, int xOffsetTip, int yOffsetTip, int chordTip, int sweep, double wash) {
         StringBuilder builder = new StringBuilder();
-        final ArrayList<double[]> transformedPointsRoot = getTransformedPoints(xOffsetRoot, yOffsetRoot, chordRoot, 0);
-        final ArrayList<double[]> transformedPointsTip = getTransformedPoints(xOffsetTip, yOffsetTip, chordTip, sweep);
+        final ArrayList<double[]> transformedPointsRoot = getTransformedPoints(xOffsetRoot, yOffsetRoot, chordRoot, 0, 0);
+        final ArrayList<double[]> transformedPointsTip = getTransformedPoints(xOffsetTip, yOffsetTip, chordTip, sweep, wash);
         for (int index = 0; index < transformedPointsRoot.size(); index++) {
             builder.append(transformedPointsRoot.get(index)[0]);
             builder.append(",");
