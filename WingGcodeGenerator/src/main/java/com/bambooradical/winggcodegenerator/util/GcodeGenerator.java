@@ -58,8 +58,15 @@ public class GcodeGenerator {
         return builder.toString();
     }
 
-    public String toGcode(MachineData machineData) {
+    public String toGcode(MachineData machineData, String infoString) {
         StringBuilder builder = new StringBuilder();
+        builder.append("# ").append(infoString).append("\n");
+        builder.append("# CuttingSpeed: ").append(machineData.getCuttingSpeed()).append("\n");
+        builder.append("# HeaterPercent: ").append(machineData.getHeaterPercent()).append("\n");
+        builder.append("# MachineHeight: ").append(machineData.getMachineHeight()).append("\n");
+        builder.append("# MachineDepth: ").append(machineData.getMachineDepth()).append("\n");
+        builder.append("# WireLength: ").append(machineData.getWireLength()).append("\n");
+        builder.append("\n");
         startGcode(builder);
         setHeat(builder, machineData.getHeaterPercent());
         pause(builder, 5);

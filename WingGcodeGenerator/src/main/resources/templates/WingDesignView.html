@@ -233,13 +233,15 @@ Copyright (C) 2015 Peter Withers
             <!--<svg th:fragment="rootAerofoilData" id="rootAerofoilSvg" th:attr="viewBox=${rootAerofoilBounds}, style='width: ' + ${machineData.getDiagramScale()} + '%'"><polyline class="aerofoilShapes" th:attr="points=${rootAerofoilData}" /></svg>-->
             <div id="machineSettings">
                 <form action="#" th:action="@{/WingDesignView}" th:object="${machineData}" method="get">
-                    <input type="hidden" th:field="${wingData.rootAerofoil}" />
-                    <input type="hidden" th:field="${wingData.tipAerofoil}" />
-                    <input type="hidden" th:field="${wingData.wingLength}" />
-                    <input type="hidden" th:field="${wingData.rootChord}" />
-                    <input type="hidden" th:field="${wingData.tipChord}" />
-                    <input type="hidden" th:field="${wingData.tipSweep}" />
-                    <input type="hidden" th:field="${wingData.tipWash}" />
+                    <span th:fragment="hiddenWingFields">
+                        <input type="hidden" th:field="${wingData.rootAerofoil}" />
+                        <input type="hidden" th:field="${wingData.tipAerofoil}" />
+                        <input type="hidden" th:field="${wingData.wingLength}" />
+                        <input type="hidden" th:field="${wingData.rootChord}" />
+                        <input type="hidden" th:field="${wingData.tipChord}" />
+                        <input type="hidden" th:field="${wingData.tipSweep}" />
+                        <input type="hidden" th:field="${wingData.tipWash}" />
+                    </span>
                     <table>
                         <tr><td>
                                 View Angle</td><td><input type="number" id="viewAngle" name="viewAngle" th:value="${machineData.getViewAngle()}" />
@@ -353,7 +355,14 @@ Copyright (C) 2015 Peter Withers
             </div>
         </div>
         <br/>
-        <textarea id="gcodeArea" rows="100" cols="100" th:text="${gcode}"></textarea>
+        <div id="gcodeArea">
+            <form action="#" th:action="@{/downloadGcode}" th:object="${machineData}" method="get">
+                <span th:include="WingDesignView :: hiddenSettingsFields"></span>
+                <span th:include="WingDesignView :: hiddenWingFields"></span>
+                <button type="submit" id="downloadButton">Download GCODE</button>
+            </form>
+            <textarea rows="100" cols="100" th:text="${gcode}"></textarea>
+        </div>
         <div id="footer" th:text="'Aerofoil: ' + ${tipAerofoilData.getName()} + ' | Wing length: ' + ${wingData.wingLength} + ' | Root ' + ${rootAerofoilData.getBounds().getWidth()*wingData.rootChord} + 'x' +${rootAerofoilData.getBounds().getHeight()*wingData.rootChord} + ' | Tip '  + ${tipAerofoilData.getBounds().getWidth()*wingData.tipChord} + 'x' + ${tipAerofoilData.getBounds().getHeight()*wingData.tipChord}"></div>
     </body>
 </html>

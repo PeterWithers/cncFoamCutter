@@ -94,7 +94,7 @@ public class WingDesignController {
         model.addAttribute("gcodeXY", gcodeGenerator.toSvgXy());
         model.addAttribute("gcodeZE", gcodeGenerator.toSvgZe());
         model.addAttribute("transformZE", "translate(" + (int) (machineData.getViewAngle()) + "," + (int) (machineData.getWireLength() - machineData.getViewAngle()) + ")");
-        model.addAttribute("gcode", gcodeGenerator.toGcode(machineData));
+        model.addAttribute("gcode", gcodeGenerator.toGcode(machineData, requestURI));
         return "WingDesignView";
     }
 
@@ -131,14 +131,15 @@ public class WingDesignController {
         return "redirect:" + referer;
     }
 
-    @RequestMapping(value = "/download",
+    @RequestMapping(value = "/downloadGcode",
             method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
     String downloadFile(
             @ModelAttribute MachineData machineData,
             @ModelAttribute WingData wingData,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            HttpServletRequest request) {
         response.setHeader("Content-Disposition", "attachment;filename=" + wingData.getRootAerofoil() + "_" + wingData.getRootChord() + "-" + wingData.getTipChord() + "_" + machineData.getCuttingSpeed() + "mms" + machineData.getHeaterPercent() + "pwm");
         final int tipGcodeChord = (int) (wingData.getRootChord() + ((((double) wingData.getTipChord() - wingData.getRootChord()) / wingData.getWingLength()) * machineData.getWireLength()));
         final int tipGcodeSweep = (int) ((double) wingData.getTipSweep() / wingData.getWingLength() * machineData.getWireLength());
@@ -153,7 +154,8 @@ public class WingDesignController {
             tipAerofoilData = new AerofoilDataAG36();
         }
         final GcodeGenerator gcodeGenerator = new GcodeGenerator(rootAerofoilData, wingData.getRootChord(), tipAerofoilData, tipGcodeChord, tipGcodeSweep, tipGcodeWash, machineData.getMachineHeight(), machineData.getInitialCutHeight(), machineData.getInitialCutLength());
-        return gcodeGenerator.toGcode(machineData);
+        String referer = request.getHeader("Referer");
+        return gcodeGenerator.toGcode(machineData, referer);
     }
 
     @RequestMapping(value = "/calibrationGcode",
@@ -170,6 +172,6 @@ public class WingDesignController {
             HttpServletResponse response) {
         response.setHeader("Content-Disposition", "attachment;filename=" + startSpeed + "-" + endSpeed + "s" + startPwm + "-" + endPwm + "pwm");
         final GcodeGenerator gcodeGenerator = new GcodeGenerator();
-        return gcodeGenerator.generateTestGcode(machineData,layerThickeness, startPwm, endPwm, startSpeed, endSpeed);
+        return gcodeGenerator.generateTestGcode(machineData, layerThickeness, startPwm, endPwm, startSpeed, endSpeed);
     }
 }
