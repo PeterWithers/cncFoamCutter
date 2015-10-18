@@ -33,6 +33,9 @@ public class GcodeGenerator {
         zEpath.add(new double[]{0, 0});
     }
 
+    public GcodeGenerator() {
+    }
+
     public String toSvgXy() {
         StringBuilder builder = new StringBuilder();
         for (double[] currentPoint : xYpath) {
@@ -82,17 +85,33 @@ public class GcodeGenerator {
 
     public String generateTestGcode(MachineData machineData, int thickness, int startPwm, int endPwm, int startFeed, int endFeed) {
         StringBuilder builder = new StringBuilder();
+        builder.append("# Calibration Gcode\n");
+        builder.append("# thickness: ").append(thickness).append("\n");
+        builder.append("# startPwm: ").append(startPwm).append("\n");
+        builder.append("# endPwm: ").append(endPwm).append("\n");
+        builder.append("# startFeed: ").append(startFeed).append("\n");
+        builder.append("# endFeed: ").append(endFeed).append("\n");
+        builder.append("\n");
         startGcode(builder);
-        int steps = 50 / thickness;
+        move(builder, 0, -machineData.getMachineHeight(), 0, -machineData.getMachineHeight(), machineData);
+        waitForCurrentMovesToFinish(builder);
+        zeroVerticals(builder, machineData);
+        zeroHorizontals(builder, machineData);
+        waitForCurrentMovesToFinish(builder);
+        int steps = machineData.getMachineHeight() / thickness;
         move(builder, 0, 0, 0, 0, machineData);
-        move(builder, 0, 50, 50, 0, machineData);
+        move(builder, 0, machineData.getMachineHeight(), 0, machineData.getMachineHeight(), machineData);
+        waitForCurrentMovesToFinish(builder);
         for (int currentStep = 0; currentStep < steps; currentStep++) {
             int pwm = (((endPwm - startPwm) / steps) * currentStep) + startPwm;
-            int height = 50 - ((50 / steps) * currentStep);
+            int feed = (((endFeed - startFeed) / steps) * currentStep) + startFeed;
+            machineData.setCuttingSpeed(feed);
+            int height = machineData.getMachineHeight() - ((machineData.getMachineHeight() / steps) * currentStep);
             setHeat(builder, pwm);
-            move(builder, currentStep % 2 * 50, height, height, currentStep % 2 * 50, machineData);
+            move(builder, currentStep % 2 * 50 + 10, height, currentStep % 2 * 50 + 10, height, machineData);
             waitForCurrentMovesToFinish(builder);
         }
+        move(builder, 0, 0, 0, 0, machineData);
         waitForCurrentMovesToFinish(builder);
         setHeat(builder, 0);
         disableSteppers(builder);
@@ -108,6 +127,14 @@ public class GcodeGenerator {
         final int pwmValue = Math.max(0, (int) (Math.min(heatPercent, 100) * 0.01 * 256));
         builder.append("M117 setting PWM heater to ").append(heatPercent).append("% with S").append(pwmValue).append("\n");
         builder.append("M106 S").append(pwmValue).append("\n");;
+    }
+
+    private void zeroVerticals(StringBuilder builder, MachineData machineData) {
+        builder.append("G92 ").append(machineData.getVerticalAxis1()).append("0 ").append(machineData.getVerticalAxis2()).append("0 ").append("\n");
+    }
+
+    private void zeroHorizontals(StringBuilder builder, MachineData machineData) {
+        builder.append("G92 ").append(machineData.getHorizontalAxis1()).append("0 ").append(machineData.getHorizontalAxis2()).append("0 ").append("\n");
     }
 
     private void pause(StringBuilder builder, int seconds) {

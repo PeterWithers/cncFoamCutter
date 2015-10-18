@@ -109,9 +109,9 @@ Copyright (C) 2015 Peter Withers
             #dragHandleStart, #dragHandleEnd {
                 cursor: not-allowed;
             }
-/*            #dragHandleMid {
-                cursor: ns-resize;
-            }*/
+            /*            #dragHandleMid {
+                            cursor: ns-resize;
+                        }*/
             #footer {
                 color: #bccfe4;
                 background: #042649;
@@ -168,7 +168,7 @@ Copyright (C) 2015 Peter Withers
                 });
                 $("#gcodeButton").click(function () {
                     $("#gcodeArea").show();
-                    $("#MachineSettings").hide();
+                    $("#machineSettings").hide();
                     $("#wingSettings").hide();
                     $("#diagram").hide();
                     $("#uploadArea").hide();
@@ -271,6 +271,24 @@ Copyright (C) 2015 Peter Withers
                             </td></tr>
                     </table>
                 </form>
+                <form action="#" th:action="@{/calibrationGcode}" th:object="${machineData}" method="get">
+                    <span th:include="WingDesignView :: hiddenSettingsFields"></span>
+                    <table>
+                        <tr><td>
+                                Layer Thickeness</td><td><input type="number" id="layerThickeness" name="layerThickeness" th:value="${machineData.getMachineHeight()/25}" />
+                            </td></tr><tr><td>
+                                Start Speed</td><td><input type="number" id="startSpeed" name="startSpeed" th:value="${machineData.getCuttingSpeed()}" />
+                            </td></tr><tr><td>
+                                End Speed</td><td><input type="number" id="endSpeed" name="endSpeed" th:value="${machineData.getCuttingSpeed()/2}" />
+                            </td></tr><tr><td>
+                                Start PWM</td><td><input type="number" id="startPwm" name="startPwm" th:value="${machineData.getHeaterPercent()}" />
+                            </td></tr><tr><td>
+                                End PWM</td><td><input type="number" id="endPwm" name="endPwm" th:value="${machineData.getHeaterPercent()/2}" />
+                            </td></tr><tr><td>
+                            </td></tr><tr><td><button type="reset">Reset</button></td><td><button type="submit" id="saveButton">Download Test Gcode</button>
+                            </td></tr>
+                    </table>
+                </form>
             </div>
             <div id="uploadArea">
                 <form method="POST" enctype="multipart/form-data" action="#">
@@ -279,19 +297,21 @@ Copyright (C) 2015 Peter Withers
             </div>
             <div id="wingSettings">
                 <form id="settingsForm" action="#" th:object="${machineData}" method="get">
-                    <input type="hidden" th:field="${machineData.viewAngle}" />
-                    <input type="hidden" th:field="${machineData.machineDepth}" />
-                    <input type="hidden" th:field="${machineData.machineHeight}" />
-                    <input type="hidden" th:field="${machineData.wireLength}" />
-                    <input type="hidden" th:field="${machineData.initialCutHeight}" />
-                    <input type="hidden" th:field="${machineData.initialCutLength}" />
-                    <input type="hidden" th:field="${machineData.horizontalAxis1}" />
-                    <input type="hidden" th:field="${machineData.verticalAxis1}" />
-                    <input type="hidden" th:field="${machineData.horizontalAxis2}" />
-                    <input type="hidden" th:field="${machineData.verticalAxis2}" />
-                    <input type="hidden" th:field="${machineData.diagramScale}" />
-                    <input type="hidden" th:field="${machineData.cuttingSpeed}" />
-                    <input type="hidden" th:field="${machineData.heaterPercent}" />
+                    <span th:fragment="hiddenSettingsFields">
+                        <input type="hidden" th:field="${machineData.viewAngle}" />
+                        <input type="hidden" th:field="${machineData.machineDepth}" />
+                        <input type="hidden" th:field="${machineData.machineHeight}" />
+                        <input type="hidden" th:field="${machineData.wireLength}" />
+                        <input type="hidden" th:field="${machineData.initialCutHeight}" />
+                        <input type="hidden" th:field="${machineData.initialCutLength}" />
+                        <input type="hidden" th:field="${machineData.horizontalAxis1}" />
+                        <input type="hidden" th:field="${machineData.verticalAxis1}" />
+                        <input type="hidden" th:field="${machineData.horizontalAxis2}" />
+                        <input type="hidden" th:field="${machineData.verticalAxis2}" />
+                        <input type="hidden" th:field="${machineData.diagramScale}" />
+                        <input type="hidden" th:field="${machineData.cuttingSpeed}" />
+                        <input type="hidden" th:field="${machineData.heaterPercent}" />
+                    </span>
                     <table>
                         <tr><td>
                                 Aerofoil</td><td>

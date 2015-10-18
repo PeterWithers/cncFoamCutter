@@ -155,4 +155,21 @@ public class WingDesignController {
         final GcodeGenerator gcodeGenerator = new GcodeGenerator(rootAerofoilData, wingData.getRootChord(), tipAerofoilData, tipGcodeChord, tipGcodeSweep, tipGcodeWash, machineData.getMachineHeight(), machineData.getInitialCutHeight(), machineData.getInitialCutLength());
         return gcodeGenerator.toGcode(machineData);
     }
+
+    @RequestMapping(value = "/calibrationGcode",
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @ResponseBody
+    String downloadCalibrationGcode(
+            @ModelAttribute MachineData machineData,
+            @RequestParam(value = "layerThickeness", required = false, defaultValue = "false") final int layerThickeness,
+            @RequestParam(value = "startSpeed", required = false, defaultValue = "false") final int startSpeed,
+            @RequestParam(value = "endSpeed", required = false, defaultValue = "false") final int endSpeed,
+            @RequestParam(value = "startPwm", required = false, defaultValue = "false") final int startPwm,
+            @RequestParam(value = "endPwm", required = false, defaultValue = "false") final int endPwm,
+            HttpServletResponse response) {
+        response.setHeader("Content-Disposition", "attachment;filename=" + startSpeed + "-" + endSpeed + "s" + startPwm + "-" + endPwm + "pwm");
+        final GcodeGenerator gcodeGenerator = new GcodeGenerator();
+        return gcodeGenerator.generateTestGcode(machineData,layerThickeness, startPwm, endPwm, startSpeed, endSpeed);
+    }
 }
