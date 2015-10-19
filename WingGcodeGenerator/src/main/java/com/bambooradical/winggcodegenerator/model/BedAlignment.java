@@ -1,7 +1,6 @@
 /*
  *  Copyright (C) 2015 Peter Withers
  */
-
 package com.bambooradical.winggcodegenerator.model;
 
 /**
@@ -9,91 +8,78 @@ package com.bambooradical.winggcodegenerator.model;
  * @author Peter Withers <peter@bambooradical.com>
  */
 public class BedAlignment {
-//    can these parameters be passed into multiple objects by spring mvc?
-private int wireLength = 600;
-private int bedAlignment = 0; // positive values are aligned left offset by the value, nevative values are aligned right offset by the value, zero centre aligns with no offset
 
-private final int rootChord;
-private final int tipChord;
-private final int rootGcodeChord;
-private final int tipGcodeChord;
-private final int rootSweep;
-private final int tipSweep;
-private final int rootGcodeSweep;
-private final int tipGcodeSweep;
-private final int rootWash;
-private final int tipWash;
-private final int rootGcodeWash;
-private final int tipGcodeWash;
+    final private int bedAlignment; // positive values are aligned left offset by the value, nevative values are aligned right offset by the value, zero centre aligns with no offset
+    final private MachineData machineData;
+    final private WingData wingData;
+    final private int rootPosition;
+    final private int tipPosition;
 
-    public BedAlignment(int rootChord, int tipChord, int rootGcodeChord, int tipGcodeChord, int rootSweep, int tipSweep, int rootGcodeSweep, int tipGcodeSweep, int rootWash, int tipWash, int rootGcodeWash, int tipGcodeWash) {
-        this.rootChord = rootChord;
-        this.tipChord = tipChord;
-        this.rootGcodeChord = rootGcodeChord;
-        this.tipGcodeChord = tipGcodeChord;
-        this.rootSweep = rootSweep;
-        this.tipSweep = tipSweep;
-        this.rootGcodeSweep = rootGcodeSweep;
-        this.tipGcodeSweep = tipGcodeSweep;
-        this.rootWash = rootWash;
-        this.tipWash = tipWash;
-        this.rootGcodeWash = rootGcodeWash;
-        this.tipGcodeWash = tipGcodeWash;
+    public BedAlignment(int bedAlignment, MachineData machineData, WingData wingData) {
+        this.bedAlignment = bedAlignment;
+        this.machineData = machineData;
+        this.wingData = wingData;
+        if (bedAlignment == 0) {
+            rootPosition = (machineData.getWireLength() - wingData.getWingLength()) / 2;
+            tipPosition = (machineData.getWireLength() + wingData.getWingLength()) / 2;
+        } else if (bedAlignment > 0) {
+            rootPosition = machineData.getWireLength() - bedAlignment - wingData.getWingLength();
+            tipPosition = machineData.getWireLength() - bedAlignment;
+        } else {
+            rootPosition = 0 - bedAlignment;
+            tipPosition = 0 - bedAlignment + wingData.getWingLength();
+        }
     }
 
-    public int getWireLength() {
-        return wireLength;
+    public int getRootPosition() {
+        return rootPosition;
+    }
+
+    public int getTipPosition() {
+        return tipPosition;
     }
 
     public int getBedAlignment() {
         return bedAlignment;
     }
 
-    public int getRootChord() {
-        return rootChord;
-    }
-
-    public int getTipChord() {
-        return tipChord;
-    }
-
     public int getRootGcodeChord() {
-        return rootGcodeChord;
+        return (int) (wingData.getRootChord() - ((((double) wingData.getTipChord() - wingData.getRootChord()) / wingData.getWingLength()) * (rootPosition)));
     }
 
     public int getTipGcodeChord() {
-        return tipGcodeChord;
+        return (int) (wingData.getTipChord() + ((((double) wingData.getTipChord() - wingData.getRootChord()) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
     }
 
     public int getRootSweep() {
-        return rootSweep;
+        return 0;
     }
 
     public int getTipSweep() {
-        return tipSweep;
+        return wingData.getTipSweep();
     }
 
     public int getRootGcodeSweep() {
-        return rootGcodeSweep;
+        return 0;
     }
 
     public int getTipGcodeSweep() {
-        return tipGcodeSweep;
+        return (int) ((double) wingData.getTipSweep() / wingData.getWingLength() * machineData.getWireLength());
     }
 
     public int getRootWash() {
-        return rootWash;
+        return 0;
     }
 
     public int getTipWash() {
-        return tipWash;
+        return wingData.getTipWash();
     }
 
     public int getRootGcodeWash() {
-        return rootGcodeWash;
+        return 0;
     }
 
     public int getTipGcodeWash() {
-        return tipGcodeWash;
+        return (int) ((double) wingData.getTipWash() / wingData.getWingLength() * machineData.getWireLength());
     }
 }

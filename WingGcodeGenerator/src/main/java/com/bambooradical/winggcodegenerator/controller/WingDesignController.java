@@ -8,6 +8,7 @@ import com.bambooradical.winggcodegenerator.dao.AerofoilRepository;
 import com.bambooradical.winggcodegenerator.model.AccessData;
 import com.bambooradical.winggcodegenerator.model.AerofoilData;
 import com.bambooradical.winggcodegenerator.model.AerofoilDataAG36;
+import com.bambooradical.winggcodegenerator.model.BedAlignment;
 import com.bambooradical.winggcodegenerator.model.Bounds;
 import com.bambooradical.winggcodegenerator.model.MachineData;
 import com.bambooradical.winggcodegenerator.model.WingData;
@@ -62,6 +63,7 @@ public class WingDesignController {
     public String designView(
             @ModelAttribute MachineData machineData,
             @ModelAttribute WingData wingData,
+            @RequestParam(value = "bedAlignment", required = true, defaultValue = "0") final int bedAlignment,
             Model model,
             @RequestHeader("Accept-Language") String acceptLang,
             @RequestHeader("User-Agent") String userAgent,
@@ -69,10 +71,12 @@ public class WingDesignController {
         final String remoteAddr = request.getRemoteAddr();
         final String requestURI = request.getRequestURI();
         final Date accessDate = new java.util.Date();
+        model.addAttribute("bedAlignment", bedAlignment);
+        final BedAlignment bedAlignmentCalculator = new BedAlignment(bedAlignment, machineData, wingData);
         accessDataRepository.save(new AccessData(accessDate, remoteAddr, userAgent, acceptLang, requestURI));
-        final int tipGcodeChord = (int) (wingData.getRootChord() + ((((double) wingData.getTipChord() - wingData.getRootChord()) / wingData.getWingLength()) * machineData.getWireLength()));
-        final int tipGcodeSweep = (int) ((double) wingData.getTipSweep() / wingData.getWingLength() * machineData.getWireLength());
-        final int tipGcodeWash = (int) ((double) wingData.getTipWash() / wingData.getWingLength() * machineData.getWireLength());
+//        final int tipGcodeChord = (int) (wingData.getRootChord() + ((((double) wingData.getTipChord() - wingData.getRootChord()) / wingData.getWingLength()) * machineData.getWireLength()));
+//        final int tipGcodeSweep = (int) ((double) wingData.getTipSweep() / wingData.getWingLength() * machineData.getWireLength());
+//        final int tipGcodeWash = (int) ((double) wingData.getTipWash() / wingData.getWingLength() * machineData.getWireLength());
         final AerofoilData rootAerofoilData;
         final AerofoilData tipAerofoilData;
         if (aerofoilRepository.count() > 0) {
@@ -85,12 +89,12 @@ public class WingDesignController {
         model.addAttribute("aerofoilList", aerofoilRepository.findAll());
         model.addAttribute("rootAerofoilData", rootAerofoilData);
         model.addAttribute("tipAerofoilData", tipAerofoilData);
-        float percentOfWire = (float) wingData.getWingLength() / machineData.getWireLength();
+        float percentOfWire = (float) bedAlignmentCalculator.getTipPosition() / machineData.getWireLength();
         model.addAttribute("tipAerofoilSvg", tipAerofoilData.toSvgPoints(machineData.getInitialCutLength() + (int) (machineData.getViewAngle() * percentOfWire), (int) ((machineData.getMachineHeight() - machineData.getInitialCutHeight()) + (machineData.getWireLength() - machineData.getViewAngle()) * (percentOfWire)), wingData.getTipChord(), wingData.getTipSweep(), wingData.getTipWash()));
         model.addAttribute("wingLinesData", tipAerofoilData.toSvgLines(machineData.getInitialCutLength(), machineData.getMachineHeight() - machineData.getInitialCutHeight(), wingData.getRootChord(), machineData.getInitialCutLength() + (int) (machineData.getViewAngle() * percentOfWire), (int) ((machineData.getMachineHeight() - machineData.getInitialCutHeight()) + (machineData.getWireLength() - machineData.getViewAngle()) * (percentOfWire)), wingData.getTipChord(), wingData.getTipSweep(), wingData.getTipWash()));
         final Bounds svgBounds = machineData.getSvgBounds();
         model.addAttribute("svgbounds", svgBounds.getMinX() + " " + svgBounds.getMinY() + " " + svgBounds.getWidth() + " " + svgBounds.getHeight());
-        final GcodeGenerator gcodeGenerator = new GcodeGenerator(rootAerofoilData, wingData.getRootChord(), tipAerofoilData, tipGcodeChord, tipGcodeSweep, tipGcodeWash, machineData.getMachineHeight(), machineData.getInitialCutHeight(), machineData.getInitialCutLength());
+        final GcodeGenerator gcodeGenerator = new GcodeGenerator(rootAerofoilData, bedAlignmentCalculator, tipAerofoilData, machineData.getMachineHeight(), machineData.getInitialCutHeight(), machineData.getInitialCutLength());
         model.addAttribute("gcodeXY", gcodeGenerator.toSvgXy());
         model.addAttribute("gcodeZE", gcodeGenerator.toSvgZe());
         model.addAttribute("transformZE", "translate(" + (int) (machineData.getViewAngle()) + "," + (int) (machineData.getWireLength() - machineData.getViewAngle()) + ")");
@@ -100,7 +104,6 @@ public class WingDesignController {
 
     @RequestMapping(value = "/WingDesignView", method = RequestMethod.POST)
     public String aerofoilImport(@RequestParam("datFile") MultipartFile datFile, Model model, HttpServletRequest request) throws IOException {
-        model.addAttribute("diagramScale", 100);
         final AerofoilData uploadedAerofoil = new AerofoilDatParser().parseFile(datFile);
         uploadedAerofoil.setAccessDate(new java.util.Date());
         uploadedAerofoil.setRemoteAddress(request.getRequestURI());
@@ -138,14 +141,13 @@ public class WingDesignController {
     String downloadFile(
             @ModelAttribute MachineData machineData,
             @ModelAttribute WingData wingData,
+            @RequestParam(value = "bedAlignment", required = true, defaultValue = "0") final int bedAlignment,
             HttpServletResponse response,
             HttpServletRequest request) {
         response.setHeader("Content-Disposition", "attachment;filename=" + wingData.getRootAerofoil() + "_" + wingData.getRootChord() + "-" + wingData.getTipChord() + "_" + machineData.getCuttingSpeed() + "mms" + machineData.getHeaterPercent() + "pwm");
-        final int tipGcodeChord = (int) (wingData.getRootChord() + ((((double) wingData.getTipChord() - wingData.getRootChord()) / wingData.getWingLength()) * machineData.getWireLength()));
-        final int tipGcodeSweep = (int) ((double) wingData.getTipSweep() / wingData.getWingLength() * machineData.getWireLength());
-        final int tipGcodeWash = (int) ((double) wingData.getTipWash() / wingData.getWingLength() * machineData.getWireLength());
         final AerofoilData rootAerofoilData;
         final AerofoilData tipAerofoilData;
+        final BedAlignment bedAlignmentCalculator = new BedAlignment(bedAlignment, machineData, wingData);
         if (aerofoilRepository.count() > 0) {
             rootAerofoilData = aerofoilRepository.findOne(wingData.getRootAerofoil());
             tipAerofoilData = aerofoilRepository.findOne(wingData.getRootAerofoil()); // todo: when the gcode generator can process datafiles of different lenth this can be retured to tip 
@@ -153,7 +155,7 @@ public class WingDesignController {
             rootAerofoilData = new AerofoilDataAG36();
             tipAerofoilData = new AerofoilDataAG36();
         }
-        final GcodeGenerator gcodeGenerator = new GcodeGenerator(rootAerofoilData, wingData.getRootChord(), tipAerofoilData, tipGcodeChord, tipGcodeSweep, tipGcodeWash, machineData.getMachineHeight(), machineData.getInitialCutHeight(), machineData.getInitialCutLength());
+        final GcodeGenerator gcodeGenerator = new GcodeGenerator(rootAerofoilData, bedAlignmentCalculator, tipAerofoilData, machineData.getMachineHeight(), machineData.getInitialCutHeight(), machineData.getInitialCutLength());
         String referer = request.getHeader("Referer");
         return gcodeGenerator.toGcode(machineData, referer);
     }
