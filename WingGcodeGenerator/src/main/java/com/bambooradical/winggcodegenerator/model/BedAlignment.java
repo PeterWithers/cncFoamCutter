@@ -82,4 +82,28 @@ public class BedAlignment {
     public int getTipGcodeWash() {
         return (int) ((double) wingData.getTipWash() / wingData.getWingLength() * machineData.getWireLength());
     }
+
+    private float rootPercentOfWire() {
+        return (float) getRootPosition() / machineData.getWireLength();
+    }
+
+    public int getProjectedRootXOffset() {
+        return machineData.getInitialCutLength() + (int) (machineData.getViewAngle() * rootPercentOfWire());
+    }
+
+    public int getProjectedRootYOffset() {
+        return (int) ((machineData.getMachineHeight() - machineData.getInitialCutHeight()) + (machineData.getWireLength() - machineData.getViewAngle()) * (rootPercentOfWire()));
+    }
+
+    private float tipPercentOfWire() {
+        return (float) getTipPosition() / machineData.getWireLength();
+    }
+
+    public int getProjectedTipXOffset() {
+        return machineData.getInitialCutLength() + (int) (machineData.getViewAngle() * tipPercentOfWire());
+    }
+
+    public int getProjectedTipYOffset() {
+        return (int) ((machineData.getMachineHeight() - machineData.getInitialCutHeight()) + (machineData.getWireLength() - machineData.getViewAngle()) * (tipPercentOfWire()));
+    }
 }
