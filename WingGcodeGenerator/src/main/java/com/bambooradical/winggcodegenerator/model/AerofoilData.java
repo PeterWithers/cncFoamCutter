@@ -119,7 +119,7 @@ public class AerofoilData {
 
     public ArrayList<double[]> getTransformedPoints(int xOffset, int yOffset, int chord, int sweep, double wash) {
         ArrayList<double[]> transformedPoints = new ArrayList<>();
-        final double initialX = 1 + (sweep / chord);
+        final double initialX = 1;
         final double initialY = 0;
         if (isBezier) {
             // linear
@@ -162,7 +162,7 @@ public class AerofoilData {
                     // (1-t)3P0+3(1-t)2tP1+3(1-t)t2P2+t3P3
                     final double xB = ((1 - t) * (1 - t) * (1 - t)) * xP0 + 3 * ((1 - t) * (1 - t)) * t * xP1 + 3 * (1 - t) * (t * t) * xP2 + (t * t * t) * xP3;
                     final double yB = ((1 - t) * (1 - t) * (1 - t)) * yP0 + 3 * ((1 - t) * (1 - t)) * t * yP1 + 3 * (1 - t) * (t * t) * yP2 + (t * t * t) * yP3;
-                    transformedPoints.add(new double[]{(initialX - xB) * chord + xOffset, (initialY - yB) * chord + yOffset});
+                    transformedPoints.add(new double[]{(initialX - xB) * chord + xOffset + sweep, (initialY - yB) * chord + yOffset});
                 }
             }
         } else {
@@ -171,7 +171,7 @@ public class AerofoilData {
 //            final double initialY = svgBounds.getMaxY();
             for (int index = points.length - 1; index > -1; index--) {
                 double[] currentPoint = rotate(points[index], wash);
-                transformedPoints.add(new double[]{(initialX - currentPoint[0]) * chord + xOffset, (initialY - currentPoint[1]) * chord + yOffset});
+                transformedPoints.add(new double[]{(initialX - currentPoint[0]) * chord + xOffset + sweep, (initialY - currentPoint[1]) * chord + yOffset});
             }
         }
         return transformedPoints;

@@ -88,7 +88,7 @@ public class BedAlignment {
     }
 
     public int getProjectedRootXOffset() {
-        return machineData.getInitialCutLength() + getRootSweep() + (int) (machineData.getViewAngle() * rootPercentOfWire());
+        return machineData.getInitialCutLength() + (int) (machineData.getViewAngle() * rootPercentOfWire());
     }
 
     public int getProjectedRootYOffset() {
@@ -100,7 +100,7 @@ public class BedAlignment {
     }
 
     public int getProjectedTipXOffset() {
-        return machineData.getInitialCutLength() + getTipSweep() + (int) (machineData.getViewAngle() * tipPercentOfWire());
+        return machineData.getInitialCutLength() + (int) (machineData.getViewAngle() * tipPercentOfWire());
     }
 
     public int getProjectedTipYOffset() {
