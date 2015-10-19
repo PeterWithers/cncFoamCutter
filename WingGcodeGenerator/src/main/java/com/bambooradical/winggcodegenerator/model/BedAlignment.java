@@ -52,35 +52,35 @@ public class BedAlignment {
     }
 
     public int getRootSweep() {
-        return 0;
+        return (int) (-wingData.getTipSweep() / 2.0);
     }
 
     public int getTipSweep() {
-        return wingData.getTipSweep();
+        return (int) (wingData.getTipSweep() / 2.0);
     }
 
     public int getRootGcodeSweep() {
-        return 0;
+        return (int) (getRootSweep() - ((((double) getTipSweep() - getRootSweep()) / wingData.getWingLength()) * (rootPosition)));
     }
 
     public int getTipGcodeSweep() {
-        return (int) ((double) wingData.getTipSweep() / wingData.getWingLength() * machineData.getWireLength());
+        return (int) (getTipSweep() + ((((double) getTipSweep() - getRootSweep()) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
     }
 
     public int getRootWash() {
-        return 0;
+        return -wingData.getTipWash() / 2;
     }
 
     public int getTipWash() {
-        return wingData.getTipWash();
+        return wingData.getTipWash() / 2;
     }
 
     public int getRootGcodeWash() {
-        return 0;
+        return (int) (getRootWash() - ((((double) getTipWash() - getRootWash()) / wingData.getWingLength()) * (rootPosition)));
     }
 
     public int getTipGcodeWash() {
-        return (int) ((double) wingData.getTipWash() / wingData.getWingLength() * machineData.getWireLength());
+        return (int) (getTipWash() + ((((double) getTipWash() - getRootWash()) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
     }
 
     private float rootPercentOfWire() {

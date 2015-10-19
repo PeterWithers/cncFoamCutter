@@ -74,9 +74,6 @@ public class WingDesignController {
         model.addAttribute("bedAlignment", bedAlignment);
         final BedAlignment bedAlignmentCalculator = new BedAlignment(bedAlignment, machineData, wingData);
         accessDataRepository.save(new AccessData(accessDate, remoteAddr, userAgent, acceptLang, requestURI));
-//        final int tipGcodeChord = (int) (wingData.getRootChord() + ((((double) wingData.getTipChord() - wingData.getRootChord()) / wingData.getWingLength()) * machineData.getWireLength()));
-//        final int tipGcodeSweep = (int) ((double) wingData.getTipSweep() / wingData.getWingLength() * machineData.getWireLength());
-//        final int tipGcodeWash = (int) ((double) wingData.getTipWash() / wingData.getWingLength() * machineData.getWireLength());
         final AerofoilData rootAerofoilData;
         final AerofoilData tipAerofoilData;
         if (aerofoilRepository.count() > 0) {
@@ -91,7 +88,7 @@ public class WingDesignController {
         model.addAttribute("tipAerofoilData", tipAerofoilData);
         model.addAttribute("tipAerofoilSvg", tipAerofoilData.toSvgPoints(bedAlignmentCalculator.getProjectedTipXOffset(), bedAlignmentCalculator.getProjectedTipYOffset(), wingData.getTipChord(), bedAlignmentCalculator.getTipSweep(), bedAlignmentCalculator.getTipWash()));
         model.addAttribute("rootAerofoilSvg", tipAerofoilData.toSvgPoints(bedAlignmentCalculator.getProjectedRootXOffset(), bedAlignmentCalculator.getProjectedRootYOffset(), wingData.getRootChord(), bedAlignmentCalculator.getRootSweep(), bedAlignmentCalculator.getRootWash()));
-        model.addAttribute("wingLinesData", tipAerofoilData.toSvgLines(bedAlignmentCalculator.getProjectedRootXOffset(), bedAlignmentCalculator.getProjectedRootYOffset(), wingData.getRootChord(), bedAlignmentCalculator.getProjectedTipXOffset(), bedAlignmentCalculator.getProjectedTipYOffset(), wingData.getTipChord(), wingData.getTipSweep(), wingData.getTipWash()));
+        model.addAttribute("wingLinesData", tipAerofoilData.toSvgLines(bedAlignmentCalculator.getProjectedRootXOffset(), bedAlignmentCalculator.getProjectedRootYOffset(), wingData.getRootChord(), bedAlignmentCalculator.getRootGcodeSweep(), bedAlignmentCalculator.getRootWash(), bedAlignmentCalculator.getProjectedTipXOffset(), bedAlignmentCalculator.getProjectedTipYOffset(), wingData.getTipChord(), bedAlignmentCalculator.getTipSweep(), bedAlignmentCalculator.getTipWash()));
         final Bounds svgBounds = machineData.getSvgBounds();
         model.addAttribute("svgbounds", svgBounds.getMinX() + " " + svgBounds.getMinY() + " " + svgBounds.getWidth() + " " + svgBounds.getHeight());
         final GcodeGenerator gcodeGenerator = new GcodeGenerator(rootAerofoilData, bedAlignmentCalculator, tipAerofoilData, machineData.getMachineHeight(), machineData.getInitialCutHeight(), machineData.getInitialCutLength());

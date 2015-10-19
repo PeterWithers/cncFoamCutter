@@ -333,9 +333,9 @@ Copyright (C) 2015 Peter Withers
                             </td></tr><tr><td>
                                 Bed Alignment</td><td>
                                 <select id="bedAlignment" name="bedAlignment">
-                                    <option value="30" th:selected="${machineData.getBedAlignment()==30}">left (30)</option>
+                                    <option value="30" th:selected="${machineData.getBedAlignment()==30}">--&gt; (30)</option>
                                     <option value="0" th:selected="${machineData.getBedAlignment()==0}">centre (0)</option>
-                                    <option value="-30" th:selected="${machineData.getBedAlignment()==-30}">right (-30)</option>
+                                    <option value="-30" th:selected="${machineData.getBedAlignment()==-30}">&lt;-- (-30)</option>
                                     <option th:if="${machineData.getBedAlignment()!=-30 and machineData.getBedAlignment()!=30 and machineData.getBedAlignment()!=0}" th:text="${machineData.getBedAlignment()}" th:value="${machineData.getBedAlignment()}" selected="selected">custom</option>
                                 </select>
                             </td></tr><tr><td>
