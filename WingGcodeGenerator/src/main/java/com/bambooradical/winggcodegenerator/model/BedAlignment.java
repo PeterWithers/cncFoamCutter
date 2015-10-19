@@ -52,11 +52,11 @@ public class BedAlignment {
     }
 
     public int getRootSweep() {
-        return (int) (-wingData.getTipSweep() / 2.0);
+        return (int) (wingData.getTipSweep() >= 0 ? 0 : -wingData.getTipSweep());
     }
 
     public int getTipSweep() {
-        return (int) (wingData.getTipSweep() / 2.0);
+        return (int) (wingData.getTipSweep() <= 0 ? 0 : wingData.getTipSweep());
     }
 
     public int getRootGcodeSweep() {
@@ -88,7 +88,7 @@ public class BedAlignment {
     }
 
     public int getProjectedRootXOffset() {
-        return machineData.getInitialCutLength() + (int) (machineData.getViewAngle() * rootPercentOfWire());
+        return machineData.getInitialCutLength() + getRootSweep() + (int) (machineData.getViewAngle() * rootPercentOfWire());
     }
 
     public int getProjectedRootYOffset() {
@@ -100,7 +100,7 @@ public class BedAlignment {
     }
 
     public int getProjectedTipXOffset() {
-        return machineData.getInitialCutLength() + (int) (machineData.getViewAngle() * tipPercentOfWire());
+        return machineData.getInitialCutLength() + getTipSweep() + (int) (machineData.getViewAngle() * tipPercentOfWire());
     }
 
     public int getProjectedTipYOffset() {
