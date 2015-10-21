@@ -16,10 +16,11 @@ public class GcodeGenerator {
 
     ArrayList<double[]> xYpath;
     ArrayList<double[]> zEpath;
+    private final double offsetDistance = 10;
 
     public GcodeGenerator(AerofoilData aerofoilDataRoot, BedAlignment bedAlignment, AerofoilData aerofoilDataTip, int machineHeight, int initialCutHeight, int initialCutLength) {
-        xYpath = aerofoilDataRoot.getTransformedPoints(initialCutLength, machineHeight - initialCutHeight, bedAlignment.getRootGcodeChord(), bedAlignment.getRootGcodeSweep(), bedAlignment.getRootGcodeWash());
-        zEpath = aerofoilDataTip.getTransformedPoints(initialCutLength, machineHeight - initialCutHeight, bedAlignment.getTipGcodeChord(), bedAlignment.getTipGcodeSweep(), bedAlignment.getTipGcodeWash());
+        xYpath = applyCuttingToolOffset(aerofoilDataRoot.getTransformedPoints(initialCutLength, machineHeight - initialCutHeight, bedAlignment.getRootGcodeChord(), bedAlignment.getRootGcodeSweep(), bedAlignment.getRootGcodeWash()));
+        zEpath = applyCuttingToolOffset(aerofoilDataTip.getTransformedPoints(initialCutLength, machineHeight - initialCutHeight, bedAlignment.getTipGcodeChord(), bedAlignment.getTipGcodeSweep(), bedAlignment.getTipGcodeWash()));
         xYpath.add(0, new double[]{0, 0});
         zEpath.add(0, new double[]{0, 0});
         xYpath.add(1, new double[]{0, machineHeight - initialCutHeight});
@@ -32,6 +33,37 @@ public class GcodeGenerator {
         zEpath.add(new double[]{0, machineHeight - initialCutHeight});
         xYpath.add(new double[]{0, 0});
         zEpath.add(new double[]{0, 0});
+    }
+
+    private ArrayList<double[]> applyCuttingToolOffset(ArrayList<double[]> path) {
+        ArrayList<double[]> returnPath = new ArrayList<>();
+        for (int currentIndex = 0; currentIndex < path.size(); currentIndex++) {
+            final double[] lastPoint = (currentIndex > 0) ? path.get(currentIndex - 1) : null;
+            final double[] currentPoint = path.get(currentIndex);
+            final double[] nextPoint = (currentIndex < path.size() - 1) ? path.get(currentIndex + 1) : null;
+            final double lastDegrees;
+            if (lastPoint == null) {
+                lastDegrees = 90;
+            } else {
+                double lastDeltaX = lastPoint[0] - currentPoint[0];
+                double lastDeltaY = lastPoint[1] - currentPoint[1];
+                lastDegrees = Math.toDegrees(Math.atan2(lastDeltaX, lastDeltaY));
+            }
+            final double nextDegrees;
+            if (nextPoint == null) {
+                nextDegrees = 90;
+            } else {
+                double nextDeltaX = nextPoint[0] - currentPoint[0];
+                double nextDeltaY = nextPoint[1] - currentPoint[1];
+                nextDegrees = Math.toDegrees(Math.atan2(nextDeltaX, nextDeltaY));
+            }
+            // average the two angles and move the current point along a line defined by the resulting angle
+            final double currentDegrees = (lastDegrees + nextDegrees) / 2;
+            returnPath.add(new double[]{
+                currentPoint[0] + (offsetDistance * Math.cos(currentDegrees)),
+                currentPoint[1] + (offsetDistance * Math.sin(currentDegrees))});
+        }
+        return returnPath;
     }
 
     public GcodeGenerator() {
@@ -73,7 +105,7 @@ public class GcodeGenerator {
         pause(builder, 5);
         beep(builder);
         pause(builder, 5);
-        // todo: this will not reliably work with differing aerofoils
+        // this requres that each aerofoil path is normalised to have the same number of points and relative intervals for each point
         for (int currentPoint = 0; currentPoint < xYpath.size(); currentPoint++) {
             double[] currentPointRoot = xYpath.get(currentPoint);
             double[] currentPointTip = zEpath.get(currentPoint);;
