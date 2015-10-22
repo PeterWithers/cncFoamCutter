@@ -33,13 +33,13 @@ Copyright (C) 2015 Peter Withers
             <input type="radio" name="editMode" value="moveMode" checked="checked">Move Mode</input>
             <input type="checkbox" name="snapMode" id="snapMode" value="true" checked="checked">Snap</input>
             <input type="checkbox" name="gridMode" id="gridMode" value="true" checked="checked">Grid</input>
-            <svg id="editSvgPanel" viewBox="-25 -25 150 50"  onmousemove="move(evt)"><!--ontouchmove="touchMove(evt)" ontouchend="stop(evt)"-->
+            <svg id="editSvgPanel" viewBox="-25 -50 150 150"  onmousemove="move(evt)"><!--ontouchmove="touchMove(evt)" ontouchend="stop(evt)"-->
                 <g id="grid">
                     <!--<line x1="-10" y1="0" x2="110" y2="0" style="stroke:rgba(100,100,100, 50);stroke-width:0.1" />-->
-                    <line th:each="yRow : ${#numbers.sequence( -20, 20)}" x1="0" th:attr="y1=${yRow}, y2=${yRow}" x2="100" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
-                    <line th:each="yRow : ${#numbers.sequence( -2, 2)}" x1="-5" th:attr="y1=${yRow*10}, y2=${yRow*10}" x2="105" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
-                    <line th:each="xRow : ${#numbers.sequence( 0, 100)}" y1="-20" th:attr="x1=${xRow}, x2=${xRow}" y2="20" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
-                    <line th:each="xRow : ${#numbers.sequence( 0, 10)}" y1="-25" th:attr="x1=${xRow*10}, x2=${xRow*10}" y2="25" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
+                    <line th:each="yRow : ${#numbers.sequence( -30, 30)}" x1="0" th:attr="y1=${yRow}, y2=${yRow}" x2="100" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
+                    <line th:each="yRow : ${#numbers.sequence( -3, 3)}" x1="-5" th:attr="y1=${yRow*10}, y2=${yRow*10}" x2="105" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
+                    <line th:each="xRow : ${#numbers.sequence( 0, 100)}" y1="-30" th:attr="x1=${xRow}, x2=${xRow}" y2="30" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
+                    <line th:each="xRow : ${#numbers.sequence( 0, 10)}" y1="-35" th:attr="x1=${xRow*10}, x2=${xRow*10}" y2="35" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
                     <!--<line x1="0" y1="-55" x2="0" y2="55" style="stroke:rgba(100,100,100, 50);stroke-width:0.1" />-->
                     <line id="midPointRule" x1="100" y1="-55" x2="100" y2="55" style="stroke:red;stroke-width:0.1" />
                 </g>
@@ -57,7 +57,7 @@ Copyright (C) 2015 Peter Withers
                     if (targetHandle !== null) {
                         if (evt.buttons !== 0) {
                             cxValue = (evt.offsetX * 150 / $("#editSvgPanel")[0].clientWidth) - 25;
-                            cyValue = (evt.offsetY * 150 / $("#editSvgPanel")[0].clientWidth) - 25;
+                            cyValue = (evt.offsetY * 150 / $("#editSvgPanel")[0].clientWidth) - 50;
                             if ($("#snapMode").prop('checked')) {
                                 cxValue = cxValue.toFixed(0);
                                 cyValue = cyValue.toFixed(0);
