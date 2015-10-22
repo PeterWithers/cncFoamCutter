@@ -38,16 +38,17 @@ public class GcodeGenerator {
     private ArrayList<double[]> applyCuttingToolOffset(ArrayList<double[]> path) {
         ArrayList<double[]> returnPath = new ArrayList<>();
         for (int currentIndex = 0; currentIndex < path.size(); currentIndex++) {
-            final double[] lastPoint = (currentIndex > 0) ? path.get(currentIndex - 1) : null;
+            final double[] prevPoint = (currentIndex > 0) ? path.get(currentIndex - 1) : path.get(path.size() - 1);
             final double[] currentPoint = path.get(currentIndex);
-            final double[] nextPoint = (currentIndex < path.size() - 1) ? path.get(currentIndex + 1) : null;
-            final double lastRadians = getAngleRadians((lastPoint == null) ? new double[]{0, 0} : lastPoint, currentPoint)+1.57079633;
-            final double nextRadians = getAngleRadians((nextPoint == null) ? new double[]{0, 0} : nextPoint, currentPoint)-1.57079633;
-            // average the two angles and move the current point along a line defined by the resulting angle
-            final double currentRadians = lastRadians + ((nextRadians - lastRadians) / 2);
+            final double[] nextPoint = (currentIndex < path.size() - 1) ? path.get(currentIndex + 1) : path.get(0);
+            final double prevRadians = getAngleRadians(prevPoint, currentPoint) + 1.57079633;
+            final double nextRadians = getAngleRadians(nextPoint, currentPoint) - 1.57079633;
+            // get the mid point of the two angles and move the current point along a line defined by the resulting angle
+            final double concaveRadians = (nextRadians + prevRadians) / 2;
+            final double convexRadians = concaveRadians + Math.PI;
             returnPath.add(new double[]{currentPoint[0], currentPoint[1]});
-            returnPath.add(offsetPoint(currentPoint, offsetDistance, lastRadians));
-            returnPath.add(offsetPoint(currentPoint, offsetDistance, currentRadians));
+            returnPath.add(offsetPoint(currentPoint, offsetDistance, prevRadians));
+            returnPath.add(offsetPoint(currentPoint, offsetDistance, convexRadians));
             returnPath.add(offsetPoint(currentPoint, offsetDistance, nextRadians));
             returnPath.add(new double[]{currentPoint[0], currentPoint[1]});
         }
