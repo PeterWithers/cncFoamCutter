@@ -41,29 +41,31 @@ public class GcodeGenerator {
             final double[] lastPoint = (currentIndex > 0) ? path.get(currentIndex - 1) : null;
             final double[] currentPoint = path.get(currentIndex);
             final double[] nextPoint = (currentIndex < path.size() - 1) ? path.get(currentIndex + 1) : null;
-            final double lastDegrees;
-            if (lastPoint == null) {
-                lastDegrees = 90;
-            } else {
-                double lastDeltaX = lastPoint[0] - currentPoint[0];
-                double lastDeltaY = lastPoint[1] - currentPoint[1];
-                lastDegrees = Math.toDegrees(Math.atan2(lastDeltaX, lastDeltaY));
-            }
-            final double nextDegrees;
-            if (nextPoint == null) {
-                nextDegrees = 90;
-            } else {
-                double nextDeltaX = nextPoint[0] - currentPoint[0];
-                double nextDeltaY = nextPoint[1] - currentPoint[1];
-                nextDegrees = Math.toDegrees(Math.atan2(nextDeltaX, nextDeltaY));
-            }
+            final double lastRadians = getAngleRadians((lastPoint == null) ? new double[]{0, 0} : lastPoint, currentPoint)+1.57079633;
+            final double nextRadians = getAngleRadians((nextPoint == null) ? new double[]{0, 0} : nextPoint, currentPoint)-1.57079633;
             // average the two angles and move the current point along a line defined by the resulting angle
-            final double currentDegrees = (lastDegrees + nextDegrees) / 2;
-            returnPath.add(new double[]{
-                currentPoint[0] + (offsetDistance * Math.cos(currentDegrees)),
-                currentPoint[1] + (offsetDistance * Math.sin(currentDegrees))});
+            final double currentRadians = lastRadians + ((nextRadians - lastRadians) / 2);
+            returnPath.add(new double[]{currentPoint[0], currentPoint[1]});
+            returnPath.add(offsetPoint(currentPoint, offsetDistance, lastRadians));
+            returnPath.add(offsetPoint(currentPoint, offsetDistance, currentRadians));
+            returnPath.add(offsetPoint(currentPoint, offsetDistance, nextRadians));
+            returnPath.add(new double[]{currentPoint[0], currentPoint[1]});
         }
         return returnPath;
+    }
+
+    public double[] offsetPoint(final double[] point, double distance, double angleRadians) {
+        return new double[]{
+            point[0] + (Math.sin(angleRadians) * distance),
+            point[1] + (Math.cos(angleRadians) * distance)};
+    }
+
+    public double getAngleRadians(final double[] pointA, final double[] pointB) {
+        double angleRadians;
+        double deltaX = pointA[0] - pointB[0];
+        double deltaY = pointA[1] - pointB[1];
+        angleRadians = Math.atan2(deltaX, deltaY);
+        return angleRadians;
     }
 
     public GcodeGenerator() {
