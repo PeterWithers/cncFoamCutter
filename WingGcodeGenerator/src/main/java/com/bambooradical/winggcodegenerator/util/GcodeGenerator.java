@@ -46,11 +46,14 @@ public class GcodeGenerator {
             // get the mid point of the two angles and move the current point along a line defined by the resulting angle
             final double concaveRadians = (nextRadians + prevRadians) / 2;
             final double convexRadians = concaveRadians + Math.PI;
-            returnPath.add(new double[]{currentPoint[0], currentPoint[1]});
-            returnPath.add(offsetPoint(currentPoint, offsetDistance, prevRadians));
-            returnPath.add(offsetPoint(currentPoint, offsetDistance, convexRadians));
-            returnPath.add(offsetPoint(currentPoint, offsetDistance, nextRadians));
-            returnPath.add(new double[]{currentPoint[0], currentPoint[1]});
+            boolean isConcave = (nextRadians - prevRadians) % (Math.PI * 2) < -Math.PI;
+            if (isConcave) {
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, prevRadians));
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, convexRadians));
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, nextRadians));
+            } else {
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, concaveRadians));
+            }
         }
         return returnPath;
     }
