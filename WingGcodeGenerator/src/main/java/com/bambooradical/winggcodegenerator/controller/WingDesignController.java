@@ -76,7 +76,7 @@ public class WingDesignController {
         accessDataRepository.save(new AccessData(accessDate, remoteAddr, userAgent, acceptLang, requestURI));
         final AerofoilData rootAerofoilData;
         final AerofoilData tipAerofoilData;
-        if (aerofoilRepository.count() > 0) {
+        if (aerofoilRepository.exists(wingData.getRootAerofoil())) {
             rootAerofoilData = aerofoilRepository.findOne(wingData.getRootAerofoil());
             tipAerofoilData = aerofoilRepository.findOne(wingData.getRootAerofoil()); // todo: when the gcode generator can process datafiles of different lenth this can be retured to tip 
         } else {
@@ -91,7 +91,7 @@ public class WingDesignController {
         model.addAttribute("wingLinesData", tipAerofoilData.toSvgLines(bedAlignmentCalculator.getProjectedRootXOffset(), bedAlignmentCalculator.getProjectedRootYOffset(), wingData.getRootChord(), bedAlignmentCalculator.getRootSweep(), bedAlignmentCalculator.getRootWash(), bedAlignmentCalculator.getProjectedTipXOffset(), bedAlignmentCalculator.getProjectedTipYOffset(), wingData.getTipChord(), bedAlignmentCalculator.getTipSweep(), bedAlignmentCalculator.getTipWash()));
         final Bounds svgBounds = machineData.getSvgBounds();
         model.addAttribute("svgbounds", svgBounds.getMinX() + " " + svgBounds.getMinY() + " " + svgBounds.getWidth() + " " + svgBounds.getHeight());
-        final GcodeGenerator gcodeGenerator = new GcodeGenerator(rootAerofoilData, bedAlignmentCalculator, tipAerofoilData, machineData.getMachineHeight(), machineData.getInitialCutHeight(), machineData.getInitialCutLength());
+        final GcodeGenerator gcodeGenerator = new GcodeGenerator(machineData, rootAerofoilData, bedAlignmentCalculator, tipAerofoilData);
         model.addAttribute("gcodeXY", gcodeGenerator.toSvgXy());
         model.addAttribute("gcodeZE", gcodeGenerator.toSvgZe());
         model.addAttribute("transformZE", "translate(" + (int) (machineData.getViewAngle()) + "," + (int) (machineData.getWireLength() - machineData.getViewAngle()) + ")");
@@ -118,7 +118,7 @@ public class WingDesignController {
             @RequestParam(value = "name", required = true) final String aerofoilName,
             @RequestParam(value = "id", required = false, defaultValue = "-1") final long id,
             @RequestParam(value = "isBezier", required = false, defaultValue = "false") final boolean isBezier,
-            @RequestParam(value = "isBezier", required = false, defaultValue = "false") final boolean isEditable,
+            @RequestParam(value = "isEditable", required = false, defaultValue = "false") final boolean isEditable,
             @RequestParam(value = "saveCopy", required = false, defaultValue = "false") final boolean saveCopy,
             HttpServletRequest request) throws IOException {
         final AerofoilData uploadedAerofoil = new AerofoilDatParser().parseString(datText, aerofoilName);
@@ -127,6 +127,17 @@ public class WingDesignController {
         uploadedAerofoil.setEditable(isEditable);
         uploadedAerofoil.setBezier(isBezier);
         aerofoilRepository.save(uploadedAerofoil);
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
+    }
+
+    @RequestMapping(value = "/deleteAerofoil", method = RequestMethod.POST)
+    public String aerofoilDelete(@RequestParam(value = "id", required = false, defaultValue = "-1") final long id,
+            HttpServletRequest request) throws IOException {
+        final AerofoilData findOne = aerofoilRepository.findOne(id);
+        if (findOne.isEditable()) {
+            aerofoilRepository.delete(findOne);
+        }
         String referer = request.getHeader("Referer");
         return "redirect:" + referer;
     }
@@ -152,7 +163,7 @@ public class WingDesignController {
             rootAerofoilData = new AerofoilDataAG36();
             tipAerofoilData = new AerofoilDataAG36();
         }
-        final GcodeGenerator gcodeGenerator = new GcodeGenerator(rootAerofoilData, bedAlignmentCalculator, tipAerofoilData, machineData.getMachineHeight(), machineData.getInitialCutHeight(), machineData.getInitialCutLength());
+        final GcodeGenerator gcodeGenerator = new GcodeGenerator(machineData, rootAerofoilData, bedAlignmentCalculator, tipAerofoilData);
         String referer = request.getHeader("Referer");
         return gcodeGenerator.toGcode(machineData, referer);
     }

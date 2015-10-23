@@ -268,6 +268,10 @@ Copyright (C) 2015 Peter Withers
                             </td></tr><tr><td>
                                 Cutting Speed</td><td><input type="number" id="cuttingSpeed" name="cuttingSpeed" th:value="${machineData.getCuttingSpeed()}" />
                             </td></tr><tr><td>
+                                Wire Offset 100% Feed Rate</td><td><input type="number" id="wireOffset100Feed" name="wireOffset100Feed" th:value="${machineData.getWireOffset100Feed()}" />
+                            </td></tr><tr><td>
+                                Wire Offset 50% Feed Rate</td><td><input type="number" id="wireOffset50Feed" name="wireOffset50Feed" th:value="${machineData.getWireOffset50Feed()}" />
+                            </td></tr><tr><td>
                                 Heater %</td><td><input type="number" id="heaterPercent" name="heaterPercent" th:value="${machineData.getHeaterPercent()}" />
                             </td></tr><tr><td><button type="reset">Reset</button></td><td><button type="submit" id="saveButton">Update</button>
                             </td></tr>
@@ -312,6 +316,8 @@ Copyright (C) 2015 Peter Withers
                         <input type="hidden" th:field="${machineData.verticalAxis2}" />
                         <input type="hidden" th:field="${machineData.diagramScale}" />
                         <input type="hidden" th:field="${machineData.cuttingSpeed}" />
+                        <input type="hidden" th:field="${machineData.wireOffset100Feed}" />
+                        <input type="hidden" th:field="${machineData.wireOffset50Feed}" />
                         <input type="hidden" th:field="${machineData.heaterPercent}" />
                     </span>
                     <table>

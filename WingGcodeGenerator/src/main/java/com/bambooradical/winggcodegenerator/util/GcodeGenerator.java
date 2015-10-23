@@ -16,12 +16,11 @@ public class GcodeGenerator {
 
     ArrayList<double[]> xYpath;
     ArrayList<double[]> zEpath;
-    private final double offsetDistance = 10;
 
-    public GcodeGenerator(AerofoilData aerofoilDataRoot, BedAlignment bedAlignment, AerofoilData aerofoilDataTip, int machineHeight, int initialCutHeight, int initialCutLength) {
-        final int cutDepth = machineHeight - initialCutHeight;
-        xYpath = applyCuttingToolOffset(cutDepth, aerofoilDataRoot.getTransformedPoints(initialCutLength, cutDepth, bedAlignment.getRootGcodeChord(), bedAlignment.getRootGcodeSweep(), bedAlignment.getRootGcodeWash()));
-        zEpath = applyCuttingToolOffset(cutDepth, aerofoilDataTip.getTransformedPoints(initialCutLength, cutDepth, bedAlignment.getTipGcodeChord(), bedAlignment.getTipGcodeSweep(), bedAlignment.getTipGcodeWash()));
+    public GcodeGenerator(MachineData machineData, AerofoilData aerofoilDataRoot, BedAlignment bedAlignment, AerofoilData aerofoilDataTip) {
+        final int cutDepth = machineData.getMachineHeight() - machineData.getInitialCutHeight();
+        xYpath = applyCuttingToolOffset(cutDepth, bedAlignment.getRootGcodeWireOffsetDistance(), aerofoilDataRoot.getTransformedPoints(machineData.getInitialCutLength(), cutDepth, bedAlignment.getRootGcodeChord(), bedAlignment.getRootGcodeSweep(), bedAlignment.getRootGcodeWash()));
+        zEpath = applyCuttingToolOffset(cutDepth, bedAlignment.getTipGcodeWireOffsetDistance(), aerofoilDataTip.getTransformedPoints(machineData.getInitialCutLength(), cutDepth, bedAlignment.getTipGcodeChord(), bedAlignment.getTipGcodeSweep(), bedAlignment.getTipGcodeWash()));
         xYpath.add(0, new double[]{0, 0});
         zEpath.add(0, new double[]{0, 0});
         xYpath.add(1, new double[]{0, cutDepth});
@@ -36,7 +35,7 @@ public class GcodeGenerator {
         zEpath.add(new double[]{0, 0});
     }
 
-    private ArrayList<double[]> applyCuttingToolOffset(double cutDepth, ArrayList<double[]> path) {
+    private ArrayList<double[]> applyCuttingToolOffset(double cutDepth, double offsetDistance, ArrayList<double[]> path) {
         ArrayList<double[]> returnPath = new ArrayList<>();
         for (int currentIndex = 0; currentIndex < path.size(); currentIndex++) {
             final double[] prevPoint = (currentIndex > 0) ? path.get(currentIndex - 1) : new double[]{0, cutDepth};

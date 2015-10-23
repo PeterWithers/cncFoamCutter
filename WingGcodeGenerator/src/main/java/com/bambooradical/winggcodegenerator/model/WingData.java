@@ -11,7 +11,7 @@ public class WingData {
 
     private int rootChord = 120;
     private int tipChord = 120;
-    private int wingLength = 120;
+    private int wingLength = 300;
     private long rootAerofoil = 1;
     private long tipAerofoil = 1;
     private int tipSweep = 0;

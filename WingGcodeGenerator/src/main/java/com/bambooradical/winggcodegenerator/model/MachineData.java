@@ -32,6 +32,8 @@ public class MachineData {
     private int initialCutLength = 10;
     private int diagramScale = 100;
     private int bedAlignment = 0; // positive values are aligned left offset by the value, nevative values are aligned right offset by the value, zero centre aligns with no offset
+    private double wireOffset100Feed = 1;
+    private double wireOffset50Feed = 1.5;
 
     public int getCuttingSpeed() {
         return cuttingSpeed;
@@ -122,6 +124,22 @@ public class MachineData {
 
     public int getDiagramScale() {
         return diagramScale;
+    }
+
+    public double getWireOffset100Feed() {
+        return wireOffset100Feed;
+    }
+
+    public void setWireOffset100Feed(double wireOffset100Feed) {
+        this.wireOffset100Feed = wireOffset100Feed;
+    }
+
+    public double getWireOffset50Feed() {
+        return wireOffset50Feed;
+    }
+
+    public void setWireOffset50Feed(double wireOffset50Feed) {
+        this.wireOffset50Feed = wireOffset50Feed;
     }
 
     public void setMachineDepth(int machineDepth) {

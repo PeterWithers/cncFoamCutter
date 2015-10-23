@@ -17,15 +17,19 @@ Copyright (C) 2015 Peter Withers
     <body>
         <div th:fragment="pathEditor">
             <div id="pathEditorForm">
+                <form th:object="${tipAerofoilData}" method="POST" action="#" th:action="@{/deleteAerofoil}">
+                    <label th:text="*{name}">ID</label>
+                    <input type="hidden" th:field="*{id}" />
+                    <button th:if="${tipAerofoilData.isEditable()}" type="submit" id="deleteButton">Delete</button> 
+                </form>                 
                 <form th:object="${tipAerofoilData}" method="POST" action="#" th:action="@{/saveAerofoil}">                    
                     <input type="text" name="datText" id="datText"/>
                     <label>Aerofoil Name<input type="text" th:field="*{name}" /></label>
-                    <label><input type="number" th:field="*{id}" />ID</label>
-                    <label><input type="checkbox" onchange="updatePath()" th:attr="checked=${tipAerofoilData.isEditable()}" name="isEditable" id="isEditable" value="true" />Editable</label>
+                    <input type="hidden" th:field="*{id}" />
+                    <label><input onchange="updatePath()" checked="true" th:attr="type=${(tipAerofoilData.isEditable())?'checkbox':'hidden'}" name="isEditable" id="isEditable" value="true" /><span th:text="${(tipAerofoilData.isEditable())?'Editable':'Read Only'}"></span></label>
                     <label><input type="checkbox" onchange="updatePath()" th:attr="checked=${tipAerofoilData.isBezier()}" name="isBezier" id="isBezier" value="true" />Bezier</label>
-                    <label><input type="checkbox" checked="true" name="saveCopy" id="saveCopy" value="true"/>Save Copy</label>
-                    <button type="submit" id="deleteButton">Delete</button>
-                    <button type="submit" id="saveButton">Save</button>
+                    <label th:if="${tipAerofoilData.isEditable()}"><input type="checkbox" checked="false" name="saveCopy" id="saveCopy" value="true"/>Save Copy</label>
+                    <button type="submit" id="saveButton" th:text="${(tipAerofoilData.isEditable())?'Save':'Save Copy'}"></button>
                 </form>
             </div>
             <input type="radio" name="editMode" value="addMode">Add Mode</input>
