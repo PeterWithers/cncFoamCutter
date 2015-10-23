@@ -62,7 +62,7 @@ public class GcodeGenerator {
     }
 
     public static boolean isConcave(final double nextRadians, final double prevRadians) {
-//        System.out.println("assertEquals(" + ((nextRadians - prevRadians) % (Math.PI * 2) < -Math.PI) + ", GcodeGenerator.isConcave(" + nextRadians + ", " + prevRadians + "));");
+//        System.out.println("assertEquals(" + (nextRadians > prevRadians) + ", GcodeGenerator.isConcave(" + nextRadians + ", " + prevRadians + "));");
         return nextRadians > prevRadians;
     }
 
