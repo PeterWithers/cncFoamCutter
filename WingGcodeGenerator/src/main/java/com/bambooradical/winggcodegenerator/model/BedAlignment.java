@@ -43,6 +43,18 @@ public class BedAlignment {
         return bedAlignment;
     }
 
+    public double getRootGcodeWireOffsetDistance() {
+//        if(wingData.getTipChord() <= wingData.getRootChord())
+        return machineData.getWireOffset100Feed();
+//        else
+    }
+
+    public double getTipGcodeWireOffsetDistance() {
+//        if(wingData.getTipChord() >= wingData.getRootChord()) 
+        return machineData.getWireOffset100Feed();
+//        else
+    }
+
     public int getRootGcodeChord() {
         return (int) (wingData.getRootChord() - ((((double) wingData.getTipChord() - wingData.getRootChord()) / wingData.getWingLength()) * (rootPosition)));
     }
