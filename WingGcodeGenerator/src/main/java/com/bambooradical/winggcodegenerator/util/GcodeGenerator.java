@@ -19,43 +19,51 @@ public class GcodeGenerator {
     private final double offsetDistance = 10;
 
     public GcodeGenerator(AerofoilData aerofoilDataRoot, BedAlignment bedAlignment, AerofoilData aerofoilDataTip, int machineHeight, int initialCutHeight, int initialCutLength) {
-        xYpath = applyCuttingToolOffset(aerofoilDataRoot.getTransformedPoints(initialCutLength, machineHeight - initialCutHeight, bedAlignment.getRootGcodeChord(), bedAlignment.getRootGcodeSweep(), bedAlignment.getRootGcodeWash()));
-        zEpath = applyCuttingToolOffset(aerofoilDataTip.getTransformedPoints(initialCutLength, machineHeight - initialCutHeight, bedAlignment.getTipGcodeChord(), bedAlignment.getTipGcodeSweep(), bedAlignment.getTipGcodeWash()));
+        final int cutDepth = machineHeight - initialCutHeight;
+        xYpath = applyCuttingToolOffset(cutDepth, aerofoilDataRoot.getTransformedPoints(initialCutLength, cutDepth, bedAlignment.getRootGcodeChord(), bedAlignment.getRootGcodeSweep(), bedAlignment.getRootGcodeWash()));
+        zEpath = applyCuttingToolOffset(cutDepth, aerofoilDataTip.getTransformedPoints(initialCutLength, cutDepth, bedAlignment.getTipGcodeChord(), bedAlignment.getTipGcodeSweep(), bedAlignment.getTipGcodeWash()));
         xYpath.add(0, new double[]{0, 0});
         zEpath.add(0, new double[]{0, 0});
-        xYpath.add(1, new double[]{0, machineHeight - initialCutHeight});
-        zEpath.add(1, new double[]{0, machineHeight - initialCutHeight});
+        xYpath.add(1, new double[]{0, cutDepth});
+        zEpath.add(1, new double[]{0, cutDepth});
 //        xYpath.add(2, new double[]{initialCutLength, machineHeight - initialCutHeight});
 //        zEpath.add(2, new double[]{initialCutLength, machineHeight - initialCutHeight});
 //        xYpath.add(new double[]{initialCutLength, machineHeight - initialCutHeight});
 //        zEpath.add(new double[]{initialCutLength, machineHeight - initialCutHeight});
-        xYpath.add(new double[]{0, machineHeight - initialCutHeight});
-        zEpath.add(new double[]{0, machineHeight - initialCutHeight});
+        xYpath.add(new double[]{0, cutDepth});
+        zEpath.add(new double[]{0, cutDepth});
         xYpath.add(new double[]{0, 0});
         zEpath.add(new double[]{0, 0});
     }
 
-    private ArrayList<double[]> applyCuttingToolOffset(ArrayList<double[]> path) {
+    private ArrayList<double[]> applyCuttingToolOffset(double cutDepth, ArrayList<double[]> path) {
         ArrayList<double[]> returnPath = new ArrayList<>();
         for (int currentIndex = 0; currentIndex < path.size(); currentIndex++) {
-            final double[] prevPoint = (currentIndex > 0) ? path.get(currentIndex - 1) : path.get(path.size() - 1);
+            final double[] prevPoint = (currentIndex > 0) ? path.get(currentIndex - 1) : new double[]{0, cutDepth};
             final double[] currentPoint = path.get(currentIndex);
-            final double[] nextPoint = (currentIndex < path.size() - 1) ? path.get(currentIndex + 1) : path.get(0);
-            final double prevRadians = getAngleRadians(prevPoint, currentPoint) + 1.57079633;
-            final double nextRadians = getAngleRadians(nextPoint, currentPoint) - 1.57079633;
+            final double[] nextPoint = (currentIndex < path.size() - 1) ? path.get(currentIndex + 1) : new double[]{0, cutDepth};
+            final double prevRadians = getAngleRadians(prevPoint, currentPoint);
+            final double nextRadians = getAngleRadians(currentPoint, nextPoint);
             // get the mid point of the two angles and move the current point along a line defined by the resulting angle
-            final double concaveRadians = (nextRadians + prevRadians) / 2;
-            final double convexRadians = concaveRadians + Math.PI;
-            boolean isConcave = (nextRadians - prevRadians) % (Math.PI * 2) < -Math.PI;
+            final double midRadians = nextRadians + ((prevRadians - nextRadians) / 2d);
+            boolean isConcave = isConcave(nextRadians, prevRadians);
             if (isConcave) {
-                returnPath.add(offsetPoint(currentPoint, offsetDistance, prevRadians));
-                returnPath.add(offsetPoint(currentPoint, offsetDistance, convexRadians));
-                returnPath.add(offsetPoint(currentPoint, offsetDistance, nextRadians));
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, prevRadians + Math.PI / 2));
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, midRadians + Math.PI / 2));
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, nextRadians + Math.PI / 2));
             } else {
-                returnPath.add(offsetPoint(currentPoint, offsetDistance, concaveRadians));
+//                final double[] offsetPoint1 = offsetPoint(currentPoint, offsetDistance, prevRadians + Math.PI / 2);
+//                final double[] offsetPoint2 = offsetPoint(currentPoint, offsetDistance, nextRadians + Math.PI / 2);
+//                returnPath.add(new double[]{((offsetPoint1[0] + offsetPoint2[0]) / 2), ((offsetPoint1[1] + offsetPoint2[1]) / 2)});
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, midRadians + Math.PI / 2));
             }
         }
         return returnPath;
+    }
+
+    public static boolean isConcave(final double nextRadians, final double prevRadians) {
+//        System.out.println("assertEquals(" + ((nextRadians - prevRadians) % (Math.PI * 2) < -Math.PI) + ", GcodeGenerator.isConcave(" + nextRadians + ", " + prevRadians + "));");
+        return nextRadians > prevRadians;
     }
 
     public double[] offsetPoint(final double[] point, double distance, double angleRadians) {
