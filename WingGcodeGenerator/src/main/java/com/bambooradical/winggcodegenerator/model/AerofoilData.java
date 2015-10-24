@@ -199,10 +199,10 @@ public class AerofoilData {
         return builder.toString();
     }
 
-    public String toSvgLines(int xOffsetRoot, int yOffsetRoot, int chordRoot, int sweepRoot, double washRoot, int xOffsetTip, int yOffsetTip, int chordTip, int sweepTip, double washTip) {
+    public String toSvgLines(AerofoilData tipData, int xOffsetRoot, int yOffsetRoot, int chordRoot, int sweepRoot, double washRoot, int xOffsetTip, int yOffsetTip, int chordTip, int sweepTip, double washTip) {
         StringBuilder builder = new StringBuilder();
         final ArrayList<double[]> transformedPointsRoot = getTransformedPoints(xOffsetRoot, yOffsetRoot, chordRoot, sweepRoot, washRoot);
-        final ArrayList<double[]> transformedPointsTip = getTransformedPoints(xOffsetTip, yOffsetTip, chordTip, sweepTip, washTip);
+        final ArrayList<double[]> transformedPointsTip = tipData.getTransformedPoints(xOffsetTip, yOffsetTip, chordTip, sweepTip, washTip);
         for (int index = 0; index < transformedPointsRoot.size(); index++) {
             builder.append(transformedPointsRoot.get(index)[0]);
             builder.append(",");

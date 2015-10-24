@@ -57,6 +57,9 @@ public class GcodeGenerator {
 //                final double[] offsetPoint2 = offsetPoint(currentPoint, offsetDistance, nextRadians + Math.PI / 2);
 //                returnPath.add(new double[]{((offsetPoint1[0] + offsetPoint2[0]) / 2), ((offsetPoint1[1] + offsetPoint2[1]) / 2)});
                 returnPath.add(offsetPoint(currentPoint, offsetDistance, midRadians + Math.PI / 2));
+                // add three points so that the total number of points match any other aerofoil that could be used in conjunction with this one
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, midRadians + Math.PI / 2));
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, midRadians + Math.PI / 2));
             }
         }
         return returnPath;

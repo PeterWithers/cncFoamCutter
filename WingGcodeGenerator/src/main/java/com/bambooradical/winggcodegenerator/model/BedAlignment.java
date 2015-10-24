@@ -45,16 +45,18 @@ public class BedAlignment {
 
     public double getRootGcodeWireOffsetDistance() {
         // todo: this should be setting tipWireOffset to be propoptional to the ratio of the chords
-        double rootWireOffset = (wingData.getTipChord() <= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
-        double tipWireOffset = (wingData.getTipChord() >= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
-        return (int) (rootWireOffset - ((((double) tipWireOffset - rootWireOffset) / wingData.getWingLength()) * (rootPosition)));
+//        double rootWireOffset = (wingData.getTipChord() <= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
+//        double tipWireOffset = (wingData.getTipChord() >= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
+//        return (int) (rootWireOffset - ((((double) tipWireOffset - rootWireOffset) / wingData.getWingLength()) * (rootPosition)));
+        return machineData.getWireOffset100Feed();
     }
 
     public double getTipGcodeWireOffsetDistance() {
         // todo: this should be setting tipWireOffset to be propoptional to the ratio of the chords
-        double rootWireOffset = (wingData.getTipChord() <= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
-        double tipWireOffset = (wingData.getTipChord() >= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
-        return (int) (tipWireOffset + ((((double) tipWireOffset - rootWireOffset) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
+//        double rootWireOffset = (wingData.getTipChord() <= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
+//        double tipWireOffset = (wingData.getTipChord() >= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
+//        return (int) (tipWireOffset + ((((double) tipWireOffset - rootWireOffset) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
+        return machineData.getWireOffset100Feed();
     }
 
     public int getRootGcodeChord() {

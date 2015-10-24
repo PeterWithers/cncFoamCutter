@@ -78,17 +78,25 @@ public class WingDesignController {
         final AerofoilData tipAerofoilData;
         if (aerofoilRepository.exists(wingData.getRootAerofoil())) {
             rootAerofoilData = aerofoilRepository.findOne(wingData.getRootAerofoil());
-            tipAerofoilData = aerofoilRepository.findOne(wingData.getRootAerofoil()); // todo: when the gcode generator can process datafiles of different lenth this can be retured to tip 
         } else {
             rootAerofoilData = new AerofoilDataAG36();
-            tipAerofoilData = new AerofoilDataAG36();
+        }
+        if (aerofoilRepository.exists(wingData.getTipAerofoil())) {
+            final AerofoilData tempAerofoilData = aerofoilRepository.findOne(wingData.getTipAerofoil()); // todo: when the gcode generator can process datafiles of different lenth this can be retured to tip 
+            if (rootAerofoilData.isBezier() == tempAerofoilData.isBezier() && rootAerofoilData.getPoints().length == tempAerofoilData.getPoints().length) {
+                tipAerofoilData = tempAerofoilData;
+            } else {
+                tipAerofoilData = rootAerofoilData;
+            }
+        } else {
+            tipAerofoilData = rootAerofoilData;
         }
         model.addAttribute("aerofoilList", aerofoilRepository.findAll());
         model.addAttribute("rootAerofoilData", rootAerofoilData);
         model.addAttribute("tipAerofoilData", tipAerofoilData);
         model.addAttribute("tipAerofoilSvg", tipAerofoilData.toSvgPoints(bedAlignmentCalculator.getProjectedTipXOffset(), bedAlignmentCalculator.getProjectedTipYOffset(), wingData.getTipChord(), bedAlignmentCalculator.getTipSweep(), bedAlignmentCalculator.getTipWash()));
-        model.addAttribute("rootAerofoilSvg", tipAerofoilData.toSvgPoints(bedAlignmentCalculator.getProjectedRootXOffset(), bedAlignmentCalculator.getProjectedRootYOffset(), wingData.getRootChord(), bedAlignmentCalculator.getRootSweep(), bedAlignmentCalculator.getRootWash()));
-        model.addAttribute("wingLinesData", tipAerofoilData.toSvgLines(bedAlignmentCalculator.getProjectedRootXOffset(), bedAlignmentCalculator.getProjectedRootYOffset(), wingData.getRootChord(), bedAlignmentCalculator.getRootSweep(), bedAlignmentCalculator.getRootWash(), bedAlignmentCalculator.getProjectedTipXOffset(), bedAlignmentCalculator.getProjectedTipYOffset(), wingData.getTipChord(), bedAlignmentCalculator.getTipSweep(), bedAlignmentCalculator.getTipWash()));
+        model.addAttribute("rootAerofoilSvg", rootAerofoilData.toSvgPoints(bedAlignmentCalculator.getProjectedRootXOffset(), bedAlignmentCalculator.getProjectedRootYOffset(), wingData.getRootChord(), bedAlignmentCalculator.getRootSweep(), bedAlignmentCalculator.getRootWash()));
+        model.addAttribute("wingLinesData", rootAerofoilData.toSvgLines(tipAerofoilData, bedAlignmentCalculator.getProjectedRootXOffset(), bedAlignmentCalculator.getProjectedRootYOffset(), wingData.getRootChord(), bedAlignmentCalculator.getRootSweep(), bedAlignmentCalculator.getRootWash(), bedAlignmentCalculator.getProjectedTipXOffset(), bedAlignmentCalculator.getProjectedTipYOffset(), wingData.getTipChord(), bedAlignmentCalculator.getTipSweep(), bedAlignmentCalculator.getTipWash()));
         final Bounds svgBounds = machineData.getSvgBounds();
         model.addAttribute("svgbounds", svgBounds.getMinX() + " " + svgBounds.getMinY() + " " + svgBounds.getWidth() + " " + svgBounds.getHeight());
         final GcodeGenerator gcodeGenerator = new GcodeGenerator(machineData, rootAerofoilData, bedAlignmentCalculator, tipAerofoilData);
@@ -156,12 +164,20 @@ public class WingDesignController {
         final AerofoilData rootAerofoilData;
         final AerofoilData tipAerofoilData;
         final BedAlignment bedAlignmentCalculator = new BedAlignment(bedAlignment, machineData, wingData);
-        if (aerofoilRepository.count() > 0) {
+        if (aerofoilRepository.exists(wingData.getRootAerofoil())) {
             rootAerofoilData = aerofoilRepository.findOne(wingData.getRootAerofoil());
-            tipAerofoilData = aerofoilRepository.findOne(wingData.getRootAerofoil()); // todo: when the gcode generator can process datafiles of different lenth this can be retured to tip 
         } else {
             rootAerofoilData = new AerofoilDataAG36();
-            tipAerofoilData = new AerofoilDataAG36();
+        }
+        if (aerofoilRepository.exists(wingData.getTipAerofoil())) {
+            final AerofoilData tempAerofoilData = aerofoilRepository.findOne(wingData.getTipAerofoil()); // todo: when the gcode generator can process datafiles of different lenth this can be retured to tip 
+            if (rootAerofoilData.isBezier() == tempAerofoilData.isBezier() && rootAerofoilData.getPoints().length == tempAerofoilData.getPoints().length) {
+                tipAerofoilData = tempAerofoilData;
+            } else {
+                tipAerofoilData = rootAerofoilData;
+            }
+        } else {
+            tipAerofoilData = rootAerofoilData;
         }
         final GcodeGenerator gcodeGenerator = new GcodeGenerator(machineData, rootAerofoilData, bedAlignmentCalculator, tipAerofoilData);
         String referer = request.getHeader("Referer");
