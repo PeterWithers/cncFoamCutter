@@ -181,7 +181,7 @@ public class WingDesignController {
             @RequestParam(value = "endPwm", required = false, defaultValue = "false") final int endPwm,
             HttpServletResponse response) {
         response.setHeader("Content-Disposition", "attachment;filename=" + startSpeed + "-" + endSpeed + "s" + startPwm + "-" + endPwm + "pwm");
-        final GcodeGenerator gcodeGenerator = new GcodeGenerator();
+        final GcodeGenerator gcodeGenerator = new GcodeGenerator(0);
         return gcodeGenerator.generateTestGcode(machineData, layerThickeness, startPwm, endPwm, startSpeed, endSpeed);
     }
 }

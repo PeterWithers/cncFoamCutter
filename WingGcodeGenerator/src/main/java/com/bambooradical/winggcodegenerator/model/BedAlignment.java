@@ -44,15 +44,17 @@ public class BedAlignment {
     }
 
     public double getRootGcodeWireOffsetDistance() {
-//        if(wingData.getTipChord() <= wingData.getRootChord())
-        return machineData.getWireOffset100Feed();
-//        else
+        // todo: this should be setting tipWireOffset to be propoptional to the ratio of the chords
+        double rootWireOffset = (wingData.getTipChord() <= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
+        double tipWireOffset = (wingData.getTipChord() >= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
+        return (int) (rootWireOffset - ((((double) tipWireOffset - rootWireOffset) / wingData.getWingLength()) * (rootPosition)));
     }
 
     public double getTipGcodeWireOffsetDistance() {
-//        if(wingData.getTipChord() >= wingData.getRootChord()) 
-        return machineData.getWireOffset100Feed();
-//        else
+        // todo: this should be setting tipWireOffset to be propoptional to the ratio of the chords
+        double rootWireOffset = (wingData.getTipChord() <= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
+        double tipWireOffset = (wingData.getTipChord() >= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
+        return (int) (tipWireOffset + ((((double) tipWireOffset - rootWireOffset) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
     }
 
     public int getRootGcodeChord() {
@@ -61,6 +63,14 @@ public class BedAlignment {
 
     public int getTipGcodeChord() {
         return (int) (wingData.getTipChord() + ((((double) wingData.getTipChord() - wingData.getRootChord()) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
+    }
+
+    public int getExtrapolatedGcodeSpeed() {
+        // extralpolate the feed rate based on the relative chord lengths keeping the optimum feed rate at the center of the wing
+        double midChord = (wingData.getTipChord() + wingData.getRootChord() / 2.0);
+        double biggestGcodeChord = (wingData.getTipChord() < wingData.getRootChord()) ? getRootGcodeChord() : getTipGcodeChord();
+        double extrapolatedSpeed = machineData.getCuttingSpeed() * (biggestGcodeChord / midChord);
+        return (int) extrapolatedSpeed;
     }
 
     public int getRootSweep() {

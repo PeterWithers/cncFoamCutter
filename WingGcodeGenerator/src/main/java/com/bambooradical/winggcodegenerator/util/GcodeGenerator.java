@@ -16,8 +16,10 @@ public class GcodeGenerator {
 
     ArrayList<double[]> xYpath;
     ArrayList<double[]> zEpath;
+    private final int extrapolatedCuttingSpeed;
 
     public GcodeGenerator(MachineData machineData, AerofoilData aerofoilDataRoot, BedAlignment bedAlignment, AerofoilData aerofoilDataTip) {
+        extrapolatedCuttingSpeed = bedAlignment.getExtrapolatedGcodeSpeed();
         final int cutDepth = machineData.getMachineHeight() - machineData.getInitialCutHeight();
         xYpath = applyCuttingToolOffset(cutDepth, bedAlignment.getRootGcodeWireOffsetDistance(), aerofoilDataRoot.getTransformedPoints(machineData.getInitialCutLength(), cutDepth, bedAlignment.getRootGcodeChord(), bedAlignment.getRootGcodeSweep(), bedAlignment.getRootGcodeWash()));
         zEpath = applyCuttingToolOffset(cutDepth, bedAlignment.getTipGcodeWireOffsetDistance(), aerofoilDataTip.getTransformedPoints(machineData.getInitialCutLength(), cutDepth, bedAlignment.getTipGcodeChord(), bedAlignment.getTipGcodeSweep(), bedAlignment.getTipGcodeWash()));
@@ -79,7 +81,8 @@ public class GcodeGenerator {
         return angleRadians;
     }
 
-    public GcodeGenerator() {
+    public GcodeGenerator(int extrapolatedCuttingSpeed) {
+        this.extrapolatedCuttingSpeed = extrapolatedCuttingSpeed;
     }
 
     public String toSvgXy() {
@@ -108,6 +111,7 @@ public class GcodeGenerator {
         StringBuilder builder = new StringBuilder();
         builder.append("# ").append(infoString).append("\n");
         builder.append("# CuttingSpeed: ").append(machineData.getCuttingSpeed()).append("\n");
+        builder.append("# ExtrapolatedCuttingSpeed: ").append(extrapolatedCuttingSpeed).append("\n");
         builder.append("# HeaterPercent: ").append(machineData.getHeaterPercent()).append("\n");
         builder.append("# MachineHeight: ").append(machineData.getMachineHeight()).append("\n");
         builder.append("# MachineDepth: ").append(machineData.getMachineDepth()).append("\n");
@@ -208,6 +212,6 @@ public class GcodeGenerator {
     }
 
     private void move(StringBuilder builder, double x, double y, double z, double e, MachineData machineData) {
-        builder.append("G1 ").append(machineData.getHorizontalAxis1()).append(x).append(" ").append(machineData.getVerticalAxis1()).append(y).append(" ").append(machineData.getHorizontalAxis2()).append(z).append(" ").append(machineData.getVerticalAxis2()).append(e).append(" F").append(machineData.getCuttingSpeed()).append("\n");
+        builder.append("G1 ").append(machineData.getHorizontalAxis1()).append(x).append(" ").append(machineData.getVerticalAxis1()).append(y).append(" ").append(machineData.getHorizontalAxis2()).append(z).append(" ").append(machineData.getVerticalAxis2()).append(e).append(" F").append(extrapolatedCuttingSpeed).append("\n");
     }
 }
