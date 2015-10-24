@@ -38,6 +38,9 @@ public class GcodeGenerator {
     }
 
     private ArrayList<double[]> applyCuttingToolOffset(double cutDepth, double offsetDistance, ArrayList<double[]> path) {
+        if (offsetDistance == 0) {
+            return path;
+        }
         ArrayList<double[]> returnPath = new ArrayList<>();
         for (int currentIndex = 0; currentIndex < path.size(); currentIndex++) {
             final double[] prevPoint = (currentIndex > 0) ? path.get(currentIndex - 1) : new double[]{0, cutDepth};
