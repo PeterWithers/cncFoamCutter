@@ -75,6 +75,25 @@ public class BedAlignment {
         return (int) (tipValue + ((((double) tipValue - rootValue) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
     }
 
+    public int getExtrapolatedSpeed(GcodeMovement lastGcodeMovement, GcodeMovement currentGcodeMovement) {
+        if (lastGcodeMovement == null) {
+            return machineData.getCuttingSpeed();
+        }
+        double rootHorDiff = lastGcodeMovement.rootHorizontal - currentGcodeMovement.rootHorizontal;
+        double rootVerDiff = lastGcodeMovement.rootVertical - currentGcodeMovement.rootVertical;  
+        double rootDistance = Math.sqrt(rootHorDiff * rootHorDiff + rootVerDiff * rootVerDiff); 
+        double tipHorDiff = lastGcodeMovement.tipHorizontal - currentGcodeMovement.tipHorizontal;
+        double tipVerDiff = lastGcodeMovement.rootVertical - currentGcodeMovement.tipVertical;
+        double tipDistance = Math.sqrt(tipHorDiff * tipHorDiff + tipVerDiff * tipVerDiff);
+        final int extrapolatedSpeed;
+        if (rootDistance < tipDistance) {
+            extrapolatedSpeed = getTipGcodeValue(machineData.getCuttingSpeed() * (rootDistance / tipDistance), machineData.getCuttingSpeed());
+        } else {
+            extrapolatedSpeed = getRootGcodeValue(machineData.getCuttingSpeed(), machineData.getCuttingSpeed() * (tipDistance / rootDistance));
+        }
+        return (extrapolatedSpeed < machineData.getCuttingSpeed()) ? machineData.getCuttingSpeed() : extrapolatedSpeed;
+    }
+
     private float rootPercentOfWire() {
         return (float) getRootPosition() / machineData.getWireLength();
     }

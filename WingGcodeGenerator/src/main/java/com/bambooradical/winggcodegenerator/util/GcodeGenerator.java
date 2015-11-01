@@ -37,6 +37,7 @@ public class GcodeGenerator {
         rootPath.add(new double[]{0, 0});
         tipPath.add(new double[]{0, 0});
 
+        GcodeMovement lastGcodeMovement = null;
         for (int currentPoint = 0; currentPoint < rootPath.size(); currentPoint++) {
             // this requres that each aerofoil path is normalised to have the same number of points and relative intervals for each point
             double[] currentPointRoot = rootPath.get(currentPoint);
@@ -44,9 +45,12 @@ public class GcodeGenerator {
             final double tipHorizontal = bedAlignment.getTipGcodeValue(currentPointRoot[0], currentPointTip[0]);
             final double tipVertical = bedAlignment.getTipGcodeValue(currentPointRoot[1], currentPointTip[1]);
             final double rootHorizontal = bedAlignment.getRootGcodeValue(currentPointRoot[0], currentPointTip[0]);
-            final double rootVertical = bedAlignment.getRootGcodeValue(currentPointRoot[1], currentPointTip[1]);;
-            final double speed = 0; // todo: calculate the speed correctly
-            gcodeMovement.add(new GcodeMovement(tipHorizontal, tipVertical, rootHorizontal, rootVertical, speed));
+            final double rootVertical = bedAlignment.getRootGcodeValue(currentPointRoot[1], currentPointTip[1]);
+            final GcodeMovement currentGcodeMovement = new GcodeMovement(tipHorizontal, tipVertical, rootHorizontal, rootVertical, 0);
+            final double speed = bedAlignment.getExtrapolatedSpeed(lastGcodeMovement, currentGcodeMovement);
+            currentGcodeMovement.setSpeed(speed);
+            gcodeMovement.add(currentGcodeMovement);
+            lastGcodeMovement = currentGcodeMovement;
         }
     }
 
