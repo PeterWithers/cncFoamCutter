@@ -5,6 +5,7 @@ package com.bambooradical.winggcodegenerator.util;
 
 import com.bambooradical.winggcodegenerator.model.AerofoilData;
 import com.bambooradical.winggcodegenerator.model.BedAlignment;
+import com.bambooradical.winggcodegenerator.model.GcodeMovement;
 import com.bambooradical.winggcodegenerator.model.MachineData;
 import java.util.ArrayList;
 
@@ -14,27 +15,39 @@ import java.util.ArrayList;
  */
 public class GcodeGenerator {
 
-    ArrayList<double[]> xYpath;
-    ArrayList<double[]> zEpath;
-    private final int extrapolatedCuttingSpeed;
+    ArrayList<GcodeMovement> gcodeMovement = new ArrayList<>();
 
     public GcodeGenerator(MachineData machineData, AerofoilData aerofoilDataRoot, BedAlignment bedAlignment, AerofoilData aerofoilDataTip) {
-        extrapolatedCuttingSpeed = bedAlignment.getExtrapolatedGcodeSpeed();
+        ArrayList<double[]> tipPath;
+        ArrayList<double[]> rootPath;
         final int cutDepth = machineData.getMachineHeight() - machineData.getInitialCutHeight();
-        xYpath = applyCuttingToolOffset(cutDepth, bedAlignment.getRootGcodeWireOffsetDistance(), aerofoilDataRoot.getTransformedPoints(machineData.getInitialCutLength(), cutDepth, bedAlignment.getRootGcodeChord(), bedAlignment.getRootGcodeSweep(), bedAlignment.getRootGcodeWash()));
-        zEpath = applyCuttingToolOffset(cutDepth, bedAlignment.getTipGcodeWireOffsetDistance(), aerofoilDataTip.getTransformedPoints(machineData.getInitialCutLength(), cutDepth, bedAlignment.getTipGcodeChord(), bedAlignment.getTipGcodeSweep(), bedAlignment.getTipGcodeWash()));
-        xYpath.add(0, new double[]{0, 0});
-        zEpath.add(0, new double[]{0, 0});
-        xYpath.add(1, new double[]{0, cutDepth});
-        zEpath.add(1, new double[]{0, cutDepth});
-//        xYpath.add(2, new double[]{initialCutLength, machineHeight - initialCutHeight});
-//        zEpath.add(2, new double[]{initialCutLength, machineHeight - initialCutHeight});
-//        xYpath.add(new double[]{initialCutLength, machineHeight - initialCutHeight});
-//        zEpath.add(new double[]{initialCutLength, machineHeight - initialCutHeight});
-        xYpath.add(new double[]{0, cutDepth});
-        zEpath.add(new double[]{0, cutDepth});
-        xYpath.add(new double[]{0, 0});
-        zEpath.add(new double[]{0, 0});
+        rootPath = applyCuttingToolOffset(cutDepth, machineData.getWireOffset100Feed(), aerofoilDataRoot.getTransformedPoints(machineData.getInitialCutLength(), cutDepth, bedAlignment.getRootChord(), bedAlignment.getRootSweep(), bedAlignment.getRootWash()));
+        tipPath = applyCuttingToolOffset(cutDepth, machineData.getWireOffset100Feed(), aerofoilDataTip.getTransformedPoints(machineData.getInitialCutLength(), cutDepth, bedAlignment.getTipChord(), bedAlignment.getTipSweep(), bedAlignment.getTipWash()));
+
+        rootPath.add(0, new double[]{0, 0});
+        tipPath.add(0, new double[]{0, 0});
+        rootPath.add(1, new double[]{0, cutDepth});
+        tipPath.add(1, new double[]{0, cutDepth});
+//        rootPath.add(2, new double[]{initialCutLength, machineHeight - initialCutHeight});
+//        tipPath.add(2, new double[]{initialCutLength, machineHeight - initialCutHeight});
+//        rootPath.add(new double[]{initialCutLength, machineHeight - initialCutHeight});
+//        tipPath.add(new double[]{initialCutLength, machineHeight - initialCutHeight});
+        rootPath.add(new double[]{0, cutDepth});
+        tipPath.add(new double[]{0, cutDepth});
+        rootPath.add(new double[]{0, 0});
+        tipPath.add(new double[]{0, 0});
+
+        for (int currentPoint = 0; currentPoint < rootPath.size(); currentPoint++) {
+            // this requres that each aerofoil path is normalised to have the same number of points and relative intervals for each point
+            double[] currentPointRoot = rootPath.get(currentPoint);
+            double[] currentPointTip = tipPath.get(currentPoint);
+            final double tipHorizontal = bedAlignment.getTipGcodeValue(currentPointRoot[0], currentPointTip[0]);
+            final double tipVertical = bedAlignment.getTipGcodeValue(currentPointRoot[1], currentPointTip[1]);
+            final double rootHorizontal = bedAlignment.getRootGcodeValue(currentPointRoot[0], currentPointTip[0]);
+            final double rootVertical = bedAlignment.getRootGcodeValue(currentPointRoot[1], currentPointTip[1]);;
+            final double speed = 0; // todo: calculate the speed correctly
+            gcodeMovement.add(new GcodeMovement(tipHorizontal, tipVertical, rootHorizontal, rootVertical, speed));
+        }
     }
 
     private ArrayList<double[]> applyCuttingToolOffset(double cutDepth, double offsetDistance, ArrayList<double[]> path) {
@@ -87,16 +100,15 @@ public class GcodeGenerator {
         return angleRadians;
     }
 
-    public GcodeGenerator(int extrapolatedCuttingSpeed) {
-        this.extrapolatedCuttingSpeed = extrapolatedCuttingSpeed;
+    public GcodeGenerator() {
     }
 
     public String toSvgXy() {
         StringBuilder builder = new StringBuilder();
-        for (double[] currentPoint : xYpath) {
-            builder.append(currentPoint[0]);
+        for (GcodeMovement currentPoint : gcodeMovement) {
+            builder.append(currentPoint.rootHorizontal);
             builder.append(",");
-            builder.append(currentPoint[1]);
+            builder.append(currentPoint.rootVertical);
             builder.append(" ");
         }
         return builder.toString();
@@ -104,20 +116,19 @@ public class GcodeGenerator {
 
     public String toSvgZe() {
         StringBuilder builder = new StringBuilder();
-        for (double[] currentPoint : zEpath) {
-            builder.append(currentPoint[0]);
+        for (GcodeMovement currentPoint : gcodeMovement) {
+            builder.append(currentPoint.tipHorizontal);
             builder.append(",");
-            builder.append(currentPoint[1]);
+            builder.append(currentPoint.tipVertical);
             builder.append(" ");
         }
         return builder.toString();
     }
 
-    public String toGcode(MachineData machineData, String infoString) {
+    public String toGcode(MachineData machineData, BedAlignment bedAlignment, String infoString) {
         StringBuilder builder = new StringBuilder();
         builder.append("# ").append(infoString).append("\n");
         builder.append("# CuttingSpeed: ").append(machineData.getCuttingSpeed()).append("\n");
-        builder.append("# ExtrapolatedCuttingSpeed: ").append(extrapolatedCuttingSpeed).append("\n");
         builder.append("# HeaterPercent: ").append(machineData.getHeaterPercent()).append("\n");
         builder.append("# MachineHeight: ").append(machineData.getMachineHeight()).append("\n");
         builder.append("# MachineDepth: ").append(machineData.getMachineDepth()).append("\n");
@@ -128,13 +139,12 @@ public class GcodeGenerator {
         pause(builder, 5);
         beep(builder);
         pause(builder, 5);
-        // this requres that each aerofoil path is normalised to have the same number of points and relative intervals for each point
-        for (int currentPoint = 0; currentPoint < xYpath.size(); currentPoint++) {
-            double[] currentPointRoot = xYpath.get(currentPoint);
-            double[] currentPointTip = zEpath.get(currentPoint);;
+        for (int currentPoint = 0; currentPoint < gcodeMovement.size(); currentPoint++) {
+            GcodeMovement currentMovement = gcodeMovement.get(currentPoint);
             move(builder,
-                    currentPointRoot[0], currentPointRoot[1],
-                    currentPointTip[0], currentPointTip[1],
+                    currentMovement.rootHorizontal, currentMovement.rootVertical,
+                    currentMovement.tipHorizontal, currentMovement.tipVertical,
+                    currentMovement.speed,
                     machineData);
         }
         waitForCurrentMovesToFinish(builder);
@@ -156,14 +166,14 @@ public class GcodeGenerator {
         builder.append("# endFeed: ").append(endFeed).append("\n");
         builder.append("\n");
         startGcode(builder);
-        move(builder, 0, -machineData.getMachineHeight(), 0, -machineData.getMachineHeight(), machineData);
+        move(builder, 0, -machineData.getMachineHeight(), 0, -machineData.getMachineHeight(), machineData.getCuttingSpeed(), machineData);
         waitForCurrentMovesToFinish(builder);
         zeroVerticals(builder, machineData);
         zeroHorizontals(builder, machineData);
         waitForCurrentMovesToFinish(builder);
         int steps = machineData.getMachineHeight() / thickness;
-        move(builder, 0, 0, 0, 0, machineData);
-        move(builder, 0, machineData.getMachineHeight(), 0, machineData.getMachineHeight(), machineData);
+        move(builder, 0, 0, 0, 0, machineData.getCuttingSpeed(), machineData);
+        move(builder, 0, machineData.getMachineHeight(), 0, machineData.getMachineHeight(), machineData.getCuttingSpeed(), machineData);
         waitForCurrentMovesToFinish(builder);
         for (int currentStep = 0; currentStep < steps; currentStep++) {
             int pwm = (((endPwm - startPwm) / steps) * currentStep) + startPwm;
@@ -171,10 +181,10 @@ public class GcodeGenerator {
             machineData.setCuttingSpeed(feed);
             int height = machineData.getMachineHeight() - ((machineData.getMachineHeight() / steps) * currentStep);
             setHeat(builder, pwm);
-            move(builder, currentStep % 2 * 50 + 10, height, currentStep % 2 * 50 + 10, height, machineData);
+            move(builder, currentStep % 2 * 50 + 10, height, currentStep % 2 * 50 + 10, height, machineData.getCuttingSpeed(), machineData);
             waitForCurrentMovesToFinish(builder);
         }
-        move(builder, 0, 0, 0, 0, machineData);
+        move(builder, 0, 0, 0, 0, machineData.getCuttingSpeed(), machineData);
         waitForCurrentMovesToFinish(builder);
         setHeat(builder, 0);
         disableSteppers(builder);
@@ -217,7 +227,7 @@ public class GcodeGenerator {
         builder.append("M300 S200 P100 # beep\n");
     }
 
-    private void move(StringBuilder builder, double x, double y, double z, double e, MachineData machineData) {
-        builder.append("G1 ").append(machineData.getHorizontalAxis1()).append(x).append(" ").append(machineData.getVerticalAxis1()).append(y).append(" ").append(machineData.getHorizontalAxis2()).append(z).append(" ").append(machineData.getVerticalAxis2()).append(e).append(" F").append(extrapolatedCuttingSpeed).append("\n");
+    private void move(StringBuilder builder, double x, double y, double z, double e, double speed, MachineData machineData) {
+        builder.append("G1 ").append(machineData.getHorizontalAxis1()).append(x).append(" ").append(machineData.getVerticalAxis1()).append(y).append(" ").append(machineData.getHorizontalAxis2()).append(z).append(" ").append(machineData.getVerticalAxis2()).append(e).append(" F").append(speed).append("\n");
     }
 }

@@ -19,7 +19,7 @@ public class GcodeGeneratorTest {
     public void testGetRadians() {
         System.out.println("getRadians");
         double[] lastPoint = new double[]{0, 0};
-        GcodeGenerator instance = new GcodeGenerator(0);
+        GcodeGenerator instance = new GcodeGenerator();
         assertEquals(-1.5707963267948966, instance.getAngleRadians(lastPoint, new double[]{1, 0}), 0.0);
         assertEquals(3.141592653589793, instance.getAngleRadians(lastPoint, new double[]{0, 1}), 0.0);
         assertEquals(-2.356194490192345, instance.getAngleRadians(lastPoint, new double[]{1, 1}), 0.0);
@@ -34,7 +34,7 @@ public class GcodeGeneratorTest {
         double[] point = new double[]{0, 0};
         double distance = 1.0;
         double angleRadians = 1.57079633;
-        GcodeGenerator instance = new GcodeGenerator(0);
+        GcodeGenerator instance = new GcodeGenerator();
         assertArrayEquals(new double[]{1, 0}, instance.offsetPoint(point, distance, angleRadians), 0.1);
     }
 

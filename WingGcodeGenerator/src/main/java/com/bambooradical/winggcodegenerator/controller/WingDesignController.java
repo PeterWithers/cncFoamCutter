@@ -103,7 +103,7 @@ public class WingDesignController {
         model.addAttribute("gcodeXY", gcodeGenerator.toSvgXy());
         model.addAttribute("gcodeZE", gcodeGenerator.toSvgZe());
         model.addAttribute("transformZE", "translate(" + (int) (machineData.getViewAngle()) + "," + (int) (machineData.getWireLength() - machineData.getViewAngle()) + ")");
-        model.addAttribute("gcode", gcodeGenerator.toGcode(machineData, requestURI));
+        model.addAttribute("gcode", gcodeGenerator.toGcode(machineData, bedAlignmentCalculator, requestURI));
         return "WingDesignView";
     }
 
@@ -181,7 +181,7 @@ public class WingDesignController {
         }
         final GcodeGenerator gcodeGenerator = new GcodeGenerator(machineData, rootAerofoilData, bedAlignmentCalculator, tipAerofoilData);
         String referer = request.getHeader("Referer");
-        return gcodeGenerator.toGcode(machineData, referer);
+        return gcodeGenerator.toGcode(machineData, bedAlignmentCalculator, referer);
     }
 
     @RequestMapping(value = "/calibrationGcode",
@@ -197,7 +197,7 @@ public class WingDesignController {
             @RequestParam(value = "endPwm", required = false, defaultValue = "false") final int endPwm,
             HttpServletResponse response) {
         response.setHeader("Content-Disposition", "attachment;filename=" + startSpeed + "-" + endSpeed + "s" + startPwm + "-" + endPwm + "pwm");
-        final GcodeGenerator gcodeGenerator = new GcodeGenerator(0);
+        final GcodeGenerator gcodeGenerator = new GcodeGenerator();
         return gcodeGenerator.generateTestGcode(machineData, layerThickeness, startPwm, endPwm, startSpeed, endSpeed);
     }
 }

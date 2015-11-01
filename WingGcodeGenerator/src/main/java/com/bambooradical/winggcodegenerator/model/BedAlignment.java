@@ -43,36 +43,12 @@ public class BedAlignment {
         return bedAlignment;
     }
 
-    public double getRootGcodeWireOffsetDistance() {
-        // todo: this should be setting tipWireOffset to be propoptional to the ratio of the chords
-//        double rootWireOffset = (wingData.getTipChord() <= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
-//        double tipWireOffset = (wingData.getTipChord() >= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
-//        return (int) (rootWireOffset - ((((double) tipWireOffset - rootWireOffset) / wingData.getWingLength()) * (rootPosition)));
-        return machineData.getWireOffset100Feed();
+    public int getRootChord() {
+        return wingData.getRootChord();
     }
 
-    public double getTipGcodeWireOffsetDistance() {
-        // todo: this should be setting tipWireOffset to be propoptional to the ratio of the chords
-//        double rootWireOffset = (wingData.getTipChord() <= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
-//        double tipWireOffset = (wingData.getTipChord() >= wingData.getRootChord()) ? machineData.getWireOffset100Feed() : machineData.getWireOffset50Feed();
-//        return (int) (tipWireOffset + ((((double) tipWireOffset - rootWireOffset) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
-        return machineData.getWireOffset100Feed();
-    }
-
-    public int getRootGcodeChord() {
-        return (int) (wingData.getRootChord() - ((((double) wingData.getTipChord() - wingData.getRootChord()) / wingData.getWingLength()) * (rootPosition)));
-    }
-
-    public int getTipGcodeChord() {
-        return (int) (wingData.getTipChord() + ((((double) wingData.getTipChord() - wingData.getRootChord()) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
-    }
-
-    public int getExtrapolatedGcodeSpeed() {
-        // extralpolate the feed rate based on the relative chord lengths keeping the optimum feed rate at the center of the wing
-        double midChord = (wingData.getTipChord() + wingData.getRootChord() / 2.0);
-        double biggestGcodeChord = (wingData.getTipChord() < wingData.getRootChord()) ? getRootGcodeChord() : getTipGcodeChord();
-        double extrapolatedSpeed = machineData.getCuttingSpeed() * (biggestGcodeChord / midChord);
-        return (int) extrapolatedSpeed;
+    public int getTipChord() {
+        return wingData.getTipChord();
     }
 
     public int getRootSweep() {
@@ -83,14 +59,6 @@ public class BedAlignment {
         return (int) (wingData.getTipSweep() <= 0 ? 0 : wingData.getTipSweep());
     }
 
-    public int getRootGcodeSweep() {
-        return (int) (getRootSweep() - ((((double) getTipSweep() - getRootSweep()) / wingData.getWingLength()) * (rootPosition)));
-    }
-
-    public int getTipGcodeSweep() {
-        return (int) (getTipSweep() + ((((double) getTipSweep() - getRootSweep()) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
-    }
-
     public int getRootWash() {
         return -wingData.getTipWash() / 2;
     }
@@ -99,12 +67,12 @@ public class BedAlignment {
         return wingData.getTipWash() / 2;
     }
 
-    public int getRootGcodeWash() {
-        return (int) (getRootWash() - ((((double) getTipWash() - getRootWash()) / wingData.getWingLength()) * (rootPosition)));
+    public int getRootGcodeValue(double rootValue, double tipValue) {
+        return (int) (rootValue - ((((double) tipValue - rootValue) / wingData.getWingLength()) * (rootPosition)));
     }
 
-    public int getTipGcodeWash() {
-        return (int) (getTipWash() + ((((double) getTipWash() - getRootWash()) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
+    public int getTipGcodeValue(double rootValue, double tipValue) {
+        return (int) (tipValue + ((((double) tipValue - rootValue) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
     }
 
     private float rootPercentOfWire() {
