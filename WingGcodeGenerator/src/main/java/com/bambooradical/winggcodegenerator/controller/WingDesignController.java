@@ -161,9 +161,9 @@ public class WingDesignController {
             HttpServletResponse response,
             HttpServletRequest request) {
         response.setHeader("Content-Disposition", "attachment;filename=" + wingData.getRootAerofoil() + "_" + wingData.getRootChord() + "-" + wingData.getTipChord() + "_" + machineData.getCuttingSpeed() + "mms" + machineData.getHeaterPercent() + "pwm");
+        final BedAlignment bedAlignmentCalculator = new BedAlignment(bedAlignment, machineData, wingData);
         final AerofoilData rootAerofoilData;
         final AerofoilData tipAerofoilData;
-        final BedAlignment bedAlignmentCalculator = new BedAlignment(bedAlignment, machineData, wingData);
         if (aerofoilRepository.exists(wingData.getRootAerofoil())) {
             rootAerofoilData = aerofoilRepository.findOne(wingData.getRootAerofoil());
         } else {
