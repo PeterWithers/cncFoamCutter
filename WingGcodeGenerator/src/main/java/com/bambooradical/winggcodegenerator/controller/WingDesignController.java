@@ -100,10 +100,9 @@ public class WingDesignController {
         final Bounds svgBounds = machineData.getSvgBounds();
         model.addAttribute("svgbounds", svgBounds.getMinX() + " " + svgBounds.getMinY() + " " + svgBounds.getWidth() + " " + svgBounds.getHeight());
         final GcodeGenerator gcodeGenerator = new GcodeGenerator(machineData, rootAerofoilData, bedAlignmentCalculator, tipAerofoilData);
-        model.addAttribute("gcodeXY", gcodeGenerator.toSvgXy());
-        model.addAttribute("gcodeZE", gcodeGenerator.toSvgZe());
+        model.addAttribute("gcodeGenerator", gcodeGenerator);
         model.addAttribute("transformZE", "translate(" + (int) (machineData.getViewAngle()) + "," + (int) (machineData.getWireLength() - machineData.getViewAngle()) + ")");
-        model.addAttribute("gcode", gcodeGenerator.toGcode(machineData, bedAlignmentCalculator, requestURI));
+        model.addAttribute("gcode", gcodeGenerator.toGcode(machineData, requestURI));
         return "WingDesignView";
     }
 
@@ -181,7 +180,7 @@ public class WingDesignController {
         }
         final GcodeGenerator gcodeGenerator = new GcodeGenerator(machineData, rootAerofoilData, bedAlignmentCalculator, tipAerofoilData);
         String referer = request.getHeader("Referer");
-        return gcodeGenerator.toGcode(machineData, bedAlignmentCalculator, referer);
+        return gcodeGenerator.toGcode(machineData, referer);
     }
 
     @RequestMapping(value = "/calibrationGcode",

@@ -13,17 +13,17 @@ public class GcodeMovement {
     final public double tipVertical;
     final public double rootHorizontal;
     final public double rootVertical;
-     public double speed;
+    final public double tipDistance;
+    final public double rootDistance;
+    final public double speed;
 
-    public GcodeMovement(double tipHorizontal, double tipVertical, double rootHorizontal, double rootVertical, double speed) {
+    public GcodeMovement(double tipHorizontal, double tipVertical, double rootHorizontal, double rootVertical, double tipDistance, double rootDistance, double speed) {
         this.tipHorizontal = tipHorizontal;
         this.tipVertical = tipVertical;
         this.rootHorizontal = rootHorizontal;
         this.rootVertical = rootVertical;
-        this.speed = speed;
-    }
-
-    public void setSpeed(double speed) {
+        this.tipDistance = tipDistance;
+        this.rootDistance = rootDistance;
         this.speed = speed;
     }
 }

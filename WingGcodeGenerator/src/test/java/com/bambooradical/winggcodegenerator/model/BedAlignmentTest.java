@@ -22,12 +22,12 @@ public class BedAlignmentTest {
         final WingData wingData = new WingData();
         wingData.setWingLength(machineData.getWireLength() / 3);
         BedAlignment instance = new BedAlignment(0, machineData, wingData);
-        assertEquals(machineData.getCuttingSpeed(), instance.getExtrapolatedSpeed(new GcodeMovement(10, 10, 10, 10, 0), new GcodeMovement(10, 10, 10, 10, 0)));
-        assertEquals(machineData.getCuttingSpeed() * 2, instance.getExtrapolatedSpeed(new GcodeMovement(10, 10, 10, 10, 0), new GcodeMovement(10, 10, 8, 8, 0)));
-        assertEquals(machineData.getCuttingSpeed() * 2, instance.getExtrapolatedSpeed(new GcodeMovement(10, 10, 10, 10, 0), new GcodeMovement(10, 10, 10, 8, 0)));
-        assertEquals(machineData.getCuttingSpeed(), instance.getExtrapolatedSpeed(new GcodeMovement(10, 10, 10, 10, 0), new GcodeMovement(10, 8, 8, 10, 0)));
-        assertEquals(machineData.getCuttingSpeed() * 2, instance.getExtrapolatedSpeed(new GcodeMovement(10, 10, 10, 10, 0), new GcodeMovement(0, 0, 10, 10, 0)));
-        assertEquals((int)(machineData.getCuttingSpeed() * 1.8), instance.getExtrapolatedSpeed(new GcodeMovement(10, 10, 10, 10, 0), new GcodeMovement(0, 0, 8, 8, 0)));
+        assertEquals(machineData.getCuttingSpeed(), instance.getExtrapolatedSpeed(new GcodeMovement(10, 10, 10, 10, 0, 0, 0), 10, 10, 10, 10).speed, 0.0);
+        assertEquals(machineData.getCuttingSpeed() * 2, instance.getExtrapolatedSpeed(new GcodeMovement(10, 10, 10, 10, 0, 0, 0), 10, 10, 8, 8).speed, 0.0);
+        assertEquals(machineData.getCuttingSpeed() * 2, instance.getExtrapolatedSpeed(new GcodeMovement(10, 10, 10, 10, 0, 0, 0), 10, 10, 10, 8).speed, 0.0);
+        assertEquals(machineData.getCuttingSpeed(), instance.getExtrapolatedSpeed(new GcodeMovement(10, 10, 10, 10, 0, 0, 0), 10, 8, 8, 10).speed, 0.0);
+        assertEquals(machineData.getCuttingSpeed() * 2, instance.getExtrapolatedSpeed(new GcodeMovement(10, 10, 10, 10, 0, 0, 0), 0, 0, 10, 10).speed, 0.0);
+        assertEquals((int) (machineData.getCuttingSpeed() * 1.8), instance.getExtrapolatedSpeed(new GcodeMovement(10, 10, 10, 10, 0, 0, 0), 0, 0, 8, 8).speed, 0.0);
     }
 
     /**

@@ -100,6 +100,24 @@ Copyright (C) 2015 Peter Withers
                 stroke: #7566ba;
                 stroke-width: 2; 
             }
+            .rootDistanceGraph {
+                color: #995CB4;
+                stroke: #995CB4;
+                stroke-width: 1; 
+                fill: none;
+            }
+            .tipDistanceGraph {
+                color: #5D86B1;
+                stroke: #5D86B1;
+                stroke-width: 1; 
+                fill: none;
+            }
+            .speedGraph {
+                color: #FFE67C;
+                stroke: #FFE67C;
+                stroke-width: 1; 
+                fill: none;
+            }
             .dragHandle {
                 stroke-width: 0.1; 
                 stroke: #985cb4;
@@ -149,6 +167,7 @@ Copyright (C) 2015 Peter Withers
                     $("#diagram").show();
                     $("#uploadArea").hide();
                     $("#pathEditorPanel").hide();
+                    $("#gcodeGraph").hide();
                 });
                 $("#wingButton").click(function () {
                     $("#gcodeArea").hide();
@@ -157,6 +176,7 @@ Copyright (C) 2015 Peter Withers
                     $("#diagram").show();
                     $("#uploadArea").hide();
                     $("#pathEditorPanel").hide();
+                    $("#gcodeGraph").hide();
                 });
                 $("#diagramButton").click(function () {
                     $("#gcodeArea").hide();
@@ -165,6 +185,7 @@ Copyright (C) 2015 Peter Withers
                     $("#diagram").show();
                     $("#uploadArea").hide();
                     $("#pathEditorPanel").hide();
+                    $("#gcodeGraph").hide();
                 });
                 $("#gcodeButton").click(function () {
                     $("#gcodeArea").show();
@@ -173,10 +194,21 @@ Copyright (C) 2015 Peter Withers
                     $("#diagram").hide();
                     $("#uploadArea").hide();
                     $("#pathEditorPanel").hide();
+                    $("#gcodeGraph").hide();
+                });
+                $("#graphButton").click(function () {
+                    $("#gcodeArea").hide();
+                    $("#machineSettings").hide();
+                    $("#wingSettings").hide();
+                    $("#diagram").hide();
+                    $("#uploadArea").hide();
+                    $("#pathEditorPanel").hide();
+                    $("#gcodeGraph").show();
                 });
                 $("#addAerofoilButton").click(function () {
                     $("#uploadArea").show();
                     $("#pathEditorPanel").hide();
+                    $("#gcodeGraph").hide();
                     $("#gcodeArea").hide();
                     $("#wingSettings").hide();
                     $("#machineSettings").hide();
@@ -188,8 +220,10 @@ Copyright (C) 2015 Peter Withers
                     $("#wingSettings").hide();
                     $("#machineSettings").hide();
                     $("#diagram").hide();
+                    $("#gcodeGraph").hide();
                     $("#pathEditorPanel").show();
                 });
+                $("#gcodeGraph").hide();
                 $("#pathEditorPanel").hide();
                 $("#uploadArea").hide();
                 $("#gcodeArea").hide();
@@ -209,7 +243,14 @@ Copyright (C) 2015 Peter Withers
         <header>
             <div>Wing Design View</div>
         </header>
-        <ul id="menu"><li><a id="machineButton">Machine Settings</a></li><li><a id="wingButton">Wing Settings</a></li><li><a id="diagramButton">Diagram</a></li><li><a id="gcodeButton">GCODE</a></li><li><a id="addAerofoilButton">Add Aerofoil</a></li><li><a id="editAerofoilButton">Edit Aerofoil</a></li></ul>
+        <ul id="menu">
+            <li><a id="machineButton">Machine Settings</a></li>
+            <li><a id="wingButton">Wing Settings</a></li>
+            <li><a id="diagramButton">Diagram</a></li>
+            <li><a id="gcodeButton">GCODE</a></li>
+            <li><a id="addAerofoilButton">Add Aerofoil</a></li>
+            <li><a id="editAerofoilButton">Edit Aerofoil</a></li>
+        </ul>
         <div id="diagramPanel">
             <!--<h13 th:text="'Chord: ' + ${aerofoilchord}" />-->
             <br/>
@@ -222,10 +263,10 @@ Copyright (C) 2015 Peter Withers
                 <polyline class="aerofoilShapes" th:attr="points=${rootAerofoilSvg}" />
                 <polyline class="aerofoilLines" th:attr="points=${wingLinesData}" />
                 <polyline class="aerofoilShapes" th:attr="points=${tipAerofoilSvg}" />
-                <polyline class="ncPathLines" th:attr="points=${gcodeXY}" stroke-dasharray="20,10,5,5,5,10">
+                <polyline class="ncPathLines" th:attr="points=${gcodeGenerator.toSvgXy()}" stroke-dasharray="20,10,5,5,5,10">
                     <animate attributeName="stroke-dashoffset" from="55" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
                 </polyline>
-                <polyline class="ncPathLines" th:attr="points=${gcodeZE}, transform=${transformZE}" stroke-dasharray="20,10,5,5,5,10">
+                <polyline class="ncPathLines" th:attr="points=${gcodeGenerator.toSvgZe()}, transform=${transformZE}" stroke-dasharray="20,10,5,5,5,10">
                     <animate attributeName="stroke-dashoffset" from="55" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
                 </polyline>
             </svg>
@@ -364,12 +405,31 @@ Copyright (C) 2015 Peter Withers
         </div>
         <br/>
         <div id="gcodeArea">
-            <form action="#" th:action="@{/downloadGcode}" th:object="${machineData}" method="get">
-                <span th:include="WingDesignView :: hiddenSettingsFields"></span>
-                <span th:include="WingDesignView :: hiddenWingFields"></span>
-                <button type="submit" id="downloadButton">Download GCODE</button>
-            </form>
+            <table>
+                <tr>
+                    <td>
+                        <button id="graphButton">Travel / Feed Graph</button>
+                    </td>
+                    <td>
+                        <form action="#" th:action="@{/downloadGcode}" th:object="${machineData}" method="get">
+                            <span th:include="WingDesignView :: hiddenSettingsFields"></span>
+                            <span th:include="WingDesignView :: hiddenWingFields"></span>
+                            <button type="submit" id="downloadButton">Download GCODE</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
             <textarea rows="100" cols="100" th:text="${gcode}"></textarea>
+        </div>
+        <div id="gcodeGraph">
+            <div class="rootDistanceGraph">Root Distance</div>
+            <div class="tipDistanceGraph">Tip Distance</div>
+            <div class="speedGraph">Feed Rate</div>
+            <svg id="graph"  viewBox="0 0 500 600">
+                <polyline class="speedGraph" th:attr="points=${gcodeGenerator.toSvgSpeedGraph(500)}" />
+                <polyline class="rootDistanceGraph" th:attr="points=${gcodeGenerator.toSvgRootDistanceGraph(500)}" />
+                <polyline class="tipDistanceGraph" th:attr="points=${gcodeGenerator.toSvgTipDistanceGraph(500)}" />
+            </svg>
         </div>
         <div id="footer" th:text="'Aerofoil: ' + ${tipAerofoilData.getName()} + ' | Wing length: ' + ${wingData.wingLength} + ' | Root ' + ${rootAerofoilData.getBounds().getWidth()*wingData.rootChord} + 'x' +${rootAerofoilData.getBounds().getHeight()*wingData.rootChord} + ' | Tip '  + ${tipAerofoilData.getBounds().getWidth()*wingData.tipChord} + 'x' + ${tipAerofoilData.getBounds().getHeight()*wingData.tipChord}"></div>
     </body>

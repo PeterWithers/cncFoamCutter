@@ -46,9 +46,7 @@ public class GcodeGenerator {
             final double tipVertical = bedAlignment.getTipGcodeValue(currentPointRoot[1], currentPointTip[1]);
             final double rootHorizontal = bedAlignment.getRootGcodeValue(currentPointRoot[0], currentPointTip[0]);
             final double rootVertical = bedAlignment.getRootGcodeValue(currentPointRoot[1], currentPointTip[1]);
-            final GcodeMovement currentGcodeMovement = new GcodeMovement(tipHorizontal, tipVertical, rootHorizontal, rootVertical, 0);
-            final double speed = bedAlignment.getExtrapolatedSpeed(lastGcodeMovement, currentGcodeMovement);
-            currentGcodeMovement.setSpeed(speed);
+            final GcodeMovement currentGcodeMovement = bedAlignment.getExtrapolatedSpeed(lastGcodeMovement, tipHorizontal, tipVertical, rootHorizontal, rootVertical);
             gcodeMovement.add(currentGcodeMovement);
             lastGcodeMovement = currentGcodeMovement;
         }
@@ -129,7 +127,49 @@ public class GcodeGenerator {
         return builder.toString();
     }
 
-    public String toGcode(MachineData machineData, BedAlignment bedAlignment, String infoString) {
+    public String toSvgSpeedGraph(int graphWidth) {
+        final int stepAmount = graphWidth / gcodeMovement.size();
+        StringBuilder builder = new StringBuilder();
+        int columnCounter = 0;
+        for (GcodeMovement currentPoint : gcodeMovement) {
+            builder.append(columnCounter);
+            builder.append(",");
+            builder.append(currentPoint.speed);
+            builder.append(" ");
+            columnCounter += stepAmount;
+        }
+        return builder.toString();
+    }
+
+    public String toSvgRootDistanceGraph(int graphWidth) {
+        final int stepAmount = graphWidth / gcodeMovement.size();
+        StringBuilder builder = new StringBuilder();
+        int columnCounter = 0;
+        for (GcodeMovement currentPoint : gcodeMovement) {
+            builder.append(columnCounter);
+            builder.append(",");
+            builder.append(currentPoint.rootDistance);
+            builder.append(" ");
+            columnCounter += stepAmount;
+        }
+        return builder.toString();
+    }
+
+    public String toSvgTipDistanceGraph(int graphWidth) {
+        final int stepAmount = graphWidth / gcodeMovement.size();
+        StringBuilder builder = new StringBuilder();
+        int columnCounter = 0;
+        for (GcodeMovement currentPoint : gcodeMovement) {
+            builder.append(columnCounter);
+            builder.append(",");
+            builder.append(currentPoint.tipDistance);
+            builder.append(" ");
+            columnCounter += stepAmount;
+        }
+        return builder.toString();
+    }
+
+    public String toGcode(MachineData machineData, String infoString) {
         StringBuilder builder = new StringBuilder();
         builder.append("# ").append(infoString).append("\n");
         builder.append("# CuttingSpeed: ").append(machineData.getCuttingSpeed()).append("\n");

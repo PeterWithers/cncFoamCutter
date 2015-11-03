@@ -75,23 +75,28 @@ public class BedAlignment {
         return (int) (tipValue + ((((double) tipValue - rootValue) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
     }
 
-    public int getExtrapolatedSpeed(GcodeMovement lastGcodeMovement, GcodeMovement currentGcodeMovement) {
-        if (lastGcodeMovement == null) {
-            return machineData.getCuttingSpeed();
-        }
-        double rootHorDiff = lastGcodeMovement.rootHorizontal - currentGcodeMovement.rootHorizontal;
-        double rootVerDiff = lastGcodeMovement.rootVertical - currentGcodeMovement.rootVertical;  
-        double rootDistance = Math.sqrt(rootHorDiff * rootHorDiff + rootVerDiff * rootVerDiff); 
-        double tipHorDiff = lastGcodeMovement.tipHorizontal - currentGcodeMovement.tipHorizontal;
-        double tipVerDiff = lastGcodeMovement.rootVertical - currentGcodeMovement.tipVertical;
-        double tipDistance = Math.sqrt(tipHorDiff * tipHorDiff + tipVerDiff * tipVerDiff);
+    public GcodeMovement getExtrapolatedSpeed(GcodeMovement lastGcodeMovement, final double tipHorizontal, final double tipVertical, final double rootHorizontal, final double rootVertical) {
         final int extrapolatedSpeed;
-        if (rootDistance < tipDistance) {
-            extrapolatedSpeed = getTipGcodeValue(machineData.getCuttingSpeed() * (rootDistance / tipDistance), machineData.getCuttingSpeed());
+        final double rootDistance;
+        final double tipDistance;
+        if (lastGcodeMovement == null) {
+            extrapolatedSpeed = machineData.getCuttingSpeed();
+            tipDistance = 0;
+            rootDistance = 0;
         } else {
-            extrapolatedSpeed = getRootGcodeValue(machineData.getCuttingSpeed(), machineData.getCuttingSpeed() * (tipDistance / rootDistance));
+            final double rootHorDiff = lastGcodeMovement.rootHorizontal - rootHorizontal;
+            final double rootVerDiff = lastGcodeMovement.rootVertical - rootVertical;
+            rootDistance = Math.sqrt(rootHorDiff * rootHorDiff + rootVerDiff * rootVerDiff);
+            final double tipHorDiff = lastGcodeMovement.tipHorizontal - tipHorizontal;
+            final double tipVerDiff = lastGcodeMovement.rootVertical - tipVertical;
+            tipDistance = Math.sqrt(tipHorDiff * tipHorDiff + tipVerDiff * tipVerDiff);
+            if (rootDistance < tipDistance) {
+                extrapolatedSpeed = getTipGcodeValue(machineData.getCuttingSpeed() * (rootDistance / tipDistance), machineData.getCuttingSpeed());
+            } else {
+                extrapolatedSpeed = getRootGcodeValue(machineData.getCuttingSpeed(), machineData.getCuttingSpeed() * (tipDistance / rootDistance));
+            }
         }
-        return (extrapolatedSpeed < machineData.getCuttingSpeed()) ? machineData.getCuttingSpeed() : extrapolatedSpeed;
+        return new GcodeMovement(tipHorizontal, tipVertical, rootHorizontal, rootVertical, tipDistance, rootDistance, (extrapolatedSpeed < machineData.getCuttingSpeed()) ? machineData.getCuttingSpeed() : extrapolatedSpeed);
     }
 
     private float rootPercentOfWire() {
