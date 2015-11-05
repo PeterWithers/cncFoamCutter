@@ -85,7 +85,10 @@ public class GcodeGenerator {
 
     public static boolean isConcave(final double nextRadians, final double prevRadians) {
 //        System.out.println("assertEquals(" + (nextRadians > prevRadians) + ", GcodeGenerator.isConcave(" + nextRadians + ", " + prevRadians + "));");
-        return nextRadians > prevRadians;
+        final double radiansDiff = nextRadians - prevRadians;
+        double normRadDiff = radiansDiff - (Math.PI + Math.PI) * Math.floor((radiansDiff + Math.PI) / (Math.PI + Math.PI));
+//        System.out.println("normRadDiff:" + normRadDiff);
+        return normRadDiff > 0;
     }
 
     public double[] offsetPoint(final double[] point, double distance, double angleRadians) {

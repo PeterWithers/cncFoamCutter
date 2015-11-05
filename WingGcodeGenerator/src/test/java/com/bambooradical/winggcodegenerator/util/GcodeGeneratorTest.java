@@ -59,6 +59,10 @@ public class GcodeGeneratorTest {
         assertEquals(true, GcodeGenerator.isConcave(2.5213431676069717, 0.4636476090008061));
         assertEquals(false, GcodeGenerator.isConcave(0.8960553845713439, 2.5213431676069717));
         assertEquals(true, GcodeGenerator.isConcave(1.5707963267948966, 0.8960553845713439));
+        assertEquals(true, GcodeGenerator.isConcave(2.393214606066275, -0.3805063771123649));
+        assertEquals(false, GcodeGenerator.isConcave(0.8960553845713439, 2.393214606066275));
+        assertEquals(true, GcodeGenerator.isConcave(-0.3805063771123649, 2.976443976175166));
+        assertEquals(false, GcodeGenerator.isConcave(2.976443976175166, -0.6947382761967033));
     }
 
     /**
