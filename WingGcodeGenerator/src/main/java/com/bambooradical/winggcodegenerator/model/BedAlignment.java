@@ -12,16 +12,16 @@ public class BedAlignment {
     final private int bedAlignment; // positive values are aligned left offset by the value, nevative values are aligned right offset by the value, zero centre aligns with no offset
     final private MachineData machineData;
     final private WingData wingData;
-    final private int rootPosition;
-    final private int tipPosition;
+    final private double rootPosition;
+    final private double tipPosition;
 
     public BedAlignment(int bedAlignment, MachineData machineData, WingData wingData) {
         this.bedAlignment = bedAlignment;
         this.machineData = machineData;
         this.wingData = wingData;
         if (bedAlignment == 0) {
-            rootPosition = (machineData.getWireLength() - wingData.getWingLength()) / 2;
-            tipPosition = (machineData.getWireLength() + wingData.getWingLength()) / 2;
+            rootPosition = (machineData.getWireLength() - wingData.getWingLength()) / 2d;
+            tipPosition = (machineData.getWireLength() + wingData.getWingLength()) / 2d;
         } else if (bedAlignment > 0) {
             rootPosition = machineData.getWireLength() - bedAlignment - wingData.getWingLength();
             tipPosition = machineData.getWireLength() - bedAlignment;
@@ -31,11 +31,11 @@ public class BedAlignment {
         }
     }
 
-    public int getRootPosition() {
+    public double getRootPosition() {
         return rootPosition;
     }
 
-    public int getTipPosition() {
+    public double getTipPosition() {
         return tipPosition;
     }
 
@@ -67,22 +67,22 @@ public class BedAlignment {
         return wingData.getTipWash() / 2;
     }
 
-    public int getRootGcodeValue(double rootValue, double tipValue) {
-        return (int) (rootValue - ((((double) tipValue - rootValue) / wingData.getWingLength()) * (rootPosition)));
+    public double getRootGcodeValue(double rootValue, double tipValue) {
+        return (rootValue - ((((double) tipValue - rootValue) / wingData.getWingLength()) * (rootPosition)));
     }
 
-    public int getTipGcodeValue(double rootValue, double tipValue) {
-        return (int) (tipValue + ((((double) tipValue - rootValue) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
+    public double getTipGcodeValue(double rootValue, double tipValue) {
+        return (tipValue + ((((double) tipValue - rootValue) / wingData.getWingLength()) * (machineData.getWireLength() - tipPosition)));
     }
 
     public GcodeMovement getExtrapolatedSpeed(GcodeMovement lastGcodeMovement, final double tipHorizontal, final double tipVertical, final double rootHorizontal, final double rootVertical) {
-        final int extrapolatedSpeed;
+        final double extrapolatedSpeed;
         final double rootDistance;
         final double tipDistance;
         if (lastGcodeMovement == null) {
             extrapolatedSpeed = machineData.getCuttingSpeed();
-            tipDistance = 0;
-            rootDistance = 0;
+            tipDistance = 0d;
+            rootDistance = 0d;
         } else {
             final double rootHorDiff = lastGcodeMovement.rootHorizontal - rootHorizontal;
             final double rootVerDiff = lastGcodeMovement.rootVertical - rootVertical;

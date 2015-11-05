@@ -67,17 +67,17 @@ public class GcodeGenerator {
             final double midRadians = nextRadians + ((prevRadians - nextRadians) / 2d);
             boolean isConcave = isConcave(nextRadians, prevRadians);
             if (isConcave) {
-                returnPath.add(offsetPoint(currentPoint, offsetDistance, prevRadians + Math.PI / 2));
-                returnPath.add(offsetPoint(currentPoint, offsetDistance, midRadians + Math.PI / 2));
-                returnPath.add(offsetPoint(currentPoint, offsetDistance, nextRadians + Math.PI / 2));
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, prevRadians + Math.PI / 2d));
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, midRadians + Math.PI / 2d));
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, nextRadians + Math.PI / 2d));
             } else {
 //                final double[] offsetPoint1 = offsetPoint(currentPoint, offsetDistance, prevRadians + Math.PI / 2);
 //                final double[] offsetPoint2 = offsetPoint(currentPoint, offsetDistance, nextRadians + Math.PI / 2);
 //                returnPath.add(new double[]{((offsetPoint1[0] + offsetPoint2[0]) / 2), ((offsetPoint1[1] + offsetPoint2[1]) / 2)});
-                returnPath.add(offsetPoint(currentPoint, offsetDistance, midRadians + Math.PI / 2));
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, midRadians + Math.PI / 2d));
                 // add three points so that the total number of points match any other aerofoil that could be used in conjunction with this one
-                returnPath.add(offsetPoint(currentPoint, offsetDistance, midRadians + Math.PI / 2));
-                returnPath.add(offsetPoint(currentPoint, offsetDistance, midRadians + Math.PI / 2));
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, midRadians + Math.PI / 2d));
+                returnPath.add(offsetPoint(currentPoint, offsetDistance, midRadians + Math.PI / 2d));
             }
         }
         return returnPath;
