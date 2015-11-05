@@ -52,7 +52,7 @@ public class GcodeGenerator {
         }
     }
 
-    private ArrayList<double[]> applyCuttingToolOffset(double cutDepth, double offsetDistance, ArrayList<double[]> path) {
+    protected ArrayList<double[]> applyCuttingToolOffset(double cutDepth, double offsetDistance, ArrayList<double[]> path) {
         if (offsetDistance == 0) {
             return path;
         }

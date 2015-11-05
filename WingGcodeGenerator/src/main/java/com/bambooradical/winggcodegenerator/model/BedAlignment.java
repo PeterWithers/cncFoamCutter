@@ -91,9 +91,17 @@ public class BedAlignment {
             final double tipVerDiff = lastGcodeMovement.rootVertical - tipVertical;
             tipDistance = Math.sqrt(tipHorDiff * tipHorDiff + tipVerDiff * tipVerDiff);
             if (rootDistance < tipDistance) {
-                extrapolatedSpeed = getTipGcodeValue(machineData.getCuttingSpeed() * (rootDistance / tipDistance), machineData.getCuttingSpeed());
+                if (tipDistance == 0) {
+                    extrapolatedSpeed = machineData.getCuttingSpeed();
+                } else {
+                    extrapolatedSpeed = getTipGcodeValue(machineData.getCuttingSpeed() * (rootDistance / tipDistance), machineData.getCuttingSpeed());
+                }
             } else {
-                extrapolatedSpeed = getRootGcodeValue(machineData.getCuttingSpeed(), machineData.getCuttingSpeed() * (tipDistance / rootDistance));
+                if (rootDistance == 0) {
+                    extrapolatedSpeed = machineData.getCuttingSpeed();
+                } else {
+                    extrapolatedSpeed = getRootGcodeValue(machineData.getCuttingSpeed(), machineData.getCuttingSpeed() * (tipDistance / rootDistance));
+                }
             }
         }
         return new GcodeMovement(tipHorizontal, tipVertical, rootHorizontal, rootVertical, tipDistance, rootDistance, (extrapolatedSpeed < machineData.getCuttingSpeed()) ? machineData.getCuttingSpeed() : extrapolatedSpeed);

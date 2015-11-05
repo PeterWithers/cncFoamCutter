@@ -40,8 +40,8 @@ public class BedAlignmentTest {
         final WingData wingData = new WingData();
         wingData.setWingLength(machineData.getWireLength() / 3);
         BedAlignment instance = new BedAlignment(0, machineData, wingData);
-        assertEquals(10, instance.getRootGcodeValue(5, 0));
-        assertEquals(15, instance.getRootGcodeValue(5, -5));
+        assertEquals(10, instance.getRootGcodeValue(5, 0), 0.0);
+        assertEquals(15, instance.getRootGcodeValue(5, -5), 0.0);
     }
 
     /**
@@ -54,7 +54,7 @@ public class BedAlignmentTest {
         final WingData wingData = new WingData();
         wingData.setWingLength(machineData.getWireLength() / 3);
         BedAlignment instance = new BedAlignment(0, machineData, wingData);
-        assertEquals(-5, instance.getTipGcodeValue(5, 0));
-        assertEquals(15, instance.getTipGcodeValue(5, 10));
+        assertEquals(-5, instance.getTipGcodeValue(5, 0), 0.0);
+        assertEquals(15, instance.getTipGcodeValue(5, 10), 0.0);
     }
 }
