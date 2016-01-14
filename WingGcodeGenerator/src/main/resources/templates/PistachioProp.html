@@ -20,8 +20,10 @@ Copyright (C) 2016 Peter Withers
             <div id="propEditorForm">
                 <form method="POST" action="#" th:action="@{/updatePropSettings}">    
                     Prop Diameter<input type="number" id="propDiameter" name="propDiameter" th:value="${propDiameter}" />
+                    Prop Thickness<input type="number" id="propThickness" name="propThickness" th:value="${propThickness}" />
                     Blade Count<input type="number" id="bladeCount" name="bladeCount" th:value="${bladeCount}" />
-                    Shaft Diameter<input type="number" id="shaftDiameter" name="shaftDiameter" th:value="${shaftDiameter}" />
+                    Shaft Diameter<input type="number" step="0.01" id="shaftDiameter" name="shaftDiameter" th:value="${shaftDiameter}" />
+                    Layer Height<input type="number" step="0.01" id="layerHeight" name="layerHeight" th:value="${shaftDiameter}" />
                     <button type="submit" id="saveButton" >Update</button>
                 </form>
             </div>
@@ -32,13 +34,7 @@ Copyright (C) 2016 Peter Withers
                     <line th:each="xRow : ${#numbers.sequence( 0, 100)}" y1="-30" th:attr="x1=${xRow}, x2=${xRow}" y2="30" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
                     <line th:each="xRow : ${#numbers.sequence( 0, 10)}" y1="-35" th:attr="x1=${xRow*10}, x2=${xRow*10}" y2="35" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
                 </g>
-                <!--<path class="aerofoilEditLines" id="bezierPath" d="M0,0"/>-->
-                <!--<circle class="dragHandle" id="dragHandle0" cx="0" cy="0" r="2" />-->
-                <!--<circle th:each="pointXY, loopstatus : ${tipAerofoilData.getPoints()}" class="dragHandle" th:id="${loopstatus.count == 1? 'dragHandleStart' : loopstatus.count == tipAerofoilData.getPoints().length ? 'dragHandleEnd' : 'dragHandle'+(loopstatus.count-1)}" th:attr="cx=${(1.0-pointXY[0])*100}, cy=${(1-pointXY[1])*100-100}, r=${loopstatus.count == tipAerofoilData.getPoints().length ? 0 : 1}" onmousedown="start(evt)"/>-->
-                <!--<circle class="dragHandle" id="dragHandle2" cx="90" cy="-10" r="2" onmousedown="start(evt)" ontouchstart="start(evt)" />-->
-                <!--<circle class="dragHandle" id="dragHandle3" cx="100" cy="0" r="2" onmousedown="start(evt)" ontouchstart="start(evt)" />-->
-                <!--<circle class="dragHandle" id="dragHandle4" cx="90" cy="10" r="2" onmousedown="start(evt)" ontouchstart="start(evt)" />-->
-                <!--<circle class="dragHandle" id="dragHandle5" cx="10" cy="10" r="2" onmousedown="start(evt)" ontouchstart="start(evt)" />-->                
+                <path class="aerofoilEditLines" id="bezierPath" th:attr="d=${propPath}"/>
             </svg>            
         </div>
     </body>

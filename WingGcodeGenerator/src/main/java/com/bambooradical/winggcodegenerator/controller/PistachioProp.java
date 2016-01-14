@@ -31,8 +31,10 @@ public class PistachioProp {
             //            @ModelAttribute int hubDiameter,
             //            @ModelAttribute int propDiameter,
             @RequestParam(value = "propDiameter", required = true, defaultValue = "25") final int propDiameter,
+            @RequestParam(value = "propThickness", required = true, defaultValue = "5") final int propThickness,
             @RequestParam(value = "bladeCount", required = true, defaultValue = "5") final int bladeCount,
             @RequestParam(value = "shaftDiameter", required = true, defaultValue = "0.5") final float shaftDiameter,
+            @RequestParam(value = "layerHeight", required = true, defaultValue = "0.3") final float layerHeight,
             @RequestHeader("Accept-Language") String acceptLang,
             @RequestHeader("User-Agent") String userAgent,
             HttpServletRequest request) {
@@ -41,8 +43,11 @@ public class PistachioProp {
         final Date accessDate = new java.util.Date();
         accessDataRepository.save(new AccessData(accessDate, remoteAddr, userAgent, acceptLang, requestURI));
         model.addAttribute("shaftDiameter", shaftDiameter);
+        model.addAttribute("propThickness", shaftDiameter);
         model.addAttribute("propDiameter", propDiameter);
         model.addAttribute("bladeCount", bladeCount);
+        model.addAttribute("layerHeight", layerHeight);
+        model.addAttribute("propPath", "M0,0, 10,1 2,10");
         return "PistachioProp";
     }
 
