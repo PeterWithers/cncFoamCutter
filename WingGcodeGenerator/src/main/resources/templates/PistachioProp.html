@@ -17,6 +17,14 @@ Copyright (C) 2016 Peter Withers
     </head>
     <body>
         <div th:fragment="propEditor">
+            <div id="propEditorForm">
+                <form method="POST" action="#" th:action="@{/updatePropSettings}">    
+                    Prop Diameter<input type="number" id="propDiameter" name="propDiameter" th:value="${propDiameter}" />
+                    Blade Count<input type="number" id="bladeCount" name="bladeCount" th:value="${bladeCount}" />
+                    Shaft Diameter<input type="number" id="shaftDiameter" name="shaftDiameter" th:value="${shaftDiameter}" />
+                    <button type="submit" id="saveButton" >Update</button>
+                </form>
+            </div>
             <svg id="editSvgPanel" viewBox="-25 -50 150 150">
                 <g id="grid">
                     <line th:each="yRow : ${#numbers.sequence( -30, 30)}" x1="0" th:attr="y1=${yRow}, y2=${yRow}" x2="100" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />

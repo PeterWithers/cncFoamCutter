@@ -9,8 +9,10 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @since Jan 14, 2016 10:08:29 PM (creation date)
@@ -24,9 +26,13 @@ public class PistachioProp {
 
     @RequestMapping("/PistachioProp")
     public String designView(
-//            @ModelAttribute int bladeCount,
-//            @ModelAttribute int hubDiameter,
-//            @ModelAttribute int propDiameter,
+            Model model,
+            //            @ModelAttribute int bladeCount,
+            //            @ModelAttribute int hubDiameter,
+            //            @ModelAttribute int propDiameter,
+            @RequestParam(value = "propDiameter", required = true, defaultValue = "25") final int propDiameter,
+            @RequestParam(value = "bladeCount", required = true, defaultValue = "5") final int bladeCount,
+            @RequestParam(value = "shaftDiameter", required = true, defaultValue = "0.5") final float shaftDiameter,
             @RequestHeader("Accept-Language") String acceptLang,
             @RequestHeader("User-Agent") String userAgent,
             HttpServletRequest request) {
@@ -34,6 +40,14 @@ public class PistachioProp {
         final String requestURI = request.getRequestURI();
         final Date accessDate = new java.util.Date();
         accessDataRepository.save(new AccessData(accessDate, remoteAddr, userAgent, acceptLang, requestURI));
+        model.addAttribute("shaftDiameter", shaftDiameter);
+        model.addAttribute("propDiameter", propDiameter);
+        model.addAttribute("bladeCount", bladeCount);
         return "PistachioProp";
+    }
+
+    @RequestMapping("/updatePropSettings")
+    public String updatePropSettings() {
+        return "PistachioProp :: propEditor";
     }
 }
