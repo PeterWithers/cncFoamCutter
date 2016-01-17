@@ -34,7 +34,10 @@ Copyright (C) 2016 Peter Withers
                     <line th:each="xRow : ${#numbers.sequence( 0, 100)}" y1="-30" th:attr="x1=${xRow}, x2=${xRow}" y2="30" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
                     <line th:each="xRow : ${#numbers.sequence( 0, 10)}" y1="-35" th:attr="x1=${xRow*10}, x2=${xRow*10}" y2="35" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
                 </g>
-                <path class="aerofoilEditLines" id="bezierPath" th:attr="d=${propPath}"/>
+                <path class="aerofoilEditLines" id="extrusionPath" th:attr="d=${propPath}"/>
+                <path class="ncPathLines" id="animatedPath" th:attr="d=${propPath}" stroke-dasharray="50,250">
+                    <animate attributeName="stroke-dashoffset" from="300" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
+                </path>
             </svg>            
         </div>
     </body>

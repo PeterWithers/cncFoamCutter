@@ -30,10 +30,10 @@ public class PistachioProp {
             //            @ModelAttribute int bladeCount,
             //            @ModelAttribute int hubDiameter,
             //            @ModelAttribute int propDiameter,
-            @RequestParam(value = "propDiameter", required = true, defaultValue = "25") final int propDiameter,
+            @RequestParam(value = "propDiameter", required = true, defaultValue = "50") final int propDiameter,
             @RequestParam(value = "propThickness", required = true, defaultValue = "5") final int propThickness,
             @RequestParam(value = "bladeCount", required = true, defaultValue = "5") final int bladeCount,
-            @RequestParam(value = "shaftDiameter", required = true, defaultValue = "0.5") final float shaftDiameter,
+            @RequestParam(value = "shaftDiameter", required = true, defaultValue = "5") final float shaftDiameter,
             @RequestParam(value = "layerHeight", required = true, defaultValue = "0.3") final float layerHeight,
             @RequestHeader("Accept-Language") String acceptLang,
             @RequestHeader("User-Agent") String userAgent,
@@ -43,11 +43,33 @@ public class PistachioProp {
         final Date accessDate = new java.util.Date();
         accessDataRepository.save(new AccessData(accessDate, remoteAddr, userAgent, acceptLang, requestURI));
         model.addAttribute("shaftDiameter", shaftDiameter);
-        model.addAttribute("propThickness", shaftDiameter);
+        model.addAttribute("propThickness", propThickness);
         model.addAttribute("propDiameter", propDiameter);
         model.addAttribute("bladeCount", bladeCount);
         model.addAttribute("layerHeight", layerHeight);
-        model.addAttribute("propPath", "M0,0, 10,1 2,10");
+        String svgPoints = "M";
+        // draw outer ring
+        final double radPerIndex = Math.PI * 2 / 360;
+        for (int degreeIndex = 0; degreeIndex <= 360; degreeIndex++) {
+            final double xPos = Math.sin(radPerIndex * degreeIndex) * propDiameter / 2;
+            final double yPos = Math.cos(radPerIndex * degreeIndex) * propDiameter / 2;
+            svgPoints += (50 + xPos) + ", " + yPos + " ";
+        }
+        final double radPerBlade = Math.PI * 2 / bladeCount;
+//        for (int layerCount = 0; layerCount < propThickness / layerHeight; layerCount += layerHeight) {
+        for (double layerCount = 0; layerCount < 10; layerCount++) {
+            for (double bladeIndex = 0; bladeIndex <= bladeCount; bladeIndex++) {
+                final double layerTipRotation = layerCount / 100;
+                final double xOuterPos = Math.sin(radPerBlade * (bladeIndex + layerTipRotation)) * propDiameter / 2;
+                final double yOuterPos = Math.cos(radPerBlade * (bladeIndex + layerTipRotation)) * propDiameter / 2;
+                final double xInnerPos = Math.sin(radPerBlade * bladeIndex) * shaftDiameter / 2;
+                final double yInnerPos = Math.cos(radPerBlade * bladeIndex) * shaftDiameter / 2;
+                svgPoints += (50 + xInnerPos) + ", " + yInnerPos + " ";
+                svgPoints += (50 + xOuterPos) + ", " + yOuterPos + " ";
+                svgPoints += (50 + xInnerPos) + ", " + yInnerPos + " ";
+            }
+        }
+        model.addAttribute("propPath", svgPoints);
         return "PistachioProp";
     }
 
