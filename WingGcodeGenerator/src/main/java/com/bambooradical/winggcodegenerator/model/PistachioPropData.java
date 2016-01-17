@@ -57,4 +57,29 @@ public class PistachioPropData {
         this.layerHeight = layerHeight;
     }
 
+    public String getSvgPoints() {
+        String svgPoints = "M";
+        // draw outer ring
+        final double radPerIndex = Math.PI * 2 / 360;
+        for (int degreeIndex = 0; degreeIndex <= 360; degreeIndex++) {
+            final double xPos = Math.sin(radPerIndex * degreeIndex) * getPropDiameter() / 2;
+            final double yPos = Math.cos(radPerIndex * degreeIndex) * getPropDiameter() / 2;
+            svgPoints += (50 + xPos) + ", " + yPos + " ";
+        }
+        final double radPerBlade = Math.PI * 2 / getBladeCount();
+//        for (int layerCount = 0; layerCount < propThickness / layerHeight; layerCount += layerHeight) {
+        for (double layerCount = 0; layerCount < 10; layerCount++) {
+            for (double bladeIndex = 0; bladeIndex <= getBladeCount(); bladeIndex++) {
+                final double layerTipRotation = layerCount / 100;
+                final double xOuterPos = Math.sin(radPerBlade * (bladeIndex + layerTipRotation)) * getPropDiameter() / 2;
+                final double yOuterPos = Math.cos(radPerBlade * (bladeIndex + layerTipRotation)) * getPropDiameter() / 2;
+                final double xInnerPos = Math.sin(radPerBlade * bladeIndex) * getShaftDiameter() / 2;
+                final double yInnerPos = Math.cos(radPerBlade * bladeIndex) * getShaftDiameter() / 2;
+                svgPoints += (50 + xInnerPos) + ", " + yInnerPos + " ";
+                svgPoints += (50 + xOuterPos) + ", " + yOuterPos + " ";
+                svgPoints += (50 + xInnerPos) + ", " + yInnerPos + " ";
+            }
+        }
+        return svgPoints;
+    }
 }
