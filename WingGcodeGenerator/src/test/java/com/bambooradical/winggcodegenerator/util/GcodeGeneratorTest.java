@@ -32,11 +32,49 @@ public class GcodeGeneratorTest {
     @Test
     public void testOffsetPoint() {
         System.out.println("offsetPoint");
-        double[] point = new double[]{0, 0};
-        double distance = 1.0;
-        double angleRadians = 1.57079633;
         GcodeGenerator instance = new GcodeGenerator();
-        assertArrayEquals(new double[]{1, 0}, instance.offsetPoint(point, distance, angleRadians), 0.1);
+        assertArrayEquals(new double[]{9.575844603750276, 50.90558942122368}, instance.offsetPoint(new double[]{10.0, 50.0}, 1.0, -0.4380290252990968), 0.0);
+        assertArrayEquals(new double[]{9.575844603750276, 50.90558942122368}, instance.offsetPoint(new double[]{10.0, 50.0}, 1.0, -0.4380290252990968), 0.0);
+        assertArrayEquals(new double[]{9.575844603750276, 50.90558942122368}, instance.offsetPoint(new double[]{10.0, 50.0}, 1.0, -0.4380290252990968), 0.0);
+        assertArrayEquals(new double[]{39.23177872040262, 86.64018439966448}, instance.offsetPoint(new double[]{40.0, 86.0}, 1.0, -0.8760580505981936), 0.0);
+        assertArrayEquals(new double[]{40.0, 87.0}, instance.offsetPoint(new double[]{40.0, 86.0}, 1.0, 0.0), 0.0);
+        assertArrayEquals(new double[]{40.76822127959738, 86.64018439966448}, instance.offsetPoint(new double[]{40.0, 86.0}, 1.0, 0.8760580505981933), 0.0);
+        assertArrayEquals(new double[]{100.4168194241156, 13.091010688907764}, instance.offsetPoint(new double[]{100.0, 14.0}, 1.0, 2.711649176784128), 0.0);
+        assertArrayEquals(new double[]{100.4168194241156, 13.091010688907764}, instance.offsetPoint(new double[]{100.0, 14.0}, 1.0, 2.711649176784128), 0.0);
+        assertArrayEquals(new double[]{100.4168194241156, 13.091010688907764}, instance.offsetPoint(new double[]{100.0, 14.0}, 1.0, 2.711649176784128), 0.0);
+        assertArrayEquals(new double[]{93.01360607616786, 49.835601012694646}, instance.offsetPoint(new double[]{94.0, 50.0}, 1.0, 4.547240302970063), 0.0);
+        assertArrayEquals(new double[]{94.26945545529667, 49.036987145666856}, instance.offsetPoint(new double[]{94.0, 50.0}, 1.0, 2.868765126326297), 0.0);
+        assertArrayEquals(new double[]{94.92847669088526, 50.3713906763541}, instance.offsetPoint(new double[]{94.0, 50.0}, 1.0, 1.1902899496825317), 0.0);
+        assertArrayEquals(new double[]{118.92847669088526, -9.628609323645897}, instance.offsetPoint(new double[]{118.0, -10.0}, 1.0, 1.1902899496825317), 0.0);
+        assertArrayEquals(new double[]{118.5349446316267, -10.84488711736762}, instance.offsetPoint(new double[]{118.0, -10.0}, 1.0, 2.5771504412718516), 0.0);
+        assertArrayEquals(new double[]{117.2672065083737, -10.680451099367279}, instance.offsetPoint(new double[]{118.0, -10.0}, 1.0, 3.9640109328611715), 0.0);
+        assertArrayEquals(new double[]{39.92622840975752, 73.00272483612942}, instance.offsetPoint(new double[]{40.0, 74.0}, 1.0, 3.215431322113706), 0.0);
+        assertArrayEquals(new double[]{39.92622840975752, 73.00272483612942}, instance.offsetPoint(new double[]{40.0, 74.0}, 1.0, 3.215431322113706), 0.0);
+        assertArrayEquals(new double[]{39.92622840975752, 73.00272483612942}, instance.offsetPoint(new double[]{40.0, 74.0}, 1.0, 3.215431322113706), 0.0);
+        assertArrayEquals(new double[]{10.624695047554424, 49.21913119055697}, instance.offsetPoint(new double[]{10.0, 50.0}, 1.0, 2.4668517113662407), 0.0);
+        assertArrayEquals(new double[]{10.3310069414355, 49.05637168083958}, instance.offsetPoint(new double[]{10.0, 50.0}, 1.0, 2.804222182478017), 0.0);
+        assertArrayEquals(new double[]{10.0, 49.0}, instance.offsetPoint(new double[]{10.0, 50.0}, 1.0, 3.141592653589793), 0.0);
+        assertArrayEquals(new double[]{9.575844603750276, 50.90558942122368}, instance.offsetPoint(new double[]{10.0, 50.0}, 1.0, -0.4380290252990968), 0.0);
+        assertArrayEquals(new double[]{9.575844603750276, 50.90558942122368}, instance.offsetPoint(new double[]{10.0, 50.0}, 1.0, -0.4380290252990968), 0.0);
+        assertArrayEquals(new double[]{9.575844603750276, 50.90558942122368}, instance.offsetPoint(new double[]{10.0, 50.0}, 1.0, -0.4380290252990968), 0.0);
+        assertArrayEquals(new double[]{39.23177872040262, 86.64018439966448}, instance.offsetPoint(new double[]{40.0, 86.0}, 1.0, -0.8760580505981936), 0.0);
+        assertArrayEquals(new double[]{40.0, 87.0}, instance.offsetPoint(new double[]{40.0, 86.0}, 1.0, 0.0), 0.0);
+        assertArrayEquals(new double[]{40.76822127959738, 86.64018439966448}, instance.offsetPoint(new double[]{40.0, 86.0}, 1.0, 0.8760580505981933), 0.0);
+        assertArrayEquals(new double[]{100.4168194241156, 13.091010688907764}, instance.offsetPoint(new double[]{100.0, 14.0}, 1.0, 2.711649176784128), 0.0);
+        assertArrayEquals(new double[]{100.4168194241156, 13.091010688907764}, instance.offsetPoint(new double[]{100.0, 14.0}, 1.0, 2.711649176784128), 0.0);
+        assertArrayEquals(new double[]{100.4168194241156, 13.091010688907764}, instance.offsetPoint(new double[]{100.0, 14.0}, 1.0, 2.711649176784128), 0.0);
+        assertArrayEquals(new double[]{93.01360607616786, 49.835601012694646}, instance.offsetPoint(new double[]{94.0, 50.0}, 1.0, 4.547240302970063), 0.0);
+        assertArrayEquals(new double[]{94.26945545529667, 49.036987145666856}, instance.offsetPoint(new double[]{94.0, 50.0}, 1.0, 2.868765126326297), 0.0);
+        assertArrayEquals(new double[]{94.92847669088526, 50.3713906763541}, instance.offsetPoint(new double[]{94.0, 50.0}, 1.0, 1.1902899496825317), 0.0);
+        assertArrayEquals(new double[]{118.92847669088526, -9.628609323645897}, instance.offsetPoint(new double[]{118.0, -10.0}, 1.0, 1.1902899496825317), 0.0);
+        assertArrayEquals(new double[]{118.5349446316267, -10.84488711736762}, instance.offsetPoint(new double[]{118.0, -10.0}, 1.0, 2.5771504412718516), 0.0);
+        assertArrayEquals(new double[]{117.2672065083737, -10.680451099367279}, instance.offsetPoint(new double[]{118.0, -10.0}, 1.0, 3.9640109328611715), 0.0);
+        assertArrayEquals(new double[]{39.92622840975752, 73.00272483612942}, instance.offsetPoint(new double[]{40.0, 74.0}, 1.0, 3.215431322113706), 0.0);
+        assertArrayEquals(new double[]{39.92622840975752, 73.00272483612942}, instance.offsetPoint(new double[]{40.0, 74.0}, 1.0, 3.215431322113706), 0.0);
+        assertArrayEquals(new double[]{39.92622840975752, 73.00272483612942}, instance.offsetPoint(new double[]{40.0, 74.0}, 1.0, 3.215431322113706), 0.0);
+        assertArrayEquals(new double[]{10.624695047554424, 49.21913119055697}, instance.offsetPoint(new double[]{10.0, 50.0}, 1.0, 2.4668517113662407), 0.0);
+        assertArrayEquals(new double[]{10.3310069414355, 49.05637168083958}, instance.offsetPoint(new double[]{10.0, 50.0}, 1.0, 2.804222182478017), 0.0);
+        assertArrayEquals(new double[]{10.0, 49.0}, instance.offsetPoint(new double[]{10.0, 50.0}, 1.0, 3.141592653589793), 0.0);
     }
 
     /**
