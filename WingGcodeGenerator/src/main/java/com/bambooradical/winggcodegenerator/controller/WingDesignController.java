@@ -159,7 +159,7 @@ public class WingDesignController {
             @RequestParam(value = "bedAlignment", required = true, defaultValue = "0") final int bedAlignment,
             HttpServletResponse response,
             HttpServletRequest request) {
-        response.setHeader("Content-Disposition", "attachment;filename=" + wingData.getRootAerofoil() + "_" + wingData.getRootChord() + "-" + wingData.getTipChord() + "_" + machineData.getCuttingSpeed() + "mms" + machineData.getHeaterPercent() + "pwm");
+        response.setHeader("Content-Disposition", "attachment;filename=" + wingData.getRootAerofoil() + "_" + wingData.getRootChord() + "-" + wingData.getTipChord() + "_" + machineData.getCuttingSpeed() + "f" + machineData.getHeaterPercent() + "h");
         final BedAlignment bedAlignmentCalculator = new BedAlignment(bedAlignment, machineData, wingData);
         final AerofoilData rootAerofoilData;
         final AerofoilData tipAerofoilData;
