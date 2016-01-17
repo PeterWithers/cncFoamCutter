@@ -425,10 +425,10 @@ Copyright (C) 2015 Peter Withers
             <div class="rootDistanceGraph">Root Distance</div>
             <div class="tipDistanceGraph">Tip Distance</div>
             <div class="speedGraph">Feed Rate</div>
-            <svg id="graph"  viewBox="0 0 500 600">
-                <polyline class="speedGraph" th:attr="points=${gcodeGenerator.toSvgSpeedGraph(500)}" />
-                <polyline class="rootDistanceGraph" th:attr="points=${gcodeGenerator.toSvgRootDistanceGraph(500)}" />
-                <polyline class="tipDistanceGraph" th:attr="points=${gcodeGenerator.toSvgTipDistanceGraph(500)}" />
+            <svg id="graph" th:attr="viewBox=${gcodeGenerator.getSvgViewBox()}">
+                <polyline class="speedGraph" th:attr="points=${gcodeGenerator.toSvgSpeedGraph()}" />
+                <polyline class="rootDistanceGraph" th:attr="points=${gcodeGenerator.toSvgRootDistanceGraph()}" />
+                <polyline class="tipDistanceGraph" th:attr="points=${gcodeGenerator.toSvgTipDistanceGraph()}" />
             </svg>
         </div>
         <div id="footer" th:text="'Aerofoil: ' + ${tipAerofoilData.getName()} + ' | Wing length: ' + ${wingData.wingLength} + ' | Root ' + ${rootAerofoilData.getBounds().getWidth()*wingData.rootChord} + 'x' +${rootAerofoilData.getBounds().getHeight()*wingData.rootChord} + ' | Tip '  + ${tipAerofoilData.getBounds().getWidth()*wingData.tipChord} + 'x' + ${tipAerofoilData.getBounds().getHeight()*wingData.tipChord}"></div>
