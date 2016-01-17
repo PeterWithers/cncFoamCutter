@@ -18,7 +18,7 @@ Copyright (C) 2016 Peter Withers
     <body>
         <div th:fragment="propEditor">
             <div id="propEditorForm">
-                <form method="POST" action="#" th:action="@{/updatePropSettings}">    
+                <form method="POST" th:object="${pistachioPropData}" action="#" th:action="@{/updatePropSettings}">    
                     Prop Diameter<input type="number" id="propDiameter" name="propDiameter" th:value="${propDiameter}" />
                     Prop Thickness<input type="number" id="propThickness" name="propThickness" th:value="${propThickness}" />
                     Blade Count<input type="number" id="bladeCount" name="bladeCount" th:value="${bladeCount}" />
