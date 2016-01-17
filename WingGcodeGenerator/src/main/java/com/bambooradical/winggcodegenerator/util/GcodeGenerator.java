@@ -16,10 +16,12 @@ import java.util.ArrayList;
 public class GcodeGenerator {
 
     ArrayList<GcodeMovement> gcodeMovement = new ArrayList<>();
+    private final int minSpeed;
 
     public GcodeGenerator(MachineData machineData, AerofoilData aerofoilDataRoot, BedAlignment bedAlignment, AerofoilData aerofoilDataTip) {
         ArrayList<double[]> tipPath;
         ArrayList<double[]> rootPath;
+        minSpeed = machineData.getCuttingSpeed();
         final int cutDepth = machineData.getMachineHeight() - machineData.getInitialCutHeight();
         rootPath = applyCuttingToolOffset(cutDepth, machineData.getWireOffset100Feed(), aerofoilDataRoot.getTransformedPoints(machineData.getInitialCutLength(), cutDepth, bedAlignment.getRootChord(), bedAlignment.getRootSweep(), bedAlignment.getRootWash()));
         tipPath = applyCuttingToolOffset(cutDepth, machineData.getWireOffset100Feed(), aerofoilDataTip.getTransformedPoints(machineData.getInitialCutLength(), cutDepth, bedAlignment.getTipChord(), bedAlignment.getTipSweep(), bedAlignment.getTipWash()));
@@ -52,7 +54,7 @@ public class GcodeGenerator {
         }
     }
 
-    protected ArrayList<double[]> applyCuttingToolOffset(double cutDepth, double offsetDistance, ArrayList<double[]> path) {
+    protected final ArrayList<double[]> applyCuttingToolOffset(double cutDepth, double offsetDistance, ArrayList<double[]> path) {
         if (offsetDistance == 0) {
             return path;
         }
@@ -64,7 +66,9 @@ public class GcodeGenerator {
             final double prevRadians = getAngleRadians(prevPoint, currentPoint);
             final double nextRadians = getAngleRadians(currentPoint, nextPoint);
             // get the mid point of the two angles and move the current point along a line defined by the resulting angle
-            final double midRadians = nextRadians + ((prevRadians - nextRadians) / 2d);
+            final double radiansDiff = nextRadians - prevRadians;
+            double normRadDiff = radiansDiff - (Math.PI + Math.PI) * Math.floor((radiansDiff + Math.PI) / (Math.PI + Math.PI));
+            final double midRadians = (normRadDiff / 2d) + prevRadians;
             boolean isConcave = isConcave(nextRadians, prevRadians);
             if (isConcave) {
                 returnPath.add(offsetPoint(currentPoint, offsetDistance, prevRadians + Math.PI / 2d));
@@ -92,9 +96,11 @@ public class GcodeGenerator {
     }
 
     public double[] offsetPoint(final double[] point, double distance, double angleRadians) {
-        return new double[]{
+        final double[] result = new double[]{
             point[0] + (Math.sin(angleRadians) * distance),
             point[1] + (Math.cos(angleRadians) * distance)};
+//        System.out.println(" assertArrayEquals(new double[]{" + result[0] + ", " + result[1] + "}, instance.offsetPoint(new double[]{" + point[0] + ", " + point[1] + "}, " + distance + ", " + angleRadians + "), 0.0);");
+        return result;
     }
 
     public double getAngleRadians(final double[] pointA, final double[] pointB) {
@@ -106,6 +112,7 @@ public class GcodeGenerator {
     }
 
     public GcodeGenerator() {
+        minSpeed = 0;
     }
 
     public String toSvgXy() {
@@ -130,22 +137,27 @@ public class GcodeGenerator {
         return builder.toString();
     }
 
-    public String toSvgSpeedGraph(int graphWidth) {
-        final int stepAmount = graphWidth / gcodeMovement.size();
+    public String getSvgViewBox() {
+        final int width = (gcodeMovement.size() > 500) ? gcodeMovement.size() : 500;
+        return "0 0 " + width + " 600";
+    }
+
+    public String toSvgSpeedGraph() {
+        final int stepAmount = (gcodeMovement.size() > 500) ? 1 : 500 / gcodeMovement.size();
         StringBuilder builder = new StringBuilder();
         int columnCounter = 0;
         for (GcodeMovement currentPoint : gcodeMovement) {
             builder.append(columnCounter);
             builder.append(",");
-            builder.append(currentPoint.speed);
+            builder.append(currentPoint.speed - minSpeed / 2);
             builder.append(" ");
             columnCounter += stepAmount;
         }
         return builder.toString();
     }
 
-    public String toSvgRootDistanceGraph(int graphWidth) {
-        final int stepAmount = graphWidth / gcodeMovement.size();
+    public String toSvgRootDistanceGraph() {
+        final int stepAmount = (gcodeMovement.size() > 500) ? 1 : 500 / gcodeMovement.size();
         StringBuilder builder = new StringBuilder();
         int columnCounter = 0;
         for (GcodeMovement currentPoint : gcodeMovement) {
@@ -158,8 +170,8 @@ public class GcodeGenerator {
         return builder.toString();
     }
 
-    public String toSvgTipDistanceGraph(int graphWidth) {
-        final int stepAmount = graphWidth / gcodeMovement.size();
+    public String toSvgTipDistanceGraph() {
+        final int stepAmount = (gcodeMovement.size() > 500) ? 1 : 500 / gcodeMovement.size();
         StringBuilder builder = new StringBuilder();
         int columnCounter = 0;
         for (GcodeMovement currentPoint : gcodeMovement) {
