@@ -34,6 +34,7 @@ public class MachineData {
     private int bedAlignment = 0; // positive values are aligned left offset by the value, nevative values are aligned right offset by the value, zero centre aligns with no offset
     private double wireOffset100Feed = 1;
     private double wireOffset50Feed = 1.5;
+    private int partSeparation = 10; // use when left and right wings are to be cut with one gcode file
 
     public int getCuttingSpeed() {
         return cuttingSpeed;
@@ -200,6 +201,14 @@ public class MachineData {
 
     public void setBedAlignment(int bedAlignment) {
         this.bedAlignment = bedAlignment;
+    }
+
+    public int getPartSeparation() {
+        return partSeparation;
+    }
+
+    public void setPartSeparation(int partSeparation) {
+        this.partSeparation = partSeparation;
     }
 
     public String toSvgPoints() {

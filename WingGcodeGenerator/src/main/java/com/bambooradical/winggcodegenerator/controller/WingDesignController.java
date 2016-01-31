@@ -99,7 +99,7 @@ public class WingDesignController {
         model.addAttribute("wingLinesData", rootAerofoilData.toSvgLines(tipAerofoilData, bedAlignmentCalculator.getProjectedRootXOffset(), bedAlignmentCalculator.getProjectedRootYOffset(), wingData.getRootChord(), bedAlignmentCalculator.getRootSweep(), bedAlignmentCalculator.getRootWash(), bedAlignmentCalculator.getProjectedTipXOffset(), bedAlignmentCalculator.getProjectedTipYOffset(), wingData.getTipChord(), bedAlignmentCalculator.getTipSweep(), bedAlignmentCalculator.getTipWash()));
         final Bounds svgBounds = machineData.getSvgBounds();
         model.addAttribute("svgbounds", svgBounds.getMinX() + " " + svgBounds.getMinY() + " " + svgBounds.getWidth() + " " + svgBounds.getHeight());
-        final GcodeGenerator gcodeGenerator = new GcodeGenerator(machineData, rootAerofoilData, bedAlignmentCalculator, tipAerofoilData);
+        final GcodeGenerator gcodeGenerator = new GcodeGenerator(machineData, rootAerofoilData, bedAlignmentCalculator, tipAerofoilData, wingData.isCutTwoMirrored());
         model.addAttribute("gcodeGenerator", gcodeGenerator);
         model.addAttribute("transformZE", "translate(" + (int) (machineData.getViewAngle()) + "," + (int) (machineData.getWireLength() - machineData.getViewAngle()) + ")");
         model.addAttribute("gcode", gcodeGenerator.toGcode(machineData, requestURI));
@@ -178,7 +178,7 @@ public class WingDesignController {
         } else {
             tipAerofoilData = rootAerofoilData;
         }
-        final GcodeGenerator gcodeGenerator = new GcodeGenerator(machineData, rootAerofoilData, bedAlignmentCalculator, tipAerofoilData);
+        final GcodeGenerator gcodeGenerator = new GcodeGenerator(machineData, rootAerofoilData, bedAlignmentCalculator, tipAerofoilData, wingData.isCutTwoMirrored());
         String referer = request.getHeader("Referer");
         return gcodeGenerator.toGcode(machineData, referer);
     }

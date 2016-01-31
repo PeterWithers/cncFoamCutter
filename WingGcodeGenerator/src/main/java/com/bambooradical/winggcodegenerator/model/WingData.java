@@ -16,6 +16,7 @@ public class WingData {
     private long tipAerofoil = 1;
     private int tipSweep = 0;
     private int tipWash = 0;
+    private boolean cutTwoMirrored = false;
 
     public int getRootChord() {
         return rootChord;
@@ -71,5 +72,13 @@ public class WingData {
 
     public void setTipWash(int tipWash) {
         this.tipWash = tipWash;
-    }   
+    }
+
+    public boolean isCutTwoMirrored() {
+        return cutTwoMirrored;
+    }
+
+    public void setCutTwoMirrored(boolean cutTwoMirrored) {
+        this.cutTwoMirrored = cutTwoMirrored;
+    }
 }

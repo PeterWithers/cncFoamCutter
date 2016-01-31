@@ -282,6 +282,7 @@ Copyright (C) 2015 Peter Withers
                         <input type="hidden" th:field="${wingData.tipChord}" />
                         <input type="hidden" th:field="${wingData.tipSweep}" />
                         <input type="hidden" th:field="${wingData.tipWash}" />
+                        <input type="hidden" th:field="${wingData.cutTwoMirrored}" />
                     </span>
                     <table>
                         <tr><td>
@@ -314,6 +315,8 @@ Copyright (C) 2015 Peter Withers
                                 Wire Offset 50% Feed Rate</td><td><input disabled="disabled" type="number" id="wireOffset50Feed" name="wireOffset50Feed" th:value="${machineData.getWireOffset50Feed()}" />
                             </td></tr><tr><td>
                                 Heater %</td><td><input type="number" id="heaterPercent" name="heaterPercent" th:value="${machineData.getHeaterPercent()}" />
+                            </td></tr><tr><td>
+                                Part Separation</td><td><input type="number" id="partSeparation" name="partSeparation" th:value="${machineData.getPartSeparation()}" />
                             </td></tr><tr><td><button type="reset">Reset</button></td><td><button type="submit" id="saveButton">Update</button>
                             </td></tr>
                     </table>
@@ -360,6 +363,7 @@ Copyright (C) 2015 Peter Withers
                         <input type="hidden" th:field="${machineData.wireOffset100Feed}" />
                         <input type="hidden" th:field="${machineData.wireOffset50Feed}" />
                         <input type="hidden" th:field="${machineData.heaterPercent}" />
+                        <input type="hidden" th:field="${machineData.partSeparation}" />
                     </span>
                     <table>
                         <tr><td>
@@ -397,6 +401,8 @@ Copyright (C) 2015 Peter Withers
                                 Sweep</td><td><input type="number" id="tipSweep" name="tipSweep" th:value="${wingData.tipSweep}" />
                             </td></tr><tr><td> 
                                 Wash</td><td><input type="number" id="tipWash" name="tipWash" th:value="${wingData.tipWash}" />
+                            </td></tr><tr><td> 
+                                Cut Two Mirrored</td><td><input type="checkbox" id="cutTwoMirrored" name="cutTwoMirrored" th:checked="${wingData.cutTwoMirrored}" value="true" />
                             </td></tr><tr><td><button type="reset">Reset</button></td><td><button type="submit" id="saveButton">Update</button>
                             </td></tr>
                     </table>

@@ -18,7 +18,7 @@ public class GcodeGenerator {
     ArrayList<GcodeMovement> gcodeMovement = new ArrayList<>();
     private final int minSpeed;
 
-    public GcodeGenerator(MachineData machineData, AerofoilData aerofoilDataRoot, BedAlignment bedAlignment, AerofoilData aerofoilDataTip) {
+    public GcodeGenerator(MachineData machineData, AerofoilData aerofoilDataRoot, BedAlignment bedAlignment, AerofoilData aerofoilDataTip, boolean cutTwoMirrored) {
         ArrayList<double[]> tipPath;
         ArrayList<double[]> rootPath;
         minSpeed = machineData.getCuttingSpeed();
@@ -36,12 +36,20 @@ public class GcodeGenerator {
 //        tipPath.add(new double[]{initialCutLength, machineHeight - initialCutHeight});
         rootPath.add(new double[]{0, cutDepth});
         tipPath.add(new double[]{0, cutDepth});
+        if (cutTwoMirrored) {
+            rootPath.add(new double[]{0, cutDepth + machineData.getPartSeparation()});
+            tipPath.add(new double[]{0, cutDepth + machineData.getPartSeparation()});
+            tipPath.addAll(applyCuttingToolOffset(cutDepth + machineData.getPartSeparation(), machineData.getWireOffset100Feed(), aerofoilDataRoot.getTransformedPoints(machineData.getInitialCutLength(), cutDepth + machineData.getPartSeparation(), bedAlignment.getRootChord(), bedAlignment.getRootSweep(), bedAlignment.getRootWash())));
+            rootPath.addAll(applyCuttingToolOffset(cutDepth + machineData.getPartSeparation(), machineData.getWireOffset100Feed(), aerofoilDataTip.getTransformedPoints(machineData.getInitialCutLength(), cutDepth + machineData.getPartSeparation(), bedAlignment.getTipChord(), bedAlignment.getTipSweep(), bedAlignment.getTipWash())));
+            rootPath.add(new double[]{0, cutDepth + machineData.getPartSeparation()});
+            tipPath.add(new double[]{0, cutDepth + machineData.getPartSeparation()});
+        }
         rootPath.add(new double[]{0, 0});
         tipPath.add(new double[]{0, 0});
 
         GcodeMovement lastGcodeMovement = null;
         for (int currentPoint = 0; currentPoint < rootPath.size(); currentPoint++) {
-            // this requres that each aerofoil path is normalised to have the same number of points and relative intervals for each point
+            // this requires that each aerofoil path is normalised to have the same number of points and relative intervals for each point
             double[] currentPointRoot = rootPath.get(currentPoint);
             double[] currentPointTip = tipPath.get(currentPoint);
             final double tipHorizontal = bedAlignment.getTipGcodeValue(currentPointRoot[0], currentPointTip[0]);
