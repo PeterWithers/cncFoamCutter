@@ -88,7 +88,7 @@ public class BedAlignment {
             final double rootVerDiff = lastGcodeMovement.rootVertical - rootVertical;
             rootDistance = Math.sqrt(rootHorDiff * rootHorDiff + rootVerDiff * rootVerDiff);
             final double tipHorDiff = lastGcodeMovement.tipHorizontal - tipHorizontal;
-            final double tipVerDiff = lastGcodeMovement.rootVertical - tipVertical;
+            final double tipVerDiff = lastGcodeMovement.tipVertical - tipVertical;
             tipDistance = Math.sqrt(tipHorDiff * tipHorDiff + tipVerDiff * tipVerDiff);
             if (rootDistance < tipDistance) {
                 if (tipDistance == 0) {
