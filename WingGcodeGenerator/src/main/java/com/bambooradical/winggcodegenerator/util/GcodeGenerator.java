@@ -22,7 +22,7 @@ public class GcodeGenerator {
         ArrayList<double[]> tipPath;
         ArrayList<double[]> rootPath;
         minSpeed = machineData.getCuttingSpeed();
-        final int cutDepth = machineData.getMachineHeight() - machineData.getInitialCutHeight();
+        final int cutDepth = machineData.getMachineHeight() - ((cutTwoMirrored) ? (machineData.getPartSeparation() / 2) : 0) - machineData.getInitialCutHeight();
         rootPath = applyCuttingToolOffset(cutDepth, machineData.getWireOffset100Feed(), aerofoilDataRoot.getTransformedPoints(machineData.getInitialCutLength(), cutDepth, bedAlignment.getRootChord(), bedAlignment.getRootSweep(), bedAlignment.getRootWash()));
         tipPath = applyCuttingToolOffset(cutDepth, machineData.getWireOffset100Feed(), aerofoilDataTip.getTransformedPoints(machineData.getInitialCutLength(), cutDepth, bedAlignment.getTipChord(), bedAlignment.getTipSweep(), bedAlignment.getTipWash()));
 
@@ -37,6 +37,10 @@ public class GcodeGenerator {
         rootPath.add(new double[]{0, cutDepth});
         tipPath.add(new double[]{0, cutDepth});
         if (cutTwoMirrored) {
+            rootPath.add(new double[]{-machineData.getPartSeparation(), cutDepth});
+            tipPath.add(new double[]{-machineData.getPartSeparation(), cutDepth});
+            rootPath.add(new double[]{-machineData.getPartSeparation(), cutDepth + machineData.getPartSeparation()});
+            tipPath.add(new double[]{-machineData.getPartSeparation(), cutDepth + machineData.getPartSeparation()});
             rootPath.add(new double[]{0, cutDepth + machineData.getPartSeparation()});
             tipPath.add(new double[]{0, cutDepth + machineData.getPartSeparation()});
             tipPath.addAll(applyCuttingToolOffset(cutDepth + machineData.getPartSeparation(), machineData.getWireOffset100Feed(), aerofoilDataRoot.getTransformedPoints(machineData.getInitialCutLength(), cutDepth + machineData.getPartSeparation(), bedAlignment.getRootChord(), bedAlignment.getRootSweep(), bedAlignment.getRootWash())));
