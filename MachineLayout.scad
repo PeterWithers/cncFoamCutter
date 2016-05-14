@@ -344,7 +344,7 @@ module verticalRod() {
         translate([verticalRodOffset,verticalRodInset,0]) {
             //#cylinder(r = verticalRodDiameter/2, h = verticalRodLength, center = true);
             //#cylinder(r = verticalBearingDiameter/2, h = verticalBearingLength, center = true);
-            difference() {
+            translate([0,2,0]) difference() {
                 for (spacing = [(-backPlateHeight/2+6.25)+80+15+5, -backPlateHeight/2+6.25]) { 
 // 80mm distance currently between mounts
 // 85mm travel in the slide
@@ -352,11 +352,14 @@ module verticalRod() {
                     // make the rod mounts
                                 translate([0,0,spacing]) hull() {
                                     cylinder(r = (verticalBearingDiameter/2)-0.5, h = verticalBearingLength/2, center = true);
-                                    translate([-5,-2,0])
+                                    translate([-5,-4,0])
                                         cube([3,5,7.5], center = true);
                                 }
                 }
-                translate([0,0,(verticalRodLength-backPlateHeight)/2+4]) cylinder(r = verticalRodDiameter/2, h = verticalRodLength, center = true);
+                union(){
+                    translate([0,0,(verticalRodLength-backPlateHeight)/2+4]) cylinder(r = verticalRodDiameter/2, h = verticalRodLength, center = true);
+                 //   translate([0,0,0]) cylinder(r = 5, h = 15+85, center = true);
+                }
             }
             translate([-3,0,(-backPlateHeight/2+6.25)+80+15+5]) hull() {
                 translate([-5,-2,0]) cube([3,5,7.5], center = true);
@@ -367,7 +370,7 @@ module verticalRod() {
             // linear bearing mount holes
             for (spacing = [bearingBlockSpacing/2, -bearingBlockSpacing/2]) 
             #for (holeVerSpacing = [bearingBlockHoleVerSpacing/2, -bearingBlockHoleVerSpacing/2])
-            for (holeHorSpacing = [bearingBlockHoleHorSpacing/2, -bearingBlockHoleHorSpacing/2])	{
+            for (holeHorSpacing = [bearingBlockHoleHorSpacing*1.5, -bearingBlockHoleHorSpacing/2])	{
                 translate([holeHorSpacing,spacing+holeVerSpacing,0])
                 cylinder(r = bearingBlockHoleDiameter/2, h = boreLength, center = true);
             }
