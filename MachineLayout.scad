@@ -386,8 +386,8 @@ module yTensionGuide(){
         union(){
             hull(){
                 //bearing cover
-                translate([0,2,3]) cylinder(r = 6, h = 15, center = true);
-                translate([0,15,linkageArmPosistion]) cylinder(r = 4, h = 2, center = true);
+                translate([0,2,3]) cylinder(r = 6.2, h = 15, center = true);
+                translate([0,20,linkageArmPosistion]) cylinder(r = 4, h = 2, center = true);
 
                 // wire tensioner outer
                 rotate(90, [0,1,0]) {
@@ -396,24 +396,24 @@ module yTensionGuide(){
             }
             hull(){
                 // linkage arm
-                translate([0,15,linkageArmPosistion]) cylinder(r = 4, h = 2, center = true);
-                translate([-22,15,linkageArmPosistion]) cylinder(r = 4, h = 2, center = true);
+                translate([0,20,linkageArmPosistion]) cylinder(r = 4, h = 2, center = true);
+                translate([-20,20,linkageArmPosistion]) cylinder(r = 4, h = 2, center = true);
             }
         }
         union(){
-            translate([-22,15,0]) cylinder(r = 2, h = 30, center = true);
+            translate([-20,20,0]) cylinder(r = 2, h = 30, center = true);
             translate([0,2,2]) cylinder(r = 5.5, h = 15, center = true);
-            translate([0,2,0]) cylinder(r = 3, h = 25, center = true);
+            translate([0,2,0]) cylinder(r = 4.5, h = 35, center = true);
             // wire tensioner cavity
             rotate(90, [0,1,0]) {
                 // spring cavity
-                translate([-7,10,6]) cylinder(r = 10, h = 5, center = true);
+                translate([-7,10,6]) cylinder(r = 7, h = 5, center = true);
                 // spool cavity
                 translate([-7,10,6]) cylinder(r = 5, h = 14, center = true);
                 // axle space
                 translate([-7,10,6]) cylinder(r = 1, h = 25, center = true);
                 // wire entrance
-                translate([-5,13,1]) cube([5,15,3], center = true);
+                #translate([-5,13,1]) cube([5,25,3], center = true);
             }
         }
     }
@@ -486,5 +486,5 @@ if (target == "xRodMountIdler") {
 } else if (target == "yRailSlideMountMK2right") {
     rotate(90, [1,0,0]) yRailSlideMountMK2right();
 } else if (target == "yTensionGuide") {
-    rotate(90, [0,0,1]) yTensionGuide();
+    rotate(90, [0,0,1]) scale([-1,1,1]) yTensionGuide();
 }
