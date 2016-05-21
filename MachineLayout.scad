@@ -387,33 +387,33 @@ module yTensionGuide(){
             hull(){
                 //bearing cover
                 translate([0,2,3]) cylinder(r = 6, h = 15, center = true);
-                translate([0,15,linkageArmPosistion]) cylinder(r = 3, h = 2, center = true);
+                translate([0,15,linkageArmPosistion]) cylinder(r = 4, h = 2, center = true);
 
                 // wire tensioner outer
                 rotate(90, [0,1,0]) {
-                    translate([-1,10,5]) cylinder(r = 6, h = 5, center = true);
+                    translate([-7,10,5]) cylinder(r = 12, h = 5, center = true);
                 }
             }
             hull(){
                 // linkage arm
-                translate([0,15,linkageArmPosistion]) cylinder(r = 3, h = 2, center = true);
-                translate([-22,15,linkageArmPosistion]) cylinder(r = 3, h = 2, center = true);
+                translate([0,15,linkageArmPosistion]) cylinder(r = 4, h = 2, center = true);
+                translate([-22,15,linkageArmPosistion]) cylinder(r = 4, h = 2, center = true);
             }
         }
         union(){
-            translate([-22,15,0]) cylinder(r = 1, h = 30, center = true);
-            translate([0,2,0]) cylinder(r = 5, h = 15+.5, center = true);
+            translate([-22,15,0]) cylinder(r = 2, h = 30, center = true);
+            translate([0,2,2]) cylinder(r = 5.5, h = 15, center = true);
             translate([0,2,0]) cylinder(r = 3, h = 25, center = true);
             // wire tensioner cavity
             rotate(90, [0,1,0]) {
                 // spring cavity
-                translate([-1,10,6]) cylinder(r = 5, h = 5, center = true);
+                translate([-7,10,6]) cylinder(r = 10, h = 5, center = true);
                 // spool cavity
-                translate([-1,10,6]) cylinder(r = 3.5, h = 14, center = true);
+                translate([-7,10,6]) cylinder(r = 5, h = 14, center = true);
                 // axle space
-                translate([-1,10,6]) cylinder(r = 1, h = 25, center = true);
+                translate([-7,10,6]) cylinder(r = 1, h = 25, center = true);
                 // wire entrance
-                translate([-1,13,1]) cube([5,15,3], center = true);
+                translate([-5,13,1]) cube([5,15,3], center = true);
             }
         }
     }
