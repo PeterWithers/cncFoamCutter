@@ -485,4 +485,6 @@ if (target == "xRodMountIdler") {
     rotate(90, [1,0,0]) yRailSlideMountMK2left();
 } else if (target == "yRailSlideMountMK2right") {
     rotate(90, [1,0,0]) yRailSlideMountMK2right();
+} else if (target == "yTensionGuide") {
+    rotate(90, [0,0,1]) yTensionGuide();
 }
