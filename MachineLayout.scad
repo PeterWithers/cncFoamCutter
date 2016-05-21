@@ -351,16 +351,19 @@ module verticalRod() {
 // therefore: 80+15+5 
                     // make the rod mounts
                                 translate([0,0,spacing]) hull() {
-                                    cylinder(r = (verticalBearingDiameter/2)-0.5, h = verticalBearingLength/2, center = true);
+                                    // vertical rod housing
+                                    cylinder(r = (verticalBearingDiameter/1.8)-0.5, h = verticalBearingLength/2, center = true);
                                     translate([-5,-4,0])
                                         cube([3,5,7.5], center = true);
                                 }
                 }
                 union(){
                     translate([0,0,(verticalRodLength-backPlateHeight)/2+4]) cylinder(r = verticalRodDiameter/2, h = verticalRodLength, center = true);
-                 //   translate([0,0,0]) cylinder(r = 5, h = 15+85, center = true);
+                   //translate([0,0,6]) cylinder(r = 5, h = 15+77, center = true);
+                   #translate([0,0,6]) cylinder(r = 5, h = 15, center = true);
                 }
             }
+            translate([0,0,35]) yTensionGuide();
             translate([-3,0,(-backPlateHeight/2+6.25)+80+15+5]) hull() {
                 translate([-5,-2,0]) cube([3,5,7.5], center = true);
                 translate([-10,-2,-10]) cube([13,5,3], center = true);
@@ -370,12 +373,50 @@ module verticalRod() {
             // linear bearing mount holes
             for (spacing = [bearingBlockSpacing/2, -bearingBlockSpacing/2]) 
             #for (holeVerSpacing = [bearingBlockHoleVerSpacing/2, -bearingBlockHoleVerSpacing/2])
-            for (holeHorSpacing = [bearingBlockHoleHorSpacing*1.5, -bearingBlockHoleHorSpacing/2])	{
+            for (holeHorSpacing = [bearingBlockHoleHorSpacing*1.5])	{ //, -bearingBlockHoleHorSpacing/2
                 translate([holeHorSpacing,spacing+holeVerSpacing,0])
                 cylinder(r = bearingBlockHoleDiameter/2, h = boreLength, center = true);
             }
         } */
     //}
+}
+module yTensionGuide(){
+    linkageArmPosistion = -4;
+    difference(){
+        union(){
+            hull(){
+                //bearing cover
+                translate([0,2,3]) cylinder(r = 6, h = 15, center = true);
+                translate([0,15,linkageArmPosistion]) cylinder(r = 3, h = 2, center = true);
+
+                // wire tensioner outer
+                rotate(90, [0,1,0]) {
+                    translate([-1,10,5]) cylinder(r = 6, h = 5, center = true);
+                }
+            }
+            hull(){
+                // linkage arm
+                translate([0,15,linkageArmPosistion]) cylinder(r = 3, h = 2, center = true);
+                translate([-22,15,linkageArmPosistion]) cylinder(r = 3, h = 2, center = true);
+            }
+        }
+        union(){
+            translate([-22,15,0]) cylinder(r = 1, h = 30, center = true);
+            translate([0,2,0]) cylinder(r = 5, h = 15+.5, center = true);
+            translate([0,2,0]) cylinder(r = 3, h = 25, center = true);
+            // wire tensioner cavity
+            rotate(90, [0,1,0]) {
+                // spring cavity
+                translate([-1,10,6]) cylinder(r = 5, h = 5, center = true);
+                // spool cavity
+                translate([-1,10,6]) cylinder(r = 3.5, h = 14, center = true);
+                // axle space
+                translate([-1,10,6]) cylinder(r = 1, h = 25, center = true);
+                // wire entrance
+                translate([-1,13,1]) cube([5,15,3], center = true);
+            }
+        }
+    }
 }
 module yRailSlide() {
     cube([15,15,90], center = true);
