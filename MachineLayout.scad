@@ -391,27 +391,33 @@ module yTensionGuide(){
 
                 // wire tensioner outer
                 rotate(90, [0,1,0]) {
-                    translate([-7,10,5]) cylinder(r = 12, h = 5, center = true);
+                    translate([-7,12,5]) cylinder(r = 12, h = 8, center = true);
                 }
             }
             hull(){
                 // linkage arm
                 translate([0,20,linkageArmPosistion]) cylinder(r = 4, h = 2, center = true);
-                translate([-20,20,linkageArmPosistion]) cylinder(r = 4, h = 2, center = true);
+                translate([-21,21.5,linkageArmPosistion]) cylinder(r = 4, h = 2, center = true);
             }
         }
         union(){
-            translate([-20,20,0]) cylinder(r = 2, h = 30, center = true);
+            // vertical slide connection hole
+            translate([-21,21.5,0]) cylinder(r = 2, h = 30, center = true);
+            // linear bearing cavity
             translate([0,2,2]) cylinder(r = 5.5, h = 15, center = true);
+            // vertical rod cavity
             translate([0,2,0]) cylinder(r = 4.5, h = 35, center = true);
+            // the vertical rod cavity and the end cap cavity create a shoulder 1mm high that prevents the bearing sliding out the top of the guide
+            // end cap cavity
+            translate([0,2,19]) cylinder(r = 5.5, h = 17, center = true);
             // wire tensioner cavity
             rotate(90, [0,1,0]) {
                 // spring cavity
-                translate([-7,10,6]) cylinder(r = 7, h = 5, center = true);
+                translate([-7,12,10]) cylinder(r = 7, h = 10, center = true);
                 // spool cavity
-                translate([-7,10,6]) cylinder(r = 5, h = 14, center = true);
+                translate([-7,12,6]) cylinder(r = 5, h = 14, center = true);
                 // axle space
-                translate([-7,10,6]) cylinder(r = 1, h = 25, center = true);
+                translate([-7,12,6]) cylinder(r = 1, h = 25, center = true);
                 // wire entrance
                 #translate([-5,13,1]) cube([5,25,3], center = true);
             }
