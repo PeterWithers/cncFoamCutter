@@ -335,8 +335,8 @@ module yRailSlideMountMK2right() {
 module verticalRod() {
     verticalRodLength = 150;
     verticalRodDiameter = 5;
-    verticalRodOffset = 21;
-    verticalRodInset = 2;
+    verticalRodOffset = 0;
+    verticalRodInset = 31;
     verticalBearingDiameter = 10;
     verticalBearingLength = 15;
     backPlateHeight = 100;
@@ -345,7 +345,7 @@ module verticalRod() {
             //#cylinder(r = verticalRodDiameter/2, h = verticalRodLength, center = true);
             //#cylinder(r = verticalBearingDiameter/2, h = verticalBearingLength, center = true);
             translate([0,2,0]) difference() {
-                for (spacing = [(-backPlateHeight/2+6.25)+80+15+5, -backPlateHeight/2+6.25]) { 
+                for (spacing = [(-backPlateHeight/2+16.25)+80+15+5, -backPlateHeight/2+6.25]) { 
 // 80mm distance currently between mounts
 // 85mm travel in the slide
 // therefore: 80+15+5 
@@ -353,8 +353,8 @@ module verticalRod() {
                                 translate([0,0,spacing]) hull() {
                                     // vertical rod housing
                                     cylinder(r = (verticalBearingDiameter/1.8)-0.5, h = verticalBearingLength/2, center = true);
-                                    translate([-5,-4,0])
-                                        cube([3,5,7.5], center = true);
+                                    translate([0,-32,-3.2])
+                                        cube([30,5,1], center = true);
                                 }
                 }
                 union(){
@@ -363,11 +363,15 @@ module verticalRod() {
                    #translate([0,0,6]) cylinder(r = 5, h = 15, center = true);
                 }
             }
-            translate([0,0,35]) yTensionGuide();
-            translate([-3,0,(-backPlateHeight/2+6.25)+80+15+5]) hull() {
-                translate([-5,-2,0]) cube([3,5,7.5], center = true);
-                translate([-10,-2,-10]) cube([13,5,3], center = true);
-            }
+            translate([14.5,-30,backPlateHeight/2+5]) cube([1,7,17], center = true);
+            translate([-14.5,-30,backPlateHeight/2+5]) cube([1,7,17], center = true);
+            translate([12.5,-33,backPlateHeight/2+5]) cube([5,1,17], center = true);
+            translate([-12.5,-33,backPlateHeight/2+5]) cube([5,1,17], center = true);
+            //translate([0,0,35]) yTensionGuide();
+            //translate([-3,0,(-backPlateHeight/2+6.25)+80+15+5]) hull() {
+              //  translate([-5,-2,0]) cube([3,5,7.5], center = true);
+                //translate([-10,-2,-10]) cube([13,5,3], center = true);
+            //}
         }
 /*        rotate(90, [1,0,0])	{
             // linear bearing mount holes
