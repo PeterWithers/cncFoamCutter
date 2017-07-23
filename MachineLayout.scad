@@ -332,11 +332,22 @@ module yRailSlideMountMK2right() {
     scale([-1,1,1]) verticalRod();
 }
 
+module yRailSlideMountMK2lower() {
+    difference() {
+        union() {
+            yRailSlideMount();
+            scale([-1,1,1]) verticalRod();
+        }
+        translate([0,20,23])
+            #cube([50,50,120], center = true);
+    }
+}
+
 module verticalRod() {
     verticalRodLength = 150;
     verticalRodDiameter = 5;
     verticalRodOffset = 0;
-    verticalRodInset = 31;
+    verticalRodInset = 36;
     verticalBearingDiameter = 10;
     verticalBearingLength = 15;
     backPlateHeight = 100;
@@ -345,6 +356,7 @@ module verticalRod() {
             //#cylinder(r = verticalRodDiameter/2, h = verticalRodLength, center = true);
             //#cylinder(r = verticalBearingDiameter/2, h = verticalBearingLength, center = true);
             translate([0,2,0]) difference() {
+                union() { 
                 for (spacing = [(-backPlateHeight/2+16.25)+80+15+5, -backPlateHeight/2+6.25]) { 
 // 80mm distance currently between mounts
 // 85mm travel in the slide
@@ -353,9 +365,12 @@ module verticalRod() {
                                 translate([0,0,spacing]) hull() {
                                     // vertical rod housing
                                     cylinder(r = (verticalBearingDiameter/1.8)-0.5, h = verticalBearingLength/2, center = true);
-                                    translate([0,-32,-3.2])
+                                    translate([0,-37,-3.2])
                                         cube([30,5,1], center = true);
-                                }
+                                    }
+                }
+                    #translate([0,-20,-backPlateHeight/2+6])
+                        cube([10,35,5], center = true);
                 }
                 union(){
                     translate([0,0,(verticalRodLength-backPlateHeight)/2+4]) cylinder(r = verticalRodDiameter/2, h = verticalRodLength, center = true);
@@ -363,10 +378,10 @@ module verticalRod() {
                    #translate([0,0,6]) cylinder(r = 5, h = 15, center = true);
                 }
             }
-            translate([14.5,-30,backPlateHeight/2+5]) cube([1,7,17], center = true);
-            translate([-14.5,-30,backPlateHeight/2+5]) cube([1,7,17], center = true);
-            translate([12.5,-33,backPlateHeight/2+5]) cube([5,1,17], center = true);
-            translate([-12.5,-33,backPlateHeight/2+5]) cube([5,1,17], center = true);
+            translate([14.5,-35,backPlateHeight/2+5]) cube([1,7,17], center = true);
+            translate([-14.5,-35,backPlateHeight/2+5]) cube([1,7,17], center = true);
+            translate([12.5,-38,backPlateHeight/2+5]) cube([5,1,17], center = true);
+            translate([-12.5,-38,backPlateHeight/2+5]) cube([5,1,17], center = true);
             //translate([0,0,35]) yTensionGuide();
             //translate([-3,0,(-backPlateHeight/2+6.25)+80+15+5]) hull() {
               //  translate([-5,-2,0]) cube([3,5,7.5], center = true);
@@ -484,7 +499,7 @@ module assembly() {
 //yRail();
 //translate([-300,-150,0]) xRail();
 
-target = "yRailSlideMountMK2right";
+target = "yRailSlideMountMK2lower";
 if (target == "xRodMountIdler") {
     rotate(90, [1,0,0]) xRodMountIdler();
 } else if (target == "xRodMountMotor") {
@@ -495,6 +510,8 @@ if (target == "xRodMountIdler") {
     rotate(90, [1,0,0]) yRailSlideMountMK2left();
 } else if (target == "yRailSlideMountMK2right") {
     rotate(90, [1,0,0]) yRailSlideMountMK2right();
+} else if (target == "yRailSlideMountMK2lower") {
+    rotate(90, [1,0,0]) yRailSlideMountMK2lower();
 } else if (target == "yTensionGuide") {
     rotate(90, [0,0,1]) scale([-1,1,1]) yTensionGuide();
 }
