@@ -289,10 +289,15 @@ module yRailSlideMount() {
                         union() {
                             // endstop mount posts
                             translate([15,endstopMountHeight/2+2.9,0]) rotate(90, [0,-1,0]) rotate(90, [0,0,-1]) endStopPosts();
-                            hull(){
-                                translate([backPlateWidth/2-6.5,14,-5])cube([23,4,1], center = true);
-
-                                translate([backPlateWidth/2-8,14,15])cube([10,5,1], center = true);
+                            difference() {
+                                hull(){
+                                    translate([backPlateWidth/2-6.5,14,-5])cube([23,4,1], center = true);
+                                    translate([backPlateWidth/2-8,14,15])cube([10,5,1], center = true);
+                                }
+                                union(){
+                                    translate([backPlateWidth/2-6.5,15,-5])cube([12,4,12], center = true);
+                                    translate([backPlateWidth/2-6.5,14,-7])cube([15,6,10], center = true);
+                                }
                             }
                         }
                         // endstop mount holes
@@ -302,12 +307,18 @@ module yRailSlideMount() {
             }
 	union() {
 	rotate(90, [1,0,0])	{
-		// linear bearing mount holes
+		// linear bearing bolt holes
 		for (spacing = [bearingBlockSpacing/2, -bearingBlockSpacing/2]) 
 		for (holeVerSpacing = [bearingBlockHoleVerSpacing/2, -bearingBlockHoleVerSpacing/2])
 		for (holeHorSpacing = [bearingBlockHoleHorSpacing/2, -bearingBlockHoleHorSpacing/2])	{
-        translate([holeHorSpacing,spacing+holeVerSpacing,0])
-            cylinder(r = bearingBlockHoleDiameter/2, h = boreLength, center = true);
+                    translate([holeHorSpacing,spacing+holeVerSpacing,0])
+                        cylinder(r = bearingBlockHoleDiameter/2, h = boreLength, center = true);
+		}
+                // linear bearing bolt inset holes
+		for (holeVerSpacing = [bearingBlockHoleVerSpacing/2 + bearingBlockSpacing/2, -bearingBlockHoleVerSpacing/2 - bearingBlockSpacing/2])
+		for (holeHorSpacing = [bearingBlockHoleHorSpacing/2, -bearingBlockHoleHorSpacing/2])	{
+                    translate([holeHorSpacing,holeVerSpacing,-1.1])
+                        cylinder(r = 4, h = 3, center = true);
 		}
                 // stepper cavity
                 #translate([0,46+6,-12]) rotate(90, [1,0,0]) cylinder(d = 16, h = 12, center = true);
@@ -402,6 +413,7 @@ module verticalRod() {
                     translate([0,0,(verticalRodLength-backPlateHeight)/2+4]) cylinder(r = verticalRodDiameter/2, h = verticalRodLength, center = true);
                    //translate([0,0,6]) cylinder(r = 5, h = 15+77, center = true);
                    #translate([0,0,6]) cylinder(r = 5, h = 15, center = true);
+                   translate([0,-10,-41]) cylinder(r = 2, h = 5, center = true);
                 }
             }
             translate([0,-36,backPlateHeight/2+9]) cube([30,5,25], center = true);
@@ -525,7 +537,7 @@ module assembly() {
 //yRail();
 //translate([-300,-150,0]) xRail();
 
-target = "yRailSlideMountMK2upper";
+target = "yRailSlideMountMK2right";
 if (target == "xRodMountIdler") {
     rotate(90, [1,0,0]) xRodMountIdler();
 } else if (target == "xRodMountMotor") {
