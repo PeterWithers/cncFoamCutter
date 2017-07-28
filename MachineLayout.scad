@@ -348,6 +348,7 @@ module yRailSlideMountMK2left() {
 module yRailSlideMountMK2right() {
     yRailSlideMount();
     scale([-1,1,1]) verticalRod();
+    translate([0,0,-30]) yWireGuide();
 }
 
 module yRailSlideMountMK2lower() {
@@ -413,7 +414,7 @@ module verticalRod() {
                     translate([0,0,(verticalRodLength-backPlateHeight)/2+4]) cylinder(r = verticalRodDiameter/2, h = verticalRodLength, center = true);
                    //translate([0,0,6]) cylinder(r = 5, h = 15+77, center = true);
                    #translate([0,0,6]) cylinder(r = 5, h = 15, center = true);
-                   translate([0,-10,-41]) cylinder(r = 2, h = 5, center = true);
+                  translate([0,-15,-41]) cylinder(r = 2, h = 5, center = true);
                 }
             }
             translate([0,-36,backPlateHeight/2+9]) cube([30,5,25], center = true);
@@ -437,6 +438,47 @@ module verticalRod() {
         } */
     //}
 }
+module yWireGuide(){
+    linkageArmPosistionX = -0;
+    linkageArmPosistionY = -4;
+    linkageArmPosistionZ = 22.5;
+    difference(){
+        union(){
+            hull(){
+                //bearing cover
+                translate([0,38,3]) cylinder(r = 6.2, h = 15, center = true);
+                translate([0,31,linkageArmPosistionY]) cylinder(r = 4, h = 2, center = true);
+
+                // wire tensioner outer
+                //rotate(90, [0,1,0]) {
+                //    translate([-7,12,5]) cylinder(r = 12, h = 8, center = true);
+                //}
+            }
+            hull(){
+                // linkage arm
+                translate([0,30,linkageArmPosistionY]) cylinder(r = 4, h = 2, center = true);
+                translate([linkageArmPosistionX,linkageArmPosistionZ,linkageArmPosistionY]) cylinder(r = 4, h = 2, center = true);
+            }
+        }
+        union(){
+            // vertical slide connection hole
+            translate([linkageArmPosistionX,linkageArmPosistionZ,0]) cylinder(r = 2, h = 30, center = true);
+            // linear bearing cavity
+            translate([0,38,3.5]) cylinder(r = 5.5, h = 15, center = true);
+            // vertical rod cavity
+            translate([0,38,0]) cylinder(r = 4.5, h = 35, center = true);
+            // the vertical rod cavity and the end cap cavity create a shoulder 1mm high that prevents the bearing sliding out the top of the guide
+            // end cap cavity
+            translate([0,38,19]) cylinder(r = 5.5, h = 17, center = true);
+            // wire tensioner cavity
+            // wire cavity
+            translate([0,38,0]) cylinder(r = 7, h = 1, center = true);
+            // wire entrance
+            //translate([0,43,0]) cube([30,15,2], center = true);            
+        }
+    }
+}
+
 module yTensionGuide(){
     linkageArmPosistion = -4;
     difference(){
@@ -554,4 +596,6 @@ if (target == "xRodMountIdler") {
     rotate(90, [1,0,0]) yRailSlideMountMK2lower();
 } else if (target == "yTensionGuide") {
     rotate(90, [0,0,1]) scale([-1,1,1]) yTensionGuide();
+} else if (target == "yWireGuide") {
+    rotate(90, [0,0,1]) scale([-1,1,1]) yWireGuide();
 }

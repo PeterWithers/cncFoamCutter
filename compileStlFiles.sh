@@ -6,3 +6,4 @@
 /Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD -o ySlideMountMK2lower.stl -D 'target="yRailSlideMountMK2lower"' MachineLayout.scad
 /Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD -o ySlideMountMK2upper.stl -D 'target="yRailSlideMountMK2upper"' MachineLayout.scad
 /Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD -o yTensionGuide.stl -D 'target="yTensionGuide"' MachineLayout.scad
+/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD -o yWireGuide.stl -D 'target="yWireGuide"' MachineLayout.scad
