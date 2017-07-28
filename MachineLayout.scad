@@ -444,11 +444,12 @@ module yWireGuide(){
     linkageArmPosistionZ = 24.5;
     difference(){
         union(){
-            translate([0,38,0]) cylinder(r = 7.5, h = 1.5, center = true);
+            //translate([0,38,0]) cylinder(r = 7.5, h = 1.5, center = true);
             hull(){
                 //bearing cover
                 translate([0,38,3]) cylinder(r = 6.2, h = 15, center = true);
-                translate([0,32.5,linkageArmPosistionY+1.5]) cylinder(r = 4, h = 5, center = true);
+                translate([-5,36,linkageArmPosistionY+1.5]) cylinder(r = 5, h = 5, center = true);
+                translate([5,36,linkageArmPosistionY+1.5]) cylinder(r = 5, h = 5, center = true);
 
                 // wire tensioner outer
                 //rotate(90, [0,1,0]) {
