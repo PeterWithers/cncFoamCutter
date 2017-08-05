@@ -98,7 +98,7 @@ module xRodMountMotor() {
     difference() {
         union() {
             xRodMount();
-            rotate(90, [0,1,0]) translate([0,25,7]) {
+            rotate(90, [0,1,0]) translate([5,25,7]) {
                 cylinder(r = 4, h = 20, center = true);
                 translate([0,0,-7]) hull() {
                     for (angle = [0, 90, 180, 270]) {
@@ -110,9 +110,11 @@ module xRodMountMotor() {
                 translate([0,0,-30]) %stepperMotor();
             }
         }
-        rotate(90, [0,1,0]) translate([0,25,7]) union() {
+        rotate(90, [0,1,0]) translate([5,25,7]) union() {
+            // motor centre hole
             cylinder(r = 12, h = 30, center = true);
             for (angle = [0, 90, 180, 270]) {
+                        // motor bolt holes
                         rotate(angle, [0,0,1]) rotate(45, [0,0,1]) translate([22,0,0]) cylinder(r = 2, h = 30, center = true);
             }
         }
@@ -154,10 +156,16 @@ module xRodMount() {
 			}
             }
         }
-	rotate(90, [0,0,1]) translate([6,8,-50]) cylinder(r = 2, h = 30, center = true);
-	rotate(90, [0,0,1]) translate([6,-8,-50]) cylinder(r = 2, h = 30, center = true);
-	rotate(90, [0,0,1]) translate([30,8,-50]) cylinder(r = 2, h = 30, center = true);
-	rotate(90, [0,0,1]) translate([30,-8,-50]) cylinder(r = 2, h = 30, center = true);
+        // base mount holes
+	rotate(90, [0,0,1]) translate([6,8,-40]) cylinder(r = 2, h = 30, center = true);
+	rotate(90, [0,0,1]) translate([6,-8,-40]) cylinder(r = 2, h = 30, center = true);
+	rotate(90, [0,0,1]) translate([30,8,-40]) cylinder(r = 2, h = 30, center = true);
+	rotate(90, [0,0,1]) translate([30,-8,-40]) cylinder(r = 2, h = 30, center = true);
+        // base mount counter sunk holes
+	rotate(90, [0,0,1]) translate([6,8,-33]) cylinder(r = 3.5, h = 10, center = true);
+	rotate(90, [0,0,1]) translate([6,-8,-33]) cylinder(r = 3.5, h = 10, center = true);
+	rotate(90, [0,0,1]) translate([30,8,-33]) cylinder(r = 3.5, h = 10, center = true);
+	rotate(90, [0,0,1]) translate([30,-8,-33]) cylinder(r = 3.5, h = 10, center = true);
     }
 }
 
@@ -594,7 +602,7 @@ module assembly() {
 //yRail();
 //translate([-300,-150,0]) xRail();
 
-target = "yRailSlideMountMK2right";
+target = "xRodMountMotor";
 if (target == "xRodMountIdler") {
     rotate(90, [1,0,0]) xRodMountIdler();
 } else if (target == "xRodMountMotor") {
