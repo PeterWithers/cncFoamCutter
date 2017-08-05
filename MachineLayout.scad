@@ -391,19 +391,25 @@ module verticalRod() {
 // 85mm travel in the slide
 // therefore: 80+15+5 
                     // make the rod mounts
-                    translate([0,0,(-backPlateHeight/2+16.25)+80+15+7]) hull() {
+                    translate([0,0,(-backPlateHeight/2+16.25)+80+15+7]) {
+                        hull() {
                         // vertical rod housing
                         cylinder(r = (verticalBearingDiameter/1.8)-0.5, h = verticalBearingLength/2, center = true);
                         translate([0,-38,3.2])
                             cube([30,5,1], center = true);
-                        }   
+                        }
+                        for (spacing = [12, -12]) {
+                            translate([spacing,-35,-9])
+                                cube([1,7,25], center = true);
+                        }
+                    }
                     // make the rod mounts
                     translate([0,0,-backPlateHeight/2+6.25]) hull() {
                         // vertical rod housing
                         cylinder(r = (verticalBearingDiameter/1.8)-0.5, h = verticalBearingLength/2, center = true);
                         translate([0,-38,-3.2])
                             cube([30,5,1], center = true);
-                        }
+                    }
 
                     translate([0,-20,-backPlateHeight/2+6])
                         cube([10,35,5], center = true);
@@ -412,9 +418,9 @@ module verticalRod() {
                 }
                 union(){
                     translate([0,0,(verticalRodLength-backPlateHeight)/2+4]) cylinder(r = verticalRodDiameter/2, h = verticalRodLength, center = true);
-                   //translate([0,0,6]) cylinder(r = 5, h = 15+77, center = true);
-                   #translate([0,0,6]) cylinder(r = 5, h = 15, center = true);
-                  translate([0,-15,-41]) cylinder(r = 2, h = 5, center = true);
+                    //translate([0,0,6]) cylinder(r = 5, h = 15+77, center = true);
+                    #translate([0,0,6]) cylinder(r = 5, h = 15, center = true);
+                    translate([0,-13.5,-41]) cylinder(r = 2, h = 5, center = true);
                 }
             }
             translate([0,-36,backPlateHeight/2+9]) cube([30,5,25], center = true);
