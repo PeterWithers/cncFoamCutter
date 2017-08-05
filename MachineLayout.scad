@@ -74,7 +74,8 @@ module xRodMountIdler() {
     difference() {
         union() {
             xRodMount();
-            rotate(90, [0,1,0]) translate([0,10,6]) {
+            rotate(90, [0,1,0]) translate([5,10,6]) {
+                /*
                 intersection () {
                     union() {
                         translate([0,0,-2.5]) cylinder(r1 = 6, r2 = 2 , h = 2, center = true);
@@ -83,12 +84,16 @@ module xRodMountIdler() {
                     }
                     translate([0,0,-1.5]) cube([15,15,7], center = true);
                 }
+                */
                 %ballBearingSmall(0, 0, 0);
             }
 			translate([-5,0.5,7]) endStopPosts();
         }
         union() {
-            rotate(90, [0,1,0]) translate([0,10,7]) cylinder(r = 1, h = 30, center = true);
+            hull() {
+                rotate(90, [0,1,0]) translate([5,19,7]) cylinder(r = 2, h = 30, center = true);
+                rotate(90, [0,1,0]) translate([5,9,7]) cylinder(r = 2, h = 30, center = true);
+            }
             translate([-7,0.5,7]) endStop();
         }
     }
@@ -602,7 +607,7 @@ module assembly() {
 //yRail();
 //translate([-300,-150,0]) xRail();
 
-target = "xRodMountMotor";
+target = "xRodMountIdler";
 if (target == "xRodMountIdler") {
     rotate(90, [1,0,0]) xRodMountIdler();
 } else if (target == "xRodMountMotor") {
