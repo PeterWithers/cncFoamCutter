@@ -456,6 +456,8 @@ module yWireGuide(){
                 translate([0,38,3]) cylinder(r = 6.2, h = 15, center = true);
                 translate([-3,37,linkageArmPosistionY+2]) cylinder(r = 6, h = 6, center = true);
                 translate([3,37,linkageArmPosistionY+2]) cylinder(r = 6, h = 6, center = true);
+                #translate([11,37,linkageArmPosistionY+11]) cylinder(r = 1, h = 1, center = true);
+                #translate([-11,37,linkageArmPosistionY+11]) cylinder(r = 1, h = 1, center = true);
 
                 // wire tensioner outer
                 //rotate(90, [0,1,0]) {
@@ -464,8 +466,8 @@ module yWireGuide(){
             }
             hull(){
                 // linkage arm
-                translate([-3,36,linkageArmPosistionY]) cylinder(r = 4, h = 2, center = true);
-                translate([3,36,linkageArmPosistionY]) cylinder(r = 4, h = 2, center = true);
+                translate([-9,36,linkageArmPosistionY]) cylinder(r = 4, h = 2, center = true);
+                translate([9,36,linkageArmPosistionY]) cylinder(r = 4, h = 2, center = true);
                 translate([linkageArmPosistionX,linkageArmPosistionZ,linkageArmPosistionY]) cylinder(r = 4, h = 2, center = true);
             }
             //%translate([linkageArmPosistionX,2+22.5,0]) cylinder(r = 2, h = 30, center = true);
