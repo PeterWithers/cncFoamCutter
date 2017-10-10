@@ -4,6 +4,7 @@
 package com.bambooradical.winggcodegenerator.controller;
 
 import com.bambooradical.winggcodegenerator.dao.AccessDataRepository;
+import com.bambooradical.winggcodegenerator.dao.AccessDataService;
 import com.bambooradical.winggcodegenerator.dao.AerofoilRepository;
 import com.bambooradical.winggcodegenerator.model.AccessData;
 import com.bambooradical.winggcodegenerator.model.AerofoilData;
@@ -41,6 +42,8 @@ public class WingDesignController {
     AerofoilRepository aerofoilRepository;
     @Autowired
     AccessDataRepository accessDataRepository;
+    @Autowired
+    AccessDataService accessDataService;
 
 //    @RequestMapping("/update")
 //    public String update() {
@@ -73,7 +76,9 @@ public class WingDesignController {
         final Date accessDate = new java.util.Date();
         model.addAttribute("bedAlignment", bedAlignment);
         final BedAlignment bedAlignmentCalculator = new BedAlignment(bedAlignment, machineData, wingData);
-        accessDataRepository.save(new AccessData(accessDate, remoteAddr, userAgent, acceptLang, requestURI));
+        final AccessData accessData = new AccessData(accessDate, remoteAddr, userAgent, acceptLang, requestURI);
+        accessDataRepository.save(accessData);
+        accessDataService.storeAccessData(accessData);
         final AerofoilData rootAerofoilData;
         final AerofoilData tipAerofoilData;
         if (aerofoilRepository.exists(wingData.getRootAerofoil())) {
