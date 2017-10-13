@@ -31,6 +31,21 @@ public class AerofoilService {
         aerofoilKeyFactory = datastore.newKeyFactory().setKind("AerofoilData");
     }
 
+    private FullEntity getPointsEntities(double[][] points) {
+        FullEntity entityPrevious = null;
+        for (int index = points.length - 1; index > -0; index--) {
+            double[] point = points[index];
+            IncompleteKey key = aerofoilKeyFactory.setKind("AerofoilDataPoints").newKey();
+            FullEntity entity = FullEntity.newBuilder(key)
+                    .set("x", point[0])
+                    .set("y", point[1])
+                    .set("next", entityPrevious)
+                    .build();
+            datastore.put(entity);
+        }
+        return entityPrevious;
+    }
+
     public Entity save(AerofoilData aerofoilData) {
 //        Key key = aerofoilKeyFactory.newKey(aerofoilData.getName());
 //        Entity entity = Entity.newBuilder(key)
@@ -43,7 +58,7 @@ public class AerofoilService {
                 .set("isEditable", aerofoilData.isEditable())
                 .set("isHidden", aerofoilData.isHidden())
                 .set("AccessDate", Timestamp.of(aerofoilData.getAccessDate()))
-                .set("Points", AerofoilDatParser.encodeString(aerofoilData.getPoints()))
+                .set("Points", getPointsEntities(aerofoilData.getPoints()))
                 .build();
         return datastore.put(entity);
     }
