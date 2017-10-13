@@ -30,7 +30,7 @@ public class AccessDataService {
         accessDataKeyFactory = datastore.newKeyFactory().setKind("AccessData");
     }
 
-    public Entity storeAccessData(AccessData accessData) {
+    public Entity save(AccessData accessData) {
 //        Key key = accessDataKeyFactory.newKey(accessData.getRemoteAddress());
 //        Entity entity = Entity.newBuilder(key)
         IncompleteKey key = accessDataKeyFactory.setKind("AccessData").newKey();
