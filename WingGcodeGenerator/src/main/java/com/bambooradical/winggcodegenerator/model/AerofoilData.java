@@ -45,6 +45,10 @@ public class AerofoilData {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public Date getAccessDate() {
         return accessDate;
     }
