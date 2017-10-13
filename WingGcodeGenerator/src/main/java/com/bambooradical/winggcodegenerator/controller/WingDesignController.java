@@ -3,9 +3,8 @@
  */
 package com.bambooradical.winggcodegenerator.controller;
 
-import com.bambooradical.winggcodegenerator.dao.AccessDataRepository;
 import com.bambooradical.winggcodegenerator.dao.AccessDataService;
-import com.bambooradical.winggcodegenerator.dao.AerofoilRepository;
+import com.bambooradical.winggcodegenerator.dao.AerofoilService;
 import com.bambooradical.winggcodegenerator.model.AccessData;
 import com.bambooradical.winggcodegenerator.model.AerofoilData;
 import com.bambooradical.winggcodegenerator.model.AerofoilDataAG36;
@@ -23,9 +22,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,11 +40,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class WingDesignController {
 
     @Autowired
-    AerofoilRepository aerofoilRepository;
+    AerofoilService aerofoilRepository;
     @Autowired
-    AccessDataRepository accessDataRepository;
-    @Autowired
-    AccessDataService accessDataService;
+    AccessDataService accessDataRepository;
 
 //    @RequestMapping("/update")
 //    public String update() {
@@ -80,7 +77,6 @@ public class WingDesignController {
         final BedAlignment bedAlignmentCalculator = new BedAlignment(bedAlignment, machineData, wingData);
         final AccessData accessData = new AccessData(accessDate, remoteAddr, userAgent, acceptLang, requestURI);
         accessDataRepository.save(accessData);
-        accessDataService.storeAccessData(accessData);
         final AerofoilData rootAerofoilData;
         final AerofoilData tipAerofoilData;
         if (aerofoilRepository.exists(wingData.getRootAerofoil())) {
@@ -210,13 +206,22 @@ public class WingDesignController {
         return gcodeGenerator.generateTestGcode(machineData, layerThickeness, startPwm, endPwm, startSpeed, endSpeed);
     }
 
-    @RequestMapping("/aerofoil")
-    public List<AerofoilData> listRecords() {
-        return aerofoilRepository.findAll();
-    }
-
-    @RequestMapping("/access")
-    public List<AccessData> listAccessRecords() {
-        return accessDataService.findAll();
+//    @RequestMapping("/aerofoil")
+//    public List<AerofoilData> listRecords() {
+//        return aerofoilRepository.findAll();
+//    }
+//
+//    @RequestMapping("/access")
+//    public List<AccessData> listAccessRecords() {
+//        return accessDataService.findAll();
+//    }
+    @RequestMapping("/addAerofoilList")
+    public String addAerofoilList(@RequestBody List<AerofoilData> recordList, @RequestParam(value = "start", required = false, defaultValue = "0") int startRecord) {
+        for (long currentIndex = (startRecord * 1000); currentIndex < recordList.size() && currentIndex < ((startRecord * 1000) + 1000); currentIndex++) {
+            AerofoilData aerofoilData = recordList.get((int) currentIndex);
+            aerofoilRepository.save(aerofoilData);
+        }
+        return "WingDesignView";
+        //return "Found " + aerofoilRepository.count() + " Aerofoils out of " + recordList.size() + " uploaded";
     }
 }
