@@ -45,6 +45,7 @@ public class AerofoilService {
             }
             FullEntity entity = builder.build();
             datastore.put(entity);
+            entityPrevious = entity;
         }
         return entityPrevious;
     }
