@@ -45,6 +45,6 @@ public class Application extends SpringBootServletInitializer {
 
     @Bean
     public Datastore cloudDatastoreService() {
-        return DatastoreOptions.defaultInstance().service();
+        return DatastoreOptions.getDefaultInstance().getService();
     }
 }

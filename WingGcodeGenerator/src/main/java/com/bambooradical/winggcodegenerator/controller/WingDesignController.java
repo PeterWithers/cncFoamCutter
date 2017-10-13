@@ -17,11 +17,13 @@ import com.bambooradical.winggcodegenerator.util.AerofoilDatParser;
 import com.bambooradical.winggcodegenerator.util.GcodeGenerator;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -206,5 +208,15 @@ public class WingDesignController {
         response.setHeader("Content-Disposition", "attachment;filename=" + startSpeed + "-" + endSpeed + "s" + startPwm + "-" + endPwm + "pwm");
         final GcodeGenerator gcodeGenerator = new GcodeGenerator();
         return gcodeGenerator.generateTestGcode(machineData, layerThickeness, startPwm, endPwm, startSpeed, endSpeed);
+    }
+
+    @RequestMapping("/aerofoil")
+    public List<AerofoilData> listRecords() {
+        return aerofoilRepository.findAll();
+    }
+
+    @RequestMapping("/access")
+    public List<AccessData> listAccessRecords() {
+        return accessDataService.findAll();
     }
 }
