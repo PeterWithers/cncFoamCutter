@@ -37,7 +37,7 @@ public class AerofoilService {
         IncompleteKey key = aerofoilKeyFactory.setKind("AerofoilData").newKey();
         FullEntity entity = FullEntity.newBuilder(key)
                 .set("Name", aerofoilData.getName())
-                .set("ParentId", aerofoilData.getParentId())
+                .set("ParentId", (aerofoilData.getParentId() != null) ? aerofoilData.getParentId()  "-1")
                 .set("RemoteAddress", aerofoilData.getRemoteAddress())
                 .set("isBezier", aerofoilData.isBezier())
                 .set("isEditable", aerofoilData.isEditable())
