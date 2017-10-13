@@ -7,6 +7,7 @@ import com.bambooradical.winggcodegenerator.model.AerofoilData;
 import com.bambooradical.winggcodegenerator.util.AerofoilDatParser;
 import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.*;
+import com.google.cloud.datastore.FullEntity.Builder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,11 +37,13 @@ public class AerofoilService {
         for (int index = points.length - 1; index > -0; index--) {
             double[] point = points[index];
             IncompleteKey key = aerofoilKeyFactory.setKind("AerofoilDataPoints").newKey();
-            FullEntity entity = FullEntity.newBuilder(key)
+            Builder builder = FullEntity.newBuilder(key)
                     .set("x", point[0])
-                    .set("y", point[1])
-                    .set("next", entityPrevious)
-                    .build();
+                    .set("y", point[1]);
+            if (entityPrevious != null) {
+                builder.set("next", entityPrevious);
+            }
+            FullEntity entity = builder.build();
             datastore.put(entity);
         }
         return entityPrevious;
