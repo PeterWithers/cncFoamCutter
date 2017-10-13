@@ -17,7 +17,17 @@ import org.springframework.web.multipart.MultipartFile;
 public class AerofoilDatParser {
 
     public static double[][] decodeString(final String pointsString) {
-        return null;
+        final ArrayList<double[]> dataPoints = new ArrayList<>();
+        for (String pointString : pointsString.split(" ")) {
+            final String[] splitLine = pointString.trim().split(",");
+            if (splitLine.length != 2) {
+                break;
+            }
+            final double xPoint = Double.parseDouble(splitLine[0]);
+            final double yPoint = Double.parseDouble(splitLine[1]);
+            dataPoints.add(new double[]{xPoint, yPoint});
+        }
+        return dataPoints.toArray(new double[][]{});
     }
 
     public static String encodeString(final double[][] points) {
