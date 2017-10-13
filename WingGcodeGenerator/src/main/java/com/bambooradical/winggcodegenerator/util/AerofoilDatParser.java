@@ -33,10 +33,11 @@ public class AerofoilDatParser {
     public static String encodeString(final double[][] points) {
         StringBuilder builder = new StringBuilder();
         for (double[] point : points) {
-            builder.append(Double.toString(point[0]));
-            builder.append(",");
-            builder.append(Double.toString(point[1]));
-            builder.append(" ");
+            builder.append(String.format("%.6f,%.6f ", point[0], point[1]));
+//            builder.append(Double.toString(point[0]));
+//            builder.append(",");
+//            builder.append(Double.toString(point[1]));
+//            builder.append(" ");
         }
         return builder.toString();
     }
