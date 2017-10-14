@@ -4,7 +4,6 @@
 package com.bambooradical.winggcodegenerator.dao;
 
 import com.bambooradical.winggcodegenerator.model.AerofoilData;
-import com.bambooradical.winggcodegenerator.util.AerofoilDatParser;
 import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.*;
 import com.google.cloud.datastore.FullEntity.Builder;
@@ -39,6 +38,33 @@ public class AerofoilService {
         }
     }
 
+    private double[][] getPoints(Entity entity) {
+        final ArrayList<double[]> dataPoints = new ArrayList<>();
+        int index = 0;
+        while (entity.contains("p" + index)) {
+            final List<Value<Double>> list = entity.getList("p" + index);
+            dataPoints.add(new double[]{list.get(0).get(), list.get(1).get()});
+        }
+        return dataPoints.toArray(new double[][]{});
+    }
+//    private void setPoints(final Builder builder, double[][] points) {
+//        ArrayList<Double> pointsList = new ArrayList<Double>();
+//        for (double[] point : points) {
+//            pointsList.add(point[0]);
+//            pointsList.add(point[1]);
+//        }
+//        builder.set("points", pointsList);
+//    }
+//
+//    private double[][] getPoints(final ArrayList<Double> dataPoints) {
+//        double[][] points = new double[dataPoints.size() / 2][2];
+//        for (int index = 0; index < dataPoints.size() / 2; index++) {
+//            points[1][0] = dataPoints.get(index);
+//            points[1][1] = dataPoints.get(index + 1);
+//        }
+//        return points;
+//    }
+
     public Entity save(AerofoilData aerofoilData) {
 //        Key key = aerofoilKeyFactory.newKey(aerofoilData.getName());
 //        Entity entity = Entity.newBuilder(key)
@@ -69,7 +95,10 @@ public class AerofoilService {
     }
 
     private AerofoilData extractAerofoilData(Entity entity) {
-        AerofoilData aerofoilData = new AerofoilData(entity.getString("Name"), AerofoilDatParser.decodeString(entity.getString("Points")));
+//        @SuppressWarnings("unchecked")
+//        ArrayList<Double> pointsList = (ArrayList<Double>) entity.getList("points");
+//        AerofoilData aerofoilData = new AerofoilData(entity.getString("Name"), getPoints(pointsList));
+        AerofoilData aerofoilData = new AerofoilData(entity.getString("Name"), getPoints(entity));
         aerofoilData.setAccessDate(new Date(entity.getTimestamp("AccessDate").getSeconds() * 100L));
         aerofoilData.setId(entity.getKey().getId());
         aerofoilData.setBezier(entity.getBoolean("isBezier"));
