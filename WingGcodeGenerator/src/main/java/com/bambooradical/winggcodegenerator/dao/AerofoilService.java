@@ -44,6 +44,7 @@ public class AerofoilService {
         while (entity.contains("p" + index)) {
             final List<Value<Double>> list = entity.getList("p" + index);
             dataPoints.add(new double[]{list.get(0).get(), list.get(1).get()});
+            index++;
         }
         return dataPoints.toArray(new double[][]{});
     }
