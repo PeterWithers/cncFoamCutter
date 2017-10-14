@@ -32,34 +32,28 @@ public class AerofoilService {
         aerofoilKeyFactory = datastore.newKeyFactory().setKind("AerofoilData");
     }
 
-    private FullEntity getPointsEntities(double[][] points) {
-        final FullEntity entity;
-        final IncompleteKey key = aerofoilKeyFactory.setKind("AerofoilDataPoints").newKey();
-        final Builder builder = FullEntity.newBuilder(key);
+    private void setPoints(final Builder builder, double[][] points) {
         for (int index = 0; index < points.length; index++) {
             double[] point = points[index];
-            builder.set("x" + index, point[0])
-                    .set("y" + index, point[1]);
+            builder.set("p" + index, point[0], point[1]);
         }
-        entity = builder.build();
-        datastore.put(entity);
-        return entity;
     }
 
     public Entity save(AerofoilData aerofoilData) {
 //        Key key = aerofoilKeyFactory.newKey(aerofoilData.getName());
 //        Entity entity = Entity.newBuilder(key)
         IncompleteKey key = aerofoilKeyFactory.setKind("AerofoilData").newKey();
-        FullEntity entity = FullEntity.newBuilder(key)
-                .set("Name", aerofoilData.getName())
+//        final FullEntity pointsEntities = getPointsEntities(aerofoilData.getPoints());
+        final Builder builder = FullEntity.newBuilder(key);
+        builder.set("Name", aerofoilData.getName())
                 .set("ParentId", (aerofoilData.getParentId() != null) ? aerofoilData.getParentId() : -1)
                 .set("RemoteAddress", aerofoilData.getRemoteAddress())
                 .set("isBezier", aerofoilData.isBezier())
                 .set("isEditable", aerofoilData.isEditable())
                 .set("isHidden", aerofoilData.isHidden())
-                .set("AccessDate", Timestamp.of(aerofoilData.getAccessDate()))
-                .set("Points", getPointsEntities(aerofoilData.getPoints()))
-                .build();
+                .set("AccessDate", Timestamp.of(aerofoilData.getAccessDate()));
+        setPoints(builder, aerofoilData.getPoints());
+        FullEntity entity = builder.build();
         return datastore.put(entity);
     }
 
