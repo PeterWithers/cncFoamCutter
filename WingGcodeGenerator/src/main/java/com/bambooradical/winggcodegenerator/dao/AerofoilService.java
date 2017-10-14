@@ -33,21 +33,17 @@ public class AerofoilService {
     }
 
     private FullEntity getPointsEntities(double[][] points) {
-        FullEntity entityPrevious = null;
-        for (int index = points.length - 1; index > -0; index--) {
+        final FullEntity entity;
+        final IncompleteKey key = aerofoilKeyFactory.setKind("AerofoilDataPoints").newKey();
+        final Builder builder = FullEntity.newBuilder(key);
+        for (int index = 0; index < points.length; index++) {
             double[] point = points[index];
-            IncompleteKey key = aerofoilKeyFactory.setKind("AerofoilDataPoints").newKey();
-            Builder builder = FullEntity.newBuilder(key)
-                    .set("x", point[0])
-                    .set("y", point[1]);
-            if (entityPrevious != null) {
-                builder.set("next", entityPrevious);
-            }
-            FullEntity entity = builder.build();
-            datastore.put(entity);
-            entityPrevious = entity;
+            builder.set("x" + index, point[0])
+                    .set("y" + index, point[1]);
         }
-        return entityPrevious;
+        entity = builder.build();
+        datastore.put(entity);
+        return entity;
     }
 
     public Entity save(AerofoilData aerofoilData) {
