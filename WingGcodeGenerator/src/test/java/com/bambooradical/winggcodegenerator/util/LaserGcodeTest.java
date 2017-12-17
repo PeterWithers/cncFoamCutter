@@ -28,6 +28,8 @@ public class LaserGcodeTest {
         writer.println("G1Z0"); // linear move
         writer.println("G21"); // Millimeters
         for (double xPos = 0; xPos < 50; xPos += 5) {
+            writer.println("G4 P0 "); // dwell
+            writer.println("M05 S0"); // turn off laser
             writer.println("G1 F3500"); // set speed
             writer.println("G1  X" + xPos + " Y0"); // move
             writer.println("G4 P0"); // dwell
