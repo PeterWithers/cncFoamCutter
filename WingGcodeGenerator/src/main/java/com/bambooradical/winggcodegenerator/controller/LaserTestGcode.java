@@ -3,7 +3,7 @@
  */
 package com.bambooradical.winggcodegenerator.controller;
 
-import com.bambooradical.winggcodegenerator.dao.AccessDataRepository;
+import com.bambooradical.winggcodegenerator.dao.AccessDataService;
 import com.bambooradical.winggcodegenerator.model.AccessData;
 import com.bambooradical.winggcodegenerator.model.LaserTestGcodeData;
 import java.util.Date;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class LaserTestGcode {
 
     @Autowired
-    AccessDataRepository accessDataRepository;
+    AccessDataService accessDataRepository;
 
     @RequestMapping("/LaserTestGcode")
     public String laserTestGcode(
