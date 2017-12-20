@@ -10,58 +10,97 @@ package com.bambooradical.winggcodegenerator.model;
 public class LaserTestGcodeData {
 
     final private String newLine = "\n";
-    private int propDiameter = 50;
-    private int propThickness = 5;
-    private int bladeCount = 5;
-    private float shaftDiameter = 5f;
-    private float layerHeight = 0.3f;
 
-    public int getPropDiameter() {
-        return propDiameter;
+    private int gridSize = 50;
+    private int lineSpacing = 5;
+    private double lineSteps = 1;
+    private double lineZigzag = 5;
+    private int flySpeed = 3500;
+    private int minPower = 100;
+    private int maxPower = 300;
+    private int minSpeed = 500;
+    private int maxSpeed = 1000;
+
+    public LaserTestGcodeData() {
     }
 
-    public void setPropDiameter(int propDiameter) {
-        this.propDiameter = propDiameter;
+    public int getGridSize() {
+        return gridSize;
     }
 
-    public int getPropThickness() {
-        return propThickness;
+    public void setGridSize(int gridSize) {
+        this.gridSize = gridSize;
     }
 
-    public void setPropThickness(int propThickness) {
-        this.propThickness = propThickness;
+    public int getLineSpacing() {
+        return lineSpacing;
     }
 
-    public int getBladeCount() {
-        return bladeCount;
+    public void setLineSpacing(int lineSpacing) {
+        this.lineSpacing = lineSpacing;
     }
 
-    public void setBladeCount(int bladeCount) {
-        this.bladeCount = bladeCount;
+    public double getLineSteps() {
+        return lineSteps;
     }
 
-    public float getShaftDiameter() {
-        return shaftDiameter;
+    public void setLineSteps(double lineSteps) {
+        this.lineSteps = lineSteps;
     }
 
-    public void setShaftDiameter(float shaftDiameter) {
-        this.shaftDiameter = shaftDiameter;
+    public double getLineZigzag() {
+        return lineZigzag;
     }
 
-    public float getLayerHeight() {
-        return layerHeight;
+    public void setLineZigzag(double lineZigzag) {
+        this.lineZigzag = lineZigzag;
     }
 
-    public void setLayerHeight(float layerHeight) {
-        this.layerHeight = layerHeight;
+    public int getFlySpeed() {
+        return flySpeed;
+    }
+
+    public void setFlySpeed(int flySpeed) {
+        this.flySpeed = flySpeed;
+    }
+
+    public int getMinPower() {
+        return minPower;
+    }
+
+    public void setMinPower(int minPower) {
+        this.minPower = minPower;
+    }
+
+    public int getMaxPower() {
+        return maxPower;
+    }
+
+    public void setMaxPower(int maxPower) {
+        this.maxPower = maxPower;
+    }
+
+    public int getMinSpeed() {
+        return minSpeed;
+    }
+
+    public void setMinSpeed(int minSpeed) {
+        this.minSpeed = minSpeed;
+    }
+
+    public int getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public void setMaxSpeed(int maxSpeed) {
+        this.maxSpeed = maxSpeed;
     }
 
     public String getGcode() {
-        //        for (double distance = 0.1; distance < 1; distance += 0.1) {
+        //        for (double lineSteps = 0.1; lineSteps < 1; lineSteps += 0.1) {
 //            for (double pause = 0; pause < 1; pause += 0.1) {
-        double distance = 1;
         StringBuilder stringBuilder = new StringBuilder();
-//        PrintWriter writer = new PrintWriter("target/distance" + distance + ".gcode", "UTF-8");
+//        PrintWriter writer = new PrintWriter("target/lineSteps" + lineSteps + ".gcode", "UTF-8");
         stringBuilder.append("M05 S0"); // turn off laser
         stringBuilder.append(newLine);
         stringBuilder.append("G90"); // Set to Absolute Positioning
@@ -69,22 +108,24 @@ public class LaserTestGcodeData {
 //        stringBuilder.append("G1 Z0"); // linear move
         stringBuilder.append("G21"); // Millimeters
         stringBuilder.append(newLine);
-        for (double xPos = 0; xPos < 50; xPos += 5) {
+        for (double xPos = 0; xPos < gridSize; xPos += lineSpacing) {
 //            stringBuilder.append("G4 P0 "); // dwell
 //            stringBuilder.append("M05 S0"); // turn off laser
-            stringBuilder.append("G0  X").append(xPos).append(" Y0 F3500"); // move
+            stringBuilder.append("G0  X").append(xPos).append(" Y0 F").append(flySpeed); // move
             stringBuilder.append(newLine);
             stringBuilder.append("G4 P0"); // dwell
             stringBuilder.append(newLine);
-            double power = 100 + (xPos * 10);
+            double power = minPower + (xPos * (maxPower - minPower) / (gridSize / lineSpacing));
             stringBuilder.append("M04 S").append(power); // turn on laser at power x
             stringBuilder.append(newLine);
-            for (double yPos = 0; yPos < 50; yPos += distance) {
-                double speed = 500 + (yPos * 20);
+            boolean isOdd = false;
+            for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
+                double speed = minSpeed + (yPos * (maxSpeed - minSpeed) / (gridSize / lineSteps));
                 // start loop
 //                        stringBuilder.append("G1 F" + speed); // set speed 
-                stringBuilder.append("G1 X").append(xPos).append(" Y").append(yPos).append(" F").append(speed); // move at speed
+                stringBuilder.append("G1 X").append(xPos + ((isOdd) ? lineZigzag : 0)).append(" Y").append(yPos).append(" F").append(speed); // move at speed
                 stringBuilder.append(newLine);
+                isOdd = !isOdd;
 //                    stringBuilder.append("G4 P0 "); // dwell
 //                        stringBuilder.append("M05 S0"); // turn off laser
 //                        stringBuilder.append("G4 P" + pause); // pause in ms
