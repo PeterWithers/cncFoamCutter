@@ -20,15 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class LaserTestGcode {
- 
+
     @Autowired
     AccessDataRepository accessDataRepository;
 
     @RequestMapping("/LaserTestGcode")
     public String laserTestGcode(
             @ModelAttribute LaserTestGcodeData laserTestGcodeData,
-            //            @ModelAttribute int hubDiameter,
-            //            @ModelAttribute int pistachioPropData.getPropDiameter(),
             @RequestHeader("Accept-Language") String acceptLang,
             @RequestHeader("User-Agent") String userAgent,
             HttpServletRequest request) {
