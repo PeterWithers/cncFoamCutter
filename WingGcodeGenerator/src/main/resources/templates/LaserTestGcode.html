@@ -16,25 +16,20 @@ Copyright (C) 2017 Peter Withers
         <style th:include="WingDesignView :: stylesection"></style>        
     </head> 
     <body>
-        <div id="menu" style="position: fixed; top: 5px;">
-            <a href='#editSvgPanel'>Preview</a>
-            <a href='#gcode'>View GCODE</a>
-            <a th:href="${'data:text/plain;charset=utf-8,'+laserTestGcodeData.getGcode()}" th:attr="download=${laserTestGcodeData.minPower+'-'+laserTestGcodeData.maxPower+'_'+laserTestGcodeData.minSpeed+'-'+laserTestGcodeData.maxSpeed+'.gcode'}">Download GCODE</a>
-        </div>
         <br/>
         <br/>
         <div th:fragment="propEditor">
             <div id="editorForm">
                 <form method="POST" action="#" th:action="@{/LaserTestGcode}" th:object="${laserTestGcodeData}">    
-                    Grid Size <input type="number" th:field="*{gridSize}" />
-                    Line Spacing <input type="number" th:field="*{lineSpacing}" />
-                    Line Steps <input type="number" th:field="*{lineSteps}" /><br/><br/>
-                    Line Zigzag <input type="number" th:field="*{lineZigzag}" /><br/><br/>
-                    Fly Speed <input type="number" th:field="*{flySpeed}" /><br/><br/>
-                    Minimum Power <input type="number" th:field="*{minPower}" />
-                    Maximum Power <input type="number" th:field="*{maxPower}" /><br/><br/>
-                    Minimum Speed <input type="number" th:field="*{minSpeed}" />
-                    Maximum Speed <input type="number" th:field="*{maxSpeed}" /><br/><br/>
+                    Grid&nbsp;Size&nbsp;<input type="number" th:field="*{gridSize}" />
+                    Line&nbsp;Spacing&nbsp;<input type="number" th:field="*{lineSpacing}" />
+                    Line&nbsp;Steps&nbsp;<input type="number" th:field="*{lineSteps}" /><br/><br/>
+                    Line&nbsp;Zigzag&nbsp;<input type="number" th:field="*{lineZigzag}" /><br/><br/>
+                    Fly&nbsp;Speed&nbsp;<input type="number" th:field="*{flySpeed}" /><br/><br/>
+                    Minimum&nbsp;Power&nbsp;<input type="number" th:field="*{minPower}" />
+                    Maximum&nbsp;Power&nbsp;<input type="number" th:field="*{maxPower}" /><br/><br/>
+                    Minimum&nbsp;Speed&nbsp;<input type="number" th:field="*{minSpeed}" />
+                    Maximum&nbsp;Speed&nbsp;<input type="number" th:field="*{maxSpeed}" /><br/><br/>
                     <button type="submit" id="saveButton" >Update</button>
                 </form>
             </div>            
@@ -54,6 +49,11 @@ Copyright (C) 2017 Peter Withers
             </svg>   
             <br/>
             <pre id="gcode" th:text="${laserTestGcodeData.getGcode()}"></pre>
+        </div>
+        <div id="menu" style="position: fixed; top: 5px;">
+            <a href='#editSvgPanel'>Preview</a>
+            <a href='#gcode'>View GCODE</a>
+            <a th:href="${'data:text/plain;charset=utf-8,'+laserTestGcodeData.getGcode()}" th:attr="download=${laserTestGcodeData.minPower+'-'+laserTestGcodeData.maxPower+'_'+laserTestGcodeData.minSpeed+'-'+laserTestGcodeData.maxSpeed+'.gcode'}">Download GCODE</a>
         </div>
     </body>
 </html>
