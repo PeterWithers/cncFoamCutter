@@ -4,7 +4,7 @@ Copyright (C) 2017 Peter Withers
 -->
 
 <!--
- * @since Dec 25, 2017 19:45 PM (creation date)
+ * @since Dec 20, 2017 19:45 PM (creation date)
  * @author <peter-gthb@bambooradical.com>
 -->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
@@ -18,16 +18,24 @@ Copyright (C) 2017 Peter Withers
     <body>
         <div th:fragment="propEditor">
             <div id="editorForm">
-                <form method="POST" action="#" th:action="@{/updatePropSettings}">    
-                    Prop Diameter<input type="number" id="propDiameter" name="propDiameter" th:value="${propDiameter}" />
-                    Prop Thickness<input type="number" id="propThickness" name="propThickness" th:value="${propThickness}" />
-                    Blade Count<input type="number" id="bladeCount" name="bladeCount" th:value="${bladeCount}" />
-                    Shaft Diameter<input type="number" step="0.01" id="shaftDiameter" name="shaftDiameter" th:value="${shaftDiameter}" />
-                    Layer Height<input type="number" step="0.01" id="layerHeight" name="layerHeight" th:value="${shaftDiameter}" />
+                <form method="POST" action="#" th:action="@{/LaserTestGcode}" th:object="${laserTestGcodeData}">    
+                    Grid Size<input type="number" th:field="*{gridSize}" />
+                    Line Spacing<input type="number" th:field="*{lineSpacing}" />
+                    Line Steps<input type="number" th:field="*{lineSteps}" />
+                    Line Zigzag<input type="number" th:field="*{lineZigzag}" />
+                    Fly Speed<input type="number" th:field="*{flySpeed}" />
+                    Minimum Power<input type="number" th:field="*{minPower}" />
+                    Maximum Power<input type="number" th:field="*{maxPower}" />
+                    Minimum Speed<input type="number" th:field="*{minSpeed}" />
+                    Maximum Speed<input type="number" th:field="*{maxSpeed}" />
                     <button type="submit" id="saveButton" >Update</button>
                 </form>
-            </div>
-            <svg id="editSvgPanel" viewBox="-25 -50 150 150">
+                <div id="menu">
+                    <a href='#gcode'>View GCODE</a>
+                    <a th:href="${'data:text/plain;charset=utf-8,'+laserTestGcodeData.getGcode()}" download="test.gcode">Download GCODE</a>
+                </div>
+            </div>            
+            <svg id="editSvgPanel" viewBox="-25 -50 150 100">
                 <g id="grid">
                     <line th:each="yRow : ${#numbers.sequence( -50, 50)}" x1="0" th:attr="y1=${yRow}, y2=${yRow}" x2="100" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
                     <line th:each="yRow : ${#numbers.sequence( -5, 5)}" x1="-5" th:attr="y1=${yRow*10}, y2=${yRow*10}" x2="105" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
@@ -40,7 +48,9 @@ Copyright (C) 2017 Peter Withers
                         <animate th:if="${iterator.index} eq 0" attributeName="stroke-dashoffset" from="1000" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
                     </path>
                 </g>
-            </svg>            
+            </svg>   
+            <br/>
+            <pre id="gcode" th:text="${laserTestGcodeData.getGcode()}"></pre>
         </div>
     </body>
 </html>
