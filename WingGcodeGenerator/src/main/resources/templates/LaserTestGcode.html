@@ -45,6 +45,10 @@ Copyright (C) 2017 Peter Withers
                     <path th:each="pathString, iterator : ${laserTestGcodeData.getSvgPoints()}" th:class="${laserTestGcodeData.getSvgPointsClass(iterator.index, iterator.size)}" th:attr="d=${pathString}">
                         <animate th:if="${iterator.index} eq 0" attributeName="stroke-dashoffset" from="1000" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
                     </path>
+                    <text y="-5" x="0"  fill="grey" th:text="${'S'+laserTestGcodeData.minPower}" style="font-size : 10px;">minPower</text>
+                    <text y="-5" th:attr="x=${laserTestGcodeData.gridSize-10}" fill="grey" th:text="${'S'+laserTestGcodeData.maxPower}" style="font-size : 10px;">maxPower</text>
+                    <text x="-10" y="0" fill="grey" th:text="${'F'+laserTestGcodeData.minSpeed}" transform="rotate(-90 0,5)" style="font-size:10px;text-anchor:'end'">minSpeed</text>
+                    <text x="10" th:attr="y=${laserTestGcodeData.gridSize+10},transform=${'rotate(-90 -0,'+(laserTestGcodeData.gridSize+15)+')'}" fill="grey" th:text="${'F'+laserTestGcodeData.maxSpeed}" style="font-size:10px;text-anchor:'end'">maxSpeed</text>
                 </g>
             </svg>   
             <br/>
