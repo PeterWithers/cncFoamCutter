@@ -14,7 +14,7 @@ public class LaserTestGcodeData {
     private int gridSize = 50;
     private int lineSpacing = 5;
     private double lineSteps = 5;
-    private double lineZigzag = 0.2;
+    private double lineZigzag = 2;
     private int flySpeed = 3500;
     private int minPower = 100;
     private int maxPower = 300;
