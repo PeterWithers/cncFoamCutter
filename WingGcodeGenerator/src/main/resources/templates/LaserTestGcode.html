@@ -23,8 +23,8 @@ Copyright (C) 2017 Peter Withers
                 <form method="POST" action="#" th:action="@{/LaserTestGcode}" th:object="${laserTestGcodeData}">    
                     Grid&nbsp;Size&nbsp;<input type="number" th:field="*{gridSize}" />
                     Line&nbsp;Spacing&nbsp;<input type="number" th:field="*{lineSpacing}" />
-                    Line&nbsp;Steps&nbsp;<input type="number" th:field="*{lineSteps}" /><br/><br/>
-                    Line&nbsp;Zigzag&nbsp;<input type="number" th:field="*{lineZigzag}" /><br/><br/>
+                    Line&nbsp;Steps&nbsp;<input type="number" step="any" th:field="*{lineSteps}" /><br/><br/>
+                    Line&nbsp;Zigzag&nbsp;<input type="number" step="any" th:field="*{lineZigzag}" /><br/><br/>
                     Fly&nbsp;Speed&nbsp;<input type="number" th:field="*{flySpeed}" /><br/><br/>
                     Minimum&nbsp;Power&nbsp;<input type="number" th:field="*{minPower}" />
                     Maximum&nbsp;Power&nbsp;<input type="number" th:field="*{maxPower}" /><br/><br/>
