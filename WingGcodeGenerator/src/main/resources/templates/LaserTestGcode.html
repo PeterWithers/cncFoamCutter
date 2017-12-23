@@ -20,7 +20,7 @@ Copyright (C) 2017 Peter Withers
         <br/>
         <div th:fragment="propEditor">
             <div id="editorForm">
-                <form method="POST" action="#" th:action="@{/LaserTestGcode}" th:object="${laserTestGcodeData}">    
+                <form method="get" action="#" th:action="@{/LaserTestGcode}" th:object="${laserTestGcodeData}">    
                     Grid&nbsp;Size&nbsp;<input type="number" th:field="*{gridSize}" />
                     Line&nbsp;Spacing&nbsp;<input type="number" th:field="*{lineSpacing}" />
                     Line&nbsp;Steps&nbsp;<input type="number" step="any" th:field="*{lineSteps}" /><br/><br/>
@@ -57,7 +57,7 @@ Copyright (C) 2017 Peter Withers
         <div id="menu" style="position: fixed; top: 5px;">
             <a href='#editSvgPanel'>Preview</a>
             <a href='#gcode'>View GCODE</a>
-            <a th:href="${'data:text/plain;charset=utf-8,'+laserTestGcodeData.getGcode()}" th:attr="download=${laserTestGcodeData.minPower+'-'+laserTestGcodeData.maxPower+'_'+laserTestGcodeData.minSpeed+'-'+laserTestGcodeData.maxSpeed+'.gcode'}">Download GCODE</a>
+            <a th:href="${'laserGcode?' + #httpServletRequest.queryString}">Download GCODE</a>
         </div>
     </body>
 </html>
