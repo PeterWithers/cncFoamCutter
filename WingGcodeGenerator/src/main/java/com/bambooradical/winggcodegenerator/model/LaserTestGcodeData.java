@@ -15,13 +15,31 @@ public class LaserTestGcodeData {
     private int lineSpacing = 5;
     private double lineSteps = 5;
     private double lineZigzag = 2;
+    private int chordLength = 100;
     private int flySpeed = 3500;
     private int minPower = 100;
     private int maxPower = 300;
     private int minSpeed = 500;
     private int maxSpeed = 1000;
+    private AerofoilData aerofoilData = null;
 
     public LaserTestGcodeData() {
+    }
+
+    public AerofoilData getAerofoilData() {
+        return aerofoilData;
+    }
+
+    public void setAerofoilData(AerofoilData aerofoilData) {
+        this.aerofoilData = aerofoilData;
+    }
+
+    public int getChordLength() {
+        return chordLength;
+    }
+
+    public void setChordLength(int chordLength) {
+        this.chordLength = chordLength;
     }
 
     public int getGridSize() {
@@ -116,20 +134,46 @@ public class LaserTestGcodeData {
             stringBuilder.append("G4 P0"); // dwell
             stringBuilder.append(newLine);
             double power = minPower + (xPos * (maxPower - minPower) / (gridSize / lineSpacing));
-            stringBuilder.append("M04 S").append(power); // turn on laser at power x
-            stringBuilder.append(newLine);
-            boolean isOdd = false;
-            for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
-                double speed = minSpeed + (yPos * (maxSpeed - minSpeed) / (gridSize / lineSteps));
-                // start loop
-//                        stringBuilder.append("G1 F" + speed); // set speed 
-                stringBuilder.append("G1 X").append(xPos + ((isOdd) ? lineZigzag : 0)).append(" Y").append(yPos).append(" F").append(speed); // move at speed
+            if (aerofoilData == null) {
+                stringBuilder.append("M04 S").append(power); // turn on laser at power x
                 stringBuilder.append(newLine);
-                isOdd = !isOdd;
+                boolean isOdd = false;
+                for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
+                    double speed = minSpeed + (yPos * (maxSpeed - minSpeed) / (gridSize / lineSteps));
+                    // start loop
+//                        stringBuilder.append("G1 F" + speed); // set speed 
+                    stringBuilder.append("G1 X").append(xPos + ((isOdd) ? lineZigzag : 0)).append(" Y").append(yPos).append(" F").append(speed); // move at speed
+                    stringBuilder.append(newLine);
+                    isOdd = !isOdd;
 //                    stringBuilder.append("G4 P0 "); // dwell
 //                        stringBuilder.append("M05 S0"); // turn off laser
 //                        stringBuilder.append("G4 P" + pause); // pause in ms
-                // end loop
+                    // end loop
+                }
+            } else {
+                double maxX = xPos;
+                double minX = xPos;
+                for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
+                    double speed = minSpeed + (yPos * (maxSpeed - minSpeed) / (gridSize / lineSteps));
+                    stringBuilder.append(String.format("G0 X%.6f Y%.6f F%d", xPos, yPos, flySpeed)); // move
+                    stringBuilder.append(newLine);
+                    stringBuilder.append("G4 P0"); // dwell
+                    stringBuilder.append(newLine);
+                    stringBuilder.append("M04 S").append(power); // turn on laser at power x
+                    stringBuilder.append(newLine);
+                    double maxY = yPos;
+                    double minY = yPos;
+                    for (double[] transformedPoints : aerofoilData.getTransformedPoints((int) xPos, (int) yPos, chordLength, 0, 0)) {
+                        minX = (minX < transformedPoints[0]) ? minX : transformedPoints[0];
+                        minY = (minY < transformedPoints[1]) ? minY : transformedPoints[1];
+                        maxX = (maxX > transformedPoints[0]) ? maxX : transformedPoints[0];
+                        maxY = (maxY > transformedPoints[1]) ? maxY : transformedPoints[1];
+                        stringBuilder.append(String.format("G1 X%.6f Y%.6f F%.6f", transformedPoints[0], transformedPoints[1], speed));
+                        stringBuilder.append(newLine);
+                    }
+                    yPos += maxY - minY;
+                }
+                xPos += maxX - minX;
             }
         }
         stringBuilder.append("G4 P0 "); // dwell
