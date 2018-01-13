@@ -4,10 +4,9 @@
 package com.bambooradical.winggcodegenerator.controller;
 
 import com.bambooradical.winggcodegenerator.dao.AccessDataService;
-import com.bambooradical.winggcodegenerator.dao.AerofoilRepository;
+import com.bambooradical.winggcodegenerator.dao.AerofoilService;
 import com.bambooradical.winggcodegenerator.model.AccessData;
 import com.bambooradical.winggcodegenerator.model.AerofoilData;
-import com.bambooradical.winggcodegenerator.model.AerofoilDataAG36;
 import com.bambooradical.winggcodegenerator.model.LaserTestGcodeData;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -32,17 +32,19 @@ public class LaserTestGcode {
     @Autowired
     AccessDataService accessDataRepository;
     @Autowired
-    AerofoilRepository aerofoilRepository;
+    AerofoilService aerofoilRepository;
 
     @RequestMapping("/LaserTestGcode")
     public String laserTestGcode(
             Model model,
             @ModelAttribute LaserTestGcodeData laserTestGcodeData,
+            @RequestParam(value = "aerofoilData", required = true) final long aerofoilId,
             @RequestHeader("Accept-Language") String acceptLang,
             @RequestHeader("User-Agent") String userAgent,
             HttpServletRequest request) {
-        if (aerofoilRepository.count() == 0) {
-            aerofoilRepository.save(new AerofoilData("AG36", new AerofoilDataAG36().getPoints()));
+        if (aerofoilId >= 0) {
+            final AerofoilData aerofoilData = aerofoilRepository.findOne(aerofoilId);
+            laserTestGcodeData.setAerofoilData(aerofoilData);
         }
         model.addAttribute("aerofoilList", aerofoilRepository.findAll());
         final String remoteAddr = request.getRemoteAddr();
