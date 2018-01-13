@@ -20,7 +20,15 @@ Copyright (C) 2017 Peter Withers
         <br/>
         <div th:fragment="propEditor">
             <div id="editorForm">
-                <form method="get" action="#" th:action="@{/LaserTestGcode}" th:object="${laserTestGcodeData}">    
+                <form method="get" action="#" th:action="@{/LaserTestGcode}" th:object="${laserTestGcodeData}">
+                    Aerofoil&nbsp;
+                    <select id="rootAerofoilId" name="aerofoilData">
+                        <option value="-1">test pattern</option>
+                        <option th:each="aerofoil : ${aerofoilList}" 
+                                th:value="${aerofoil.getId()}" 
+                                th:text="${aerofoil.getName()}"
+                                th:selected="${laserTestGcodeData.aerofoilData != null and aerofoil.getId() == laserTestGcodeData.aerofoilData.getId()}"></option>
+                    </select>Chord&nbsp;mm&nbsp;<input type="number" th:field="*{chordLength}" /><br/><br/>
                     Grid&nbsp;Size&nbsp;<input type="number" th:field="*{gridSize}" />
                     Line&nbsp;Spacing&nbsp;<input type="number" th:field="*{lineSpacing}" />
                     Line&nbsp;Steps&nbsp;<input type="number" step="any" th:field="*{lineSteps}" /><br/><br/>
@@ -58,6 +66,7 @@ Copyright (C) 2017 Peter Withers
             <a href='#editSvgPanel'>Preview</a>
             <a href='#gcode'>View GCODE</a>
             <a th:href="${'laserGcode?' + #httpServletRequest.queryString}">Download GCODE</a>
+            <a href="WingDesignView">WingDesignView</a>
         </div>
     </body>
 </html>
