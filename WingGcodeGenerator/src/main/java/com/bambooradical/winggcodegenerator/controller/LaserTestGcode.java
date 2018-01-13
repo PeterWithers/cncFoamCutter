@@ -4,6 +4,7 @@
 package com.bambooradical.winggcodegenerator.controller;
 
 import com.bambooradical.winggcodegenerator.dao.AccessDataService;
+import com.bambooradical.winggcodegenerator.dao.AerofoilService;
 import com.bambooradical.winggcodegenerator.model.AccessData;
 import com.bambooradical.winggcodegenerator.model.LaserTestGcodeData;
 import java.util.Date;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,13 +29,20 @@ public class LaserTestGcode {
 
     @Autowired
     AccessDataService accessDataRepository;
+    @Autowired
+    AerofoilService aerofoilRepository;
 
     @RequestMapping("/LaserTestGcode")
     public String laserTestGcode(
+            Model model,
             @ModelAttribute LaserTestGcodeData laserTestGcodeData,
             @RequestHeader("Accept-Language") String acceptLang,
             @RequestHeader("User-Agent") String userAgent,
             HttpServletRequest request) {
+//        if (aerofoilRepository.count() == 0) {
+//            aerofoilRepository.save(new AerofoilData("AG36", new AerofoilDataAG36().getPoints()));
+//        }
+        model.addAttribute("aerofoilList", aerofoilRepository.findAll());
         final String remoteAddr = request.getRemoteAddr();
         final String requestURI = request.getRequestURI();
         final Date accessDate = new java.util.Date();
