@@ -4,8 +4,10 @@
 package com.bambooradical.winggcodegenerator.controller;
 
 import com.bambooradical.winggcodegenerator.dao.AccessDataService;
-import com.bambooradical.winggcodegenerator.dao.AerofoilService;
+import com.bambooradical.winggcodegenerator.dao.AerofoilRepository;
 import com.bambooradical.winggcodegenerator.model.AccessData;
+import com.bambooradical.winggcodegenerator.model.AerofoilData;
+import com.bambooradical.winggcodegenerator.model.AerofoilDataAG36;
 import com.bambooradical.winggcodegenerator.model.LaserTestGcodeData;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +32,7 @@ public class LaserTestGcode {
     @Autowired
     AccessDataService accessDataRepository;
     @Autowired
-    AerofoilService aerofoilRepository;
+    AerofoilRepository aerofoilRepository;
 
     @RequestMapping("/LaserTestGcode")
     public String laserTestGcode(
@@ -39,9 +41,9 @@ public class LaserTestGcode {
             @RequestHeader("Accept-Language") String acceptLang,
             @RequestHeader("User-Agent") String userAgent,
             HttpServletRequest request) {
-//        if (aerofoilRepository.count() == 0) {
-//            aerofoilRepository.save(new AerofoilData("AG36", new AerofoilDataAG36().getPoints()));
-//        }
+        if (aerofoilRepository.count() == 0) {
+            aerofoilRepository.save(new AerofoilData("AG36", new AerofoilDataAG36().getPoints()));
+        }
         model.addAttribute("aerofoilList", aerofoilRepository.findAll());
         final String remoteAddr = request.getRemoteAddr();
         final String requestURI = request.getRequestURI();
