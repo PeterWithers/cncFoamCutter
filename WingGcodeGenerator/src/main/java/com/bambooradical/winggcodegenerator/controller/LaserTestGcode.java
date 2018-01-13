@@ -38,7 +38,7 @@ public class LaserTestGcode {
     public String laserTestGcode(
             Model model,
             @ModelAttribute LaserTestGcodeData laserTestGcodeData,
-            @RequestParam(value = "aerofoilData", required = true) final long aerofoilId,
+            @RequestParam(value = "aerofoilData", required = false, defaultValue = "-1") final long aerofoilId,
             @RequestHeader("Accept-Language") String acceptLang,
             @RequestHeader("User-Agent") String userAgent,
             HttpServletRequest request) {
