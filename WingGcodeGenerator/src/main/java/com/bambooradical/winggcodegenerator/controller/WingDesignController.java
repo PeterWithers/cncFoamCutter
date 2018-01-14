@@ -112,20 +112,6 @@ public class WingDesignController {
         return "WingDesignView";
     }
 
-    @RequestMapping(value = "/WingDesignView", method = RequestMethod.POST)
-    public String aerofoilImport(@RequestParam("datFile") MultipartFile datFile, Model model, HttpServletRequest request) throws IOException {
-        final AerofoilData uploadedAerofoil = new AerofoilDatParser().parseFile(datFile);
-        uploadedAerofoil.setAccessDate(new java.util.Date());
-        uploadedAerofoil.setRemoteAddress(request.getRequestURI());
-        aerofoilRepository.save(uploadedAerofoil);
-//        model.addAttribute("rootAerofoilData", uploadedAerofoil.toSvgPoints(0, 1, 100, 0));
-//        return "<svg><text>" + uploadedAerofoil.getName() + "</text><polyline points=\"" + uploadedAerofoil.toSvgPoints(0, 0) + "\" />";
-//        return "WingDesignView";
-//        return "WingDesignView :: rootAerofoilData";
-        String referer = request.getHeader("Referer");
-        return "redirect:" + referer;
-    }
-
     @RequestMapping(value = "/saveAerofoil", method = RequestMethod.POST)
     public String aerofoilSave(@RequestParam("datText") String datText,
             @RequestParam(value = "name", required = true) final String aerofoilName,
