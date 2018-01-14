@@ -13,8 +13,15 @@ Copyright (C) 2015 Peter Withers
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <style th:include="WingDesignView :: stylesection"></style>
     </head>
     <body>
+        <div id="menu">
+            <a href="WingDesignView">WingDesignView</a>
+            <a href="LaserTestGcode">LaserTestGcode</a>
+            <a href="AerofoilListing">Aerofoil Listing</a>
+        </div>
+        <br/>
         <div th:fragment="pathEditor">
             <div id="pathEditorForm">
                 <form th:object="${tipAerofoilData}" method="POST" action="#" th:action="@{/deleteAerofoil}">
@@ -57,7 +64,7 @@ Copyright (C) 2015 Peter Withers
             <br/>
             <div style="position:relative;">
                 <img id="backgroundImgTag" style="top:0;position:absolute;"/>
-                <svg id="editSvgPanel" viewBox="-25 -50 150 150"  onmousemove="move(evt)"><!--ontouchmove="touchMove(evt)" ontouchend="stop(evt)"-->
+                <svg id="editSvgPanel" viewBox="-5 -37 111 70"  onmousemove="move(evt)"><!--ontouchmove="touchMove(evt)" ontouchend="stop(evt)"-->
                     <g id="grid">
                         <!--<line x1="-10" y1="0" x2="110" y2="0" style="stroke:rgba(100,100,100, 50);stroke-width:0.1" />-->
                         <line th:each="yRow : ${#numbers.sequence( -30, 30)}" x1="0" th:attr="y1=${yRow}, y2=${yRow}" x2="100" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
