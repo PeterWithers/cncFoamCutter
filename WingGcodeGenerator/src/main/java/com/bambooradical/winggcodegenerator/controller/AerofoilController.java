@@ -3,11 +3,9 @@
  */
 package com.bambooradical.winggcodegenerator.controller;
 
-import com.bambooradical.winggcodegenerator.dao.AccessDataRepository;
-import com.bambooradical.winggcodegenerator.dao.AerofoilRepository;
+import com.bambooradical.winggcodegenerator.dao.AccessDataService;
+import com.bambooradical.winggcodegenerator.dao.AerofoilService;
 import com.bambooradical.winggcodegenerator.model.AccessData;
-import com.bambooradical.winggcodegenerator.model.AerofoilData;
-import com.bambooradical.winggcodegenerator.model.AerofoilDataAG36;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AerofoilController {
 
     @Autowired
-    AerofoilRepository aerofoilRepository;
+    AerofoilService aerofoilRepository;
     @Autowired
-    AccessDataRepository accessDataRepository;
+    AccessDataService accessDataRepository;
 
     @RequestMapping("/AerofoilListing")
     public String pathListing(
@@ -39,7 +37,7 @@ public class AerofoilController {
         final Date accessDate = new java.util.Date();
         final AccessData accessData = new AccessData(accessDate, remoteAddr, userAgent, acceptLang, requestURI);
         accessDataRepository.save(accessData);
-        aerofoilRepository.save(new AerofoilData("temp data", new AerofoilDataAG36().getPoints()));
+//        aerofoilRepository.save(new AerofoilData("temp data", new AerofoilDataAG36().getPoints()));
         model.addAttribute("aerofoilList", aerofoilRepository.findAll());
         return "AerofoilListing";
     }
