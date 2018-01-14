@@ -115,52 +115,59 @@ public class LaserTestGcodeData {
     }
 
     public String getGcode() {
-        //        for (double lineSteps = 0.1; lineSteps < 1; lineSteps += 0.1) {
-//            for (double pause = 0; pause < 1; pause += 0.1) {
-        StringBuilder stringBuilder = new StringBuilder();
-//        PrintWriter writer = new PrintWriter("target/lineSteps" + lineSteps + ".gcode", "UTF-8");
-        stringBuilder.append("M05 S0"); // turn off laser
-        stringBuilder.append(newLine);
-        stringBuilder.append("G90"); // Set to Absolute Positioning
-        stringBuilder.append(newLine);
-//        stringBuilder.append("G1 Z0"); // linear move
-        stringBuilder.append("G21"); // Millimeters
-        stringBuilder.append(newLine);
+        StringBuilder stringBuilderOuter = new StringBuilder();
+        StringBuilder stringBuilderInner = new StringBuilder();
+        stringBuilderOuter.append("M05 S0"); // turn off laser
+        stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append("G90"); // Set to Absolute Positioning
+        stringBuilderOuter.append(newLine);
+//        stringBuilderOuter.append("G1 Z0"); // linear move
+        stringBuilderOuter.append("G21"); // Millimeters
+        stringBuilderOuter.append(newLine);
+        double minAreaX = 0;
+        double minAreaY = 0;
+        double maxAreaX = 0;
+        double maxAreaY = 0;
         for (double xPos = 0; xPos < gridSize; xPos += lineSpacing) {
-//            stringBuilder.append("G4 P0 "); // dwell
-//            stringBuilder.append("M05 S0"); // turn off laser
-            stringBuilder.append("G0  X").append(xPos).append(" Y0 F").append(flySpeed); // move
-            stringBuilder.append(newLine);
-            stringBuilder.append("G4 P0"); // dwell
-            stringBuilder.append(newLine);
+//            stringBuilderInner.append("G4 P0 "); // dwell
+//            stringBuilderInner.append("M05 S0"); // turn off laser
+            stringBuilderInner.append("G0  X").append(xPos).append(" Y0 F").append(flySpeed); // move
+            stringBuilderInner.append(newLine);
+            stringBuilderInner.append("G4 P0"); // dwell
+            stringBuilderInner.append(newLine);
             double power = minPower + (xPos * (maxPower - minPower) / (gridSize / lineSpacing));
             if (aerofoilData == null) {
-                stringBuilder.append("M04 S").append(power); // turn on laser at power x
-                stringBuilder.append(newLine);
+                stringBuilderInner.append("M04 S").append(power); // turn on laser at power x
+                stringBuilderInner.append(newLine);
                 boolean isOdd = false;
                 for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
                     double speed = minSpeed + (yPos * (maxSpeed - minSpeed) / (gridSize / lineSteps));
+                    final double calculatedX = xPos + ((isOdd) ? lineZigzag : 0);
                     // start loop
-//                        stringBuilder.append("G1 F" + speed); // set speed 
-                    stringBuilder.append("G1 X").append(xPos + ((isOdd) ? lineZigzag : 0)).append(" Y").append(yPos).append(" F").append(speed); // move at speed
-                    stringBuilder.append(newLine);
+//                        stringBuilderInner.append("G1 F" + speed); // set speed 
+                    stringBuilderInner.append("G1 X").append(calculatedX).append(" Y").append(yPos).append(" F").append(speed); // move at speed
+                    stringBuilderInner.append(newLine);
                     isOdd = !isOdd;
-//                    stringBuilder.append("G4 P0 "); // dwell
-//                        stringBuilder.append("M05 S0"); // turn off laser
-//                        stringBuilder.append("G4 P" + pause); // pause in ms
-                    // end loop
+//                    stringBuilderInner.append("G4 P0 "); // dwell
+//                        stringBuilderInner.append("M05 S0"); // turn off laser
+//                        stringBuilderInner.append("G4 P" + pause); // pause in ms
+                    // end loop                    
+                    minAreaY = (minAreaY < yPos) ? minAreaY : yPos;
+                    maxAreaY = (maxAreaY > yPos) ? maxAreaY : yPos;
+                    minAreaX = (minAreaX < calculatedX) ? minAreaX : calculatedX;
+                    maxAreaX = (maxAreaX > calculatedX) ? maxAreaX : calculatedX;
                 }
             } else {
                 double maxX = xPos;
                 double minX = xPos;
                 for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
                     double speed = minSpeed + (yPos * (maxSpeed - minSpeed) / (gridSize / lineSteps));
-                    stringBuilder.append(String.format("G0 X%.6f Y%.6f F%d", xPos, yPos, flySpeed)); // move
-                    stringBuilder.append(newLine);
-                    stringBuilder.append("G4 P0"); // dwell
-                    stringBuilder.append(newLine);
-                    stringBuilder.append("M04 S").append(power); // turn on laser at power x
-                    stringBuilder.append(newLine);
+                    stringBuilderInner.append(String.format("G0 X%.6f Y%.6f F%d", xPos, yPos, flySpeed)); // move
+                    stringBuilderInner.append(newLine);
+                    stringBuilderInner.append("G4 P0"); // dwell
+                    stringBuilderInner.append(newLine);
+                    stringBuilderInner.append("M04 S").append(power); // turn on laser at power x
+                    stringBuilderInner.append(newLine);
                     double maxY = yPos;
                     double minY = yPos;
                     for (double[] transformedPoints : aerofoilData.getTransformedPoints((int) xPos, (int) yPos, chordLength, 0, 0)) {
@@ -168,27 +175,43 @@ public class LaserTestGcodeData {
                         minY = (minY < transformedPoints[1]) ? minY : transformedPoints[1];
                         maxX = (maxX > transformedPoints[0]) ? maxX : transformedPoints[0];
                         maxY = (maxY > transformedPoints[1]) ? maxY : transformedPoints[1];
-                        stringBuilder.append(String.format("G1 X%.6f Y%.6f F%.6f", transformedPoints[0], transformedPoints[1], speed));
-                        stringBuilder.append(newLine);
+                        stringBuilderInner.append(String.format("G1 X%.6f Y%.6f F%.6f", transformedPoints[0], transformedPoints[1], speed));
+                        stringBuilderInner.append(newLine);
                     }
                     yPos += maxY - minY;
+                    minAreaY = (minAreaY < minY) ? minAreaY : minY;
+                    maxAreaY = (maxAreaY > maxY) ? maxAreaY : maxY;
                 }
                 xPos += maxX - minX;
+                minAreaX = (minAreaX < minX) ? minAreaX : minX;
+                maxAreaX = (maxAreaX > maxX) ? maxAreaX : maxX;
             }
         }
-        stringBuilder.append("G4 P0 "); // dwell
-        stringBuilder.append(newLine);
-        stringBuilder.append("M05 S0"); // turn off laser
-        stringBuilder.append(newLine);
-        stringBuilder.append("G1 F3500"); // set speed
-        stringBuilder.append(newLine);
-        stringBuilder.append("G0 X0 Y0"); // go to home
-        stringBuilder.append(newLine);
-        stringBuilder.append("M30"); // perhaps this can be used as a repeat command
-        stringBuilder.append(newLine);
-//        }
-//        }
-        return stringBuilder.toString();
+//        stringBuilderOuter.append("# fly around perimeter");
+        stringBuilderOuter.append(String.format("G0 X%.6f Y%.6f F%d", minAreaX, minAreaY, flySpeed)); // fly around perimeter
+        stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append(String.format("G0 X%.6f Y%.6f F%d", minAreaX, maxAreaY, flySpeed)); // fly around perimeter
+        stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append(String.format("G0 X%.6f Y%.6f F%d", maxAreaX, maxAreaY, flySpeed)); // fly around perimeter
+        stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append(String.format("G0 X%.6f Y%.6f F%d", maxAreaX, minAreaY, flySpeed)); // fly around perimeter
+        stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append(String.format("G0 X%.6f Y%.6f F%d", minAreaX, minAreaY, flySpeed)); // fly around perimeter
+        stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append("G4 P0"); // dwell
+        stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append(stringBuilderInner);
+        stringBuilderOuter.append("G4 P0 "); // dwell
+        stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append("M05 S0"); // turn off laser
+        stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append("G1 F3500"); // set speed
+        stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append("G0 X0 Y0"); // go to home
+        stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append("M30"); // perhaps this can be used as a repeat command
+        stringBuilderOuter.append(newLine);
+        return stringBuilderOuter.toString();
     }
 
     public String getSvgPointsClass(int index, int size) {
