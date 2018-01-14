@@ -18,7 +18,14 @@ Copyright (C) 2018 Peter Withers
     <body>
         <br/>
         <br/>
-        <table>
+        <table class="uploadPanel">
+            <tr><td>
+                    <form method="POST" enctype="multipart/form-data" action="uploadAerofoil">
+                        Upload Aerofoil Dat: <input type="file" name="datFile" id="datFile"/><button type="submit" id="uploadButton">Upload</button>
+                    </form>
+                </td></tr>
+        </table>
+        <table class="aerofoilList">
             <tr th:each="aerofoil : ${aerofoilList}">
                 <td>
                     ID&nbsp;<span th:text="${aerofoil.getId()}"></span><br/>
@@ -41,6 +48,11 @@ Copyright (C) 2018 Peter Withers
                         </g>
                         <polyline class="aerofoilListing" th:attr="points=${aerofoil.toSvgPoints(0, 0, 100, 0, 0)}" />
                     </svg>
+                </td>
+                <td>
+                    <div id="menu">
+                        <a th:href="${'AerofoilEdit?aerofoilData='+aerofoil.getId()}">Edit</a>
+                    </div>
                 </td>
             </tr>
         </table>
