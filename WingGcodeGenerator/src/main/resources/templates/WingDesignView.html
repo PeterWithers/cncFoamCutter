@@ -31,7 +31,9 @@ Copyright (C) 2015 Peter Withers
                 /*height: 100%;*/
                 position: absolute;
                 top: 0;
-                left: 0;                           
+                left: 0;   
+            }
+            #wingSettings, #machineSettings, #uploadArea, .uploadPanel {
                 border-color: #5d86b1;
                 color: #bccfe4;
                 background: #042649;
@@ -40,7 +42,7 @@ Copyright (C) 2015 Peter Withers
                 padding: 5px; 
                 margin: 20px;  
             }
-            #pathEditorPanel {               
+            #pathEditorPanel, .aerofoilList {               
                 /*border-color: #5d86b1;*/
                 border-color: grey;
                 border-width: 1px;
@@ -382,7 +384,7 @@ Copyright (C) 2015 Peter Withers
                 </form>
             </div>
             <div id="uploadArea">
-                <form method="POST" enctype="multipart/form-data" action="#">
+                <form method="POST" enctype="multipart/form-data" action="uploadAerofoil">
                     Aerofoil Dat: <input type="file" name="datFile" id="datFile"/><button type="submit" id="uploadButton">Upload</button>
                 </form>
             </div>
