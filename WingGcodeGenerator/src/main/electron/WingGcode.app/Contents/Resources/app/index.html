@@ -16,29 +16,65 @@ Copyright (C) 2018 Peter Withers
             }, false);
             navigator.mediaDevices.getUserMedia({video: true}).then(function (stream) {
                 document.getElementById('camera').src = URL.createObjectURL(stream);
-            }).catch(function () {                
+            }).catch(function () {
             });
+
+            function webcamListError(error) {
+                console.log("webcamListError: ", error);
+            }
+
+            function populateWebcamList(deviceInfos) {
+                var videoSource = document.getElementById('videoSource');
+                for (var index = 0; index < deviceInfos.length; index++) {
+                    var deviceInfo = deviceInfos[index];
+                    if (deviceInfo.kind === "videoinput") {
+                        var option = document.createElement("option");
+                        option.value = deviceInfo.deviceId;
+                        option.text = deviceInfo.label;
+                        videoSource.appendChild(option);
+                    } else {
+                        console.log("Some other kind of source/device: ", deviceInfo);
+                    }
+                }
+            }
+            navigator.mediaDevices.enumerateDevices().then(populateWebcamList).catch(webcamListError);
         </script>
     </head>
     <body>
-        <table>
-            <tr>
-                <td>
-                    <iframe id="remoteFrame" style="width:50vw;height:100vh;" src="https://winggcode.bambooradical.com/LaserTestGcode"></iframe>
-                </td>
-                <td>
-                    <video style="width:50vw;" id="camera" autoplay> </video>
-                    <div id="porterror"></div>
-                    <select id="portlist"></select>
-                    <textarea style="width:50vw;" id="gcodeArea"></textarea><br/>
-                    <button id="sendButton">Send GCODE</button><br/>
-                    electron <script>document.write(process.versions.electron)</script>,
-                    chromium <script>document.write(process.versions.chrome)</script>,
-                    node <script>document.write(process.versions.node)</script>,
-                    serialport <script>document.write(require('serialport/package').version)</script>
-                </td>
-            </tr>
-        </table>
+        <iframe id="remoteFrame" style="border:none;position:absolute;top:0;left:0;width:50vw;height:100vh;" src="https://winggcode.bambooradical.com/LaserTestGcode"></iframe>
+        <div style="position:absolute;top:0;right:0;width:50vw;height:100vh;">
+            <video style="width:50vw;" id="camera" autoplay> </video>
+            <div id="porterror"></div>
+            <select id="portlist"></select>
+            <select id="videoSource"></select>
+            <textarea style="width:48vw; height:50vh;" id="gcodeArea"></textarea><br/>
+            <button id="sendButton">Send GCODE</button>
+            <button id="cancelButton">Cancel</button>
+            <br/>
+            <br/>
+            <table>
+                <tr>
+                    <td><button style="width:100%;" id="homeButton">Home</button></td>
+                    <td><button style="width:100%;" id="upButton">Up</button></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><button style="width:100%;" id="leftButton">Left</button></td>
+                    <td><button style="width:100%;" id="zeroButton">Zero</button></td>
+                    <td><button style="width:100%;" id="rightButton">Right</button></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button style="width:100%;" id="downButton">Down</button></td>
+                    <td></td>
+                </tr>
+            </table>
+
+            electron <script>document.write(process.versions.electron)</script>,
+            chromium <script>document.write(process.versions.chrome)</script>,
+            node <script>document.write(process.versions.node)</script>,
+            serialport <script>document.write(require('serialport/package').version)</script>
+        </div>
         <script>
             require('./serialconnector.js')
         </script>
