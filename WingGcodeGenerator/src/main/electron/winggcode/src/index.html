@@ -9,15 +9,16 @@ Copyright (C) 2018 Peter Withers
 -->
 <html>
     <head>
+        <meta charset="utf-8">
         <title>WingGcode</title>
         <script>
             window.addEventListener("message", function (event) {
                 document.getElementById("gcodeArea").value = event.data;
             }, false);
-            navigator.mediaDevices.getUserMedia({video: true}).then(function (stream) {
-                document.getElementById('camera').src = URL.createObjectURL(stream);
-            }).catch(function () {
-            });
+//            navigator.mediaDevices.getUserMedia({video: true}).then(function (stream) {
+//                document.getElementById('camera').src = URL.createObjectURL(stream);
+//            }).catch(function () {
+//            });
 
             function webcamListError(error) {
                 console.log("webcamListError: ", error);
@@ -36,11 +37,15 @@ Copyright (C) 2018 Peter Withers
                         console.log("Some other kind of source/device: ", deviceInfo);
                     }
                 }
+                videoSource.addEventListener("change", function () {
+                    var devId = videoSource.options[videoSource.selectedIndex].value;
+                    navigator.mediaDevices.getUserMedia({video: {deviceId: devId}}).then(function (stream) {
+                        document.getElementById('camera').src = URL.createObjectURL(stream);
+                    }).catch(function () {
+                    });
+                });
             }
             navigator.mediaDevices.enumerateDevices().then(populateWebcamList).catch(webcamListError);
-            document.getElementById("videoSource").addEventListener("change", function () {
-
-            }
 
         </script>
     </head>
@@ -50,8 +55,8 @@ Copyright (C) 2018 Peter Withers
             <video style="width:50vw;" id="camera" autoplay> </video>
             <div id="porterror"></div>
             <select id="portlist"></select>
-            <select id="videoSource"></select>
-            <textarea style="width:48vw; height:50vh;" id="gcodeArea"></textarea><br/>
+            <select id="videoSource"><option></option></select>
+            <textarea style="width:48vw;" id="gcodeArea"></textarea><br/>
             <button id="sendButton">Send GCODE</button>
             <button id="cancelButton">Cancel</button>
             <br/>
