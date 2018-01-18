@@ -8,7 +8,7 @@
  */
 
 const serialport = require('serialport')
-
+var port;
 serialport.list((err, ports) => {
     if (err) {
         document.getElementById('porterror').textContent = err.message;
@@ -27,6 +27,25 @@ serialport.list((err, ports) => {
         option.text = port.comName;
         portSelect.add(option);
     });
+
+    document.getElementById("portlist").addEventListener("change", function () {
+        var portSelect = document.getElementById("portlist");
+        var portName = portSelect.options[portSelect.selectedIndex].value;
+        document.getElementById("porterror").textContent = "connecting: " + portName
+        cancelRequest = true;
+        port = new serialport(portName, {
+            baudRate: 115200
+        }, function (err) {
+            if (err) {
+                document.getElementById("porterror").textContent = err.message;
+                return;
+            } else {
+                document.getElementById("porterror").textContent = "ready";
+                return;
+            }
+        });
+    });
+
     document.getElementById("sendButton").onclick = sendGcode;
     document.getElementById("cancelButton").onclick = function () {
         cancelRequest = true;
@@ -67,16 +86,6 @@ function sendGcode() {
     cancelRequest = false;
     if (!sendInProgress) {
         sendInProgress = true;
-        var portSelect = document.getElementById("portlist");
-        var portName = portSelect.options[portSelect.selectedIndex].value;
-        var port = new serialport(portName, function (err) {
-            if (err) {
-                document.getElementById("porterror").textContent = err.message;
-                sendInProgress = false;
-                cancelRequest = false;
-                return;
-            }
-        });
         var gcodeLines = document.getElementById("gcodeArea").value.split("\n");
         var gcodeTimerCallback = function () {
             if (cancelRequest) {
