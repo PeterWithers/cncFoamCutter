@@ -95,6 +95,11 @@ function jogRequest(xDist, yDist) {
             + "G0 X" + xDist + " Y" + yDist + "\n" // linear move
     sendGcode();
 }
+
+function messagePreview(gcodeString) {
+    document.getElementById("remoteFrame").contentWindow.postMessage(gcodeString, "*");
+}
+
 var sendInProgress = false;
 var cancelRequest = false;
 function sendGcode() {
@@ -109,6 +114,7 @@ function sendGcode() {
             } else {
                 var lineToSend = gcodeLines.shift();
                 if (gcodeLines.length > 0) {
+                    messagePreview(lineToSend);
                     port.write(lineToSend + "\n", function (err) {
                         if (err) {
                             document.getElementById('porterror').textContent = err.message;
