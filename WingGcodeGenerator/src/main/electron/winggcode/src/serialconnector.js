@@ -14,7 +14,7 @@ serialport.list((err, ports) => {
         document.getElementById('porterror').textContent = err.message;
         return;
     } else {
-        document.getElementById('porterror').textContent = "";
+        document.getElementById('porterror').textContent = "Found " + ports.length + " serial ports";
     }
 
     if (ports.length === 0) {
@@ -29,21 +29,36 @@ serialport.list((err, ports) => {
     });
 
     document.getElementById("portlist").addEventListener("change", function () {
+        document.getElementById("portlist").disabled = true;
+        if (port && port.isOpen) {
+            port.close();
+        }
         var portSelect = document.getElementById("portlist");
         var portName = portSelect.options[portSelect.selectedIndex].value;
-        document.getElementById("porterror").textContent = "connecting: " + portName
-        cancelRequest = true;
-        port = new serialport(portName, {
-            baudRate: 115200
-        }, function (err) {
-            if (err) {
-                document.getElementById("porterror").textContent = err.message;
-                return;
-            } else {
-                document.getElementById("porterror").textContent = "ready";
-                return;
-            }
-        });
+        if ("<serial port off>" === portName) {
+            document.getElementById("portlist").disabled = false;
+            document.getElementById("porterror").textContent = "disconnected";
+        } else {
+            document.getElementById("porterror").textContent = "connecting: " + portName;
+            cancelRequest = true;
+            port = new serialport(portName, {
+                baudRate: 115200,
+                disconnectedCallback: function () {
+                    document.getElementById("porterror").textContent = "disconnected";
+                    document.getElementById("portlist").disabled = false;
+                }
+            }, function (err) {
+                if (err) {
+                    document.getElementById("porterror").textContent = err.message;
+                    document.getElementById("portlist").disabled = false;
+                    return;
+                } else {
+                    document.getElementById("porterror").textContent = "ready";
+                    document.getElementById("portlist").disabled = false;
+                    return;
+                }
+            });
+        }
     });
 
     document.getElementById("sendButton").onclick = sendGcode;
@@ -88,7 +103,7 @@ function sendGcode() {
         sendInProgress = true;
         var gcodeLines = document.getElementById("gcodeArea").value.split("\n");
         var gcodeTimerCallback = function () {
-            if (cancelRequest) {
+            if (!port || !port.isOpen || cancelRequest) {
                 sendInProgress = false;
                 cancelRequest = false;
             } else {

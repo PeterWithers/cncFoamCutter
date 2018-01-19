@@ -39,10 +39,14 @@ Copyright (C) 2018 Peter Withers
                 }
                 videoSource.addEventListener("change", function () {
                     var devId = videoSource.options[videoSource.selectedIndex].value;
-                    navigator.mediaDevices.getUserMedia({video: {deviceId: devId}}).then(function (stream) {
-                        document.getElementById('camera').src = URL.createObjectURL(stream);
-                    }).catch(function () {
-                    });
+                    if ("<webcam off>" === devId) {
+                        document.getElementById('camera').src = "";
+                    } else {
+                        navigator.mediaDevices.getUserMedia({video: {deviceId: devId}}).then(function (stream) {
+                            document.getElementById('camera').src = URL.createObjectURL(stream);
+                        }).catch(function () {
+                        });
+                    }
                 });
             }
             navigator.mediaDevices.enumerateDevices().then(populateWebcamList).catch(webcamListError);
@@ -50,22 +54,21 @@ Copyright (C) 2018 Peter Withers
         </script>
     </head>
     <body>
-        <iframe id="remoteFrame" style="border:none;position:absolute;top:0;left:0;width:50vw;height:100vh;" src="https://winggcode.bambooradical.com/LaserTestGcode"></iframe>
+        <iframe id="remoteFrame" style="border:none;position:absolute;top:0;left:0;width:50vw;height:100vh;" src="https://winggcode.bambooradical.com/LaserTestGcode?minimal=true"></iframe>
         <div style="position:absolute;top:0;right:0;width:50vw;height:100vh;">
             <video style="width:50vw;" id="camera" autoplay> </video>
+            <select id="videoSource"><option>&lt;webcam off&gt;</option></select>
+            <select id="portlist"><option>&lt;serial port off&gt;</option></select>
             <div id="porterror"></div>
-            <select id="portlist"></select>
-            <select id="videoSource"><option></option></select>
-            <textarea style="width:48vw;" id="gcodeArea"></textarea><br/>
-            <button id="sendButton">Send GCODE</button>
-            <button id="cancelButton">Cancel</button>
+            <textarea style="width:48vw;height:25vh;" id="gcodeArea"></textarea><br/><br/>
             <br/>
-            <br/>
-            <table>
+            <table style="bottom: 0px; position: inherit; background-color: black; width: 100%;">
+                <tr><td></td></tr>
                 <tr>
                     <td><button style="width:100%;" id="homeButton">Home</button></td>
                     <td><button style="width:100%;" id="upButton">Up</button></td>
                     <td></td>
+                    <td><button id="sendButton">Send GCODE</button></td>
                 </tr>
                 <tr>
                     <td><button style="width:100%;" id="leftButton">Left</button></td>
@@ -76,6 +79,7 @@ Copyright (C) 2018 Peter Withers
                     <td></td>
                     <td><button style="width:100%;" id="downButton">Down</button></td>
                     <td></td>
+                    <td><button id="cancelButton">Cancel</button></td>
                 </tr>
             </table>
 
