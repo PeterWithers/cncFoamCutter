@@ -7,9 +7,12 @@
  * @author <peter-gthb@bambooradical.com>
  */
 
-const serialport = require('serialport')
+//const SerialPort = require('serialport')
+const SerialPort = require('serialport/test');
+const MockBinding = SerialPort.Binding;
+MockBinding.createPort('/dev/MockSerialPort', {echo: true, record: true});
 var port;
-serialport.list((err, ports) => {
+SerialPort.list((err, ports) => {
     if (err) {
         document.getElementById('porterror').textContent = err.message;
         return;
@@ -41,7 +44,7 @@ serialport.list((err, ports) => {
         } else {
             document.getElementById("porterror").textContent = "connecting: " + portName;
             cancelRequest = true;
-            port = new serialport(portName, {
+            port = new SerialPort(portName, {
                 baudRate: 115200,
                 disconnectedCallback: function () {
                     document.getElementById("porterror").textContent = "disconnected";
@@ -57,6 +60,9 @@ serialport.list((err, ports) => {
                     document.getElementById("portlist").disabled = false;
                     return;
                 }
+            });
+            port.on('data', function (data) {
+                document.getElementById("serialData").value += data;
             });
         }
     });
@@ -122,9 +128,11 @@ function sendGcode() {
                             cancelRequest = false;
                             return;
                         }
-                        document.getElementById('porterror').textContent = "";
-                        document.getElementById("gcodeArea").value = gcodeLines.join("\n");
-                        setTimeout(gcodeTimerCallback, 100);
+                        port.drain(function () {
+                            document.getElementById('porterror').textContent = "";
+                            document.getElementById("gcodeArea").value = gcodeLines.join("\n");
+                            setTimeout(gcodeTimerCallback, 10);
+                        });
                     });
                 } else {
                     sendInProgress = false;
