@@ -162,7 +162,7 @@ public class LaserTestGcodeData {
                 double minX = xPos;
                 for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
                     double speed = minSpeed + (yPos * (maxSpeed - minSpeed) / (gridSize / lineSteps));
-                    stringBuilderInner.append(String.format("G0 X%.6f Y%.6f F%d", xPos, yPos, flySpeed)); // move
+                    stringBuilderInner.append(String.format("G0 X%.3f Y%.3f F%d", xPos, yPos, flySpeed)); // move
                     stringBuilderInner.append(newLine);
                     stringBuilderInner.append("G4 P0"); // dwell
                     stringBuilderInner.append(newLine);
@@ -175,7 +175,7 @@ public class LaserTestGcodeData {
                         minY = (minY < transformedPoints[1]) ? minY : transformedPoints[1];
                         maxX = (maxX > transformedPoints[0]) ? maxX : transformedPoints[0];
                         maxY = (maxY > transformedPoints[1]) ? maxY : transformedPoints[1];
-                        stringBuilderInner.append(String.format("G1 X%.6f Y%.6f F%.6f", transformedPoints[0], transformedPoints[1], speed));
+                        stringBuilderInner.append(String.format("G1 X%.3f Y%.3f F%d", transformedPoints[0], transformedPoints[1], (int) speed));
                         stringBuilderInner.append(newLine);
                     }
                     yPos += maxY - minY;
@@ -188,15 +188,15 @@ public class LaserTestGcodeData {
             }
         }
 //        stringBuilderOuter.append("# fly around perimeter");
-        stringBuilderOuter.append(String.format("G0 X%.6f Y%.6f F%d", minAreaX, minAreaY, flySpeed)); // fly around perimeter
+        stringBuilderOuter.append(String.format("G0 X%.3f Y%.3f F%d", minAreaX, minAreaY, flySpeed)); // fly around perimeter
         stringBuilderOuter.append(newLine);
-        stringBuilderOuter.append(String.format("G0 X%.6f Y%.6f F%d", minAreaX, maxAreaY, flySpeed)); // fly around perimeter
+        stringBuilderOuter.append(String.format("G0 X%.3f Y%.3f F%d", minAreaX, maxAreaY, flySpeed)); // fly around perimeter
         stringBuilderOuter.append(newLine);
-        stringBuilderOuter.append(String.format("G0 X%.6f Y%.6f F%d", maxAreaX, maxAreaY, flySpeed)); // fly around perimeter
+        stringBuilderOuter.append(String.format("G0 X%.3f Y%.3f F%d", maxAreaX, maxAreaY, flySpeed)); // fly around perimeter
         stringBuilderOuter.append(newLine);
-        stringBuilderOuter.append(String.format("G0 X%.6f Y%.6f F%d", maxAreaX, minAreaY, flySpeed)); // fly around perimeter
+        stringBuilderOuter.append(String.format("G0 X%.3f Y%.3f F%d", maxAreaX, minAreaY, flySpeed)); // fly around perimeter
         stringBuilderOuter.append(newLine);
-        stringBuilderOuter.append(String.format("G0 X%.6f Y%.6f F%d", minAreaX, minAreaY, flySpeed)); // fly around perimeter
+        stringBuilderOuter.append(String.format("G0 X%.3f Y%.3f F%d", minAreaX, minAreaY, flySpeed)); // fly around perimeter
         stringBuilderOuter.append(newLine);
         stringBuilderOuter.append("G4 P0"); // dwell
         stringBuilderOuter.append(newLine);
