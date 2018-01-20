@@ -21,42 +21,44 @@ Copyright (C) 2017 Peter Withers
         <div th:fragment="propEditor">
             <div th:style="'display: ' + ${(minimal)?'none':'block'} + ';'" id="editorForm">
                 <form style="display: table;" method="get" action="#" th:action="@{/LaserTestGcode}" th:object="${laserTestGcodeData}">
-                    Aerofoil&nbsp;
-                    <select id="rootAerofoilId" name="aerofoilData">
-                        <option value="-1">test pattern</option>
-                        <option th:each="aerofoil : ${aerofoilList}" 
-                                th:value="${aerofoil.getId()}" 
-                                th:text="${aerofoil.getName()}"
-                                th:selected="${laserTestGcodeData.aerofoilData != null and aerofoil.getId() == laserTestGcodeData.aerofoilData.getId()}"></option>
-                    </select>
                     <div style="display: table-row;">
-                        <span style="display: table-cell;"> Chord&nbsp;mm</span>
+                        <span style="display: table-cell;">Aerofoil</span>
+                        <select id="rootAerofoilId" name="aerofoilData">
+                            <option value="-1">test pattern</option>
+                            <option th:each="aerofoil : ${aerofoilList}" 
+                                    th:value="${aerofoil.getId()}" 
+                                    th:text="${aerofoil.getName()}"
+                                    th:selected="${laserTestGcodeData.aerofoilData != null and aerofoil.getId() == laserTestGcodeData.aerofoilData.getId()}"></option>
+                        </select>
+                    </div>
+                    <div style="display: table-row;">
+                        <span style="display: table-cell;">Chord&nbsp;mm</span>
                         <input style="display: table-cell;" type="number" th:field="*{chordLength}" />
                         todo: add kerf parameter
                     </div>
                     <br/>
                     <div style="display: table-row;">
-                        <span style="display: table-cell;"> Grid&nbsp;Size</span>
+                        <span style="display: table-cell;">Grid&nbsp;Size</span>
                         <input style="display: table-cell;" type="number" th:field="*{gridSize}" />
                     </div>
                     <div style="display: table-row;">
-                        <span style="display: table-cell;"> Line&nbsp;Spacing</span>
+                        <span style="display: table-cell;">Line&nbsp;Spacing</span>
                         <input style="display: table-cell;" type="number" th:field="*{lineSpacing}" />
                     </div>
                     <div style="display: table-row;">
-                        <span style="display: table-cell;"> Line&nbsp;Steps</span>
+                        <span style="display: table-cell;">Line&nbsp;Steps</span>
                         <input style="display: table-cell;" type="number" step="any" th:field="*{lineSteps}" />
                     </div>
                     <div style="display: table-row;">
-                        <span style="display: table-cell;"> Line&nbsp;Zigzag</span>
+                        <span style="display: table-cell;">Line&nbsp;Zigzag</span>
                         <input style="display: table-cell;" type="number" step="any" th:field="*{lineZigzag}" />
                     </div><br/>
                     <div style="display: table-row;">
-                        <span style="display: table-cell;"> Fly&nbsp;Speed</span>
+                        <span style="display: table-cell;">Fly&nbsp;Speed</span>
                         <input style="display: table-cell;" type="number" th:field="*{flySpeed}" />
                     </div><br/>
                     <div style="display: table-row;">
-                        <span style="display: table-cell;"> Minimum&nbsp;Power</span>
+                        <span style="display: table-cell;">Minimum&nbsp;Power</span>
                         <input style="display: table-cell;" type="number" th:field="*{minPower}" />
                     </div>
                     <div style="display: table-row;">
@@ -64,14 +66,14 @@ Copyright (C) 2017 Peter Withers
                         <input style="display: table-cell;" type="number" th:field="*{maxPower}" />
                     </div><br/>
                     <div style="display: table-row;">
-                        <span style="display: table-cell;"> Minimum&nbsp;Speed</span>
+                        <span style="display: table-cell;">Minimum&nbsp;Speed</span>
                         <input style="display: table-cell;" type="number" th:field="*{minSpeed}" />
                     </div>
-                    <div style="display: table-row;"><span style="display: table-cell;"> Maximum&nbsp;Speed</span>
+                    <div style="display: table-row;"><span style="display: table-cell;">Maximum&nbsp;Speed</span>
                         <input style="display: table-cell;" type="number" th:field="*{maxSpeed}" />
                     </div><br/>
                     <input type="hidden" name="minimal" th:value="${minimal}" />
-                    <button type="submit" id="saveButton" >Update</button>
+                    <button type="submit" id="saveButton">Update</button>
                 </form>
             </div>            
             <svg id="editSvgPanel" th:attr="viewBox=${'-5 -55 '+(laserTestGcodeData.gridSize+laserTestGcodeData.chordLength+30)+' '+(laserTestGcodeData.gridSize+laserTestGcodeData.chordLength+30)}">
