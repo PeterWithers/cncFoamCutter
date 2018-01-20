@@ -168,6 +168,7 @@ public class LaserTestGcodeData {
                     stringBuilderInner.append(newLine);
                     stringBuilderInner.append("M04 S").append(power); // turn on laser at power x
                     stringBuilderInner.append(newLine);
+                    yPos += aerofoilData.getBounds().getMaxY() * chordLength;
                     double maxY = yPos;
                     double minY = yPos;
                     for (double[] transformedPoints : aerofoilData.getTransformedPoints((int) xPos, (int) yPos, chordLength, 0, 0)) {
