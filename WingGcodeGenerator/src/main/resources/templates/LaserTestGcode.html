@@ -19,8 +19,8 @@ Copyright (C) 2017 Peter Withers
         <br/>
         <br/>
         <div th:fragment="propEditor">
-            <div id="editorForm">
-                <form method="get" action="#" th:action="@{/LaserTestGcode}" th:object="${laserTestGcodeData}">
+            <div th:style="'display: ' + ${(minimal)?'none':'block'} + ';'" id="editorForm">
+                <form style="display: table;" method="get" action="#" th:action="@{/LaserTestGcode}" th:object="${laserTestGcodeData}">
                     Aerofoil&nbsp;
                     <select id="rootAerofoilId" name="aerofoilData">
                         <option value="-1">test pattern</option>
@@ -28,16 +28,49 @@ Copyright (C) 2017 Peter Withers
                                 th:value="${aerofoil.getId()}" 
                                 th:text="${aerofoil.getName()}"
                                 th:selected="${laserTestGcodeData.aerofoilData != null and aerofoil.getId() == laserTestGcodeData.aerofoilData.getId()}"></option>
-                    </select>&nbsp;Chord&nbsp;mm&nbsp;<input type="number" th:field="*{chordLength}" />&nbsp;todo: add kerf parameter<br/><br/>
-                    Grid&nbsp;Size&nbsp;<input type="number" th:field="*{gridSize}" />
-                    Line&nbsp;Spacing&nbsp;<input type="number" th:field="*{lineSpacing}" />
-                    Line&nbsp;Steps&nbsp;<input type="number" step="any" th:field="*{lineSteps}" /><br/><br/>
-                    Line&nbsp;Zigzag&nbsp;<input type="number" step="any" th:field="*{lineZigzag}" /><br/><br/>
-                    Fly&nbsp;Speed&nbsp;<input type="number" th:field="*{flySpeed}" /><br/><br/>
-                    Minimum&nbsp;Power&nbsp;<input type="number" th:field="*{minPower}" />
-                    Maximum&nbsp;Power&nbsp;<input type="number" th:field="*{maxPower}" /><br/><br/>
-                    Minimum&nbsp;Speed&nbsp;<input type="number" th:field="*{minSpeed}" />
-                    Maximum&nbsp;Speed&nbsp;<input type="number" th:field="*{maxSpeed}" /><br/><br/>
+                    </select>
+                    <div style="display: table-row;">
+                        <span style="display: table-cell;"> Chord&nbsp;mm</span>
+                        <input style="display: table-cell;" type="number" th:field="*{chordLength}" />
+                        todo: add kerf parameter
+                    </div>
+                    <br/>
+                    <div style="display: table-row;">
+                        <span style="display: table-cell;"> Grid&nbsp;Size</span>
+                        <input style="display: table-cell;" type="number" th:field="*{gridSize}" />
+                    </div>
+                    <div style="display: table-row;">
+                        <span style="display: table-cell;"> Line&nbsp;Spacing</span>
+                        <input style="display: table-cell;" type="number" th:field="*{lineSpacing}" />
+                    </div>
+                    <div style="display: table-row;">
+                        <span style="display: table-cell;"> Line&nbsp;Steps</span>
+                        <input style="display: table-cell;" type="number" step="any" th:field="*{lineSteps}" />
+                    </div>
+                    <div style="display: table-row;">
+                        <span style="display: table-cell;"> Line&nbsp;Zigzag</span>
+                        <input style="display: table-cell;" type="number" step="any" th:field="*{lineZigzag}" />
+                    </div><br/>
+                    <div style="display: table-row;">
+                        <span style="display: table-cell;"> Fly&nbsp;Speed</span>
+                        <input style="display: table-cell;" type="number" th:field="*{flySpeed}" />
+                    </div><br/>
+                    <div style="display: table-row;">
+                        <span style="display: table-cell;"> Minimum&nbsp;Power</span>
+                        <input style="display: table-cell;" type="number" th:field="*{minPower}" />
+                    </div>
+                    <div style="display: table-row;">
+                        <span style="display: table-cell;"> Maximum&nbsp;Power</span>
+                        <input style="display: table-cell;" type="number" th:field="*{maxPower}" />
+                    </div><br/>
+                    <div style="display: table-row;">
+                        <span style="display: table-cell;"> Minimum&nbsp;Speed</span>
+                        <input style="display: table-cell;" type="number" th:field="*{minSpeed}" />
+                    </div>
+                    <div style="display: table-row;"><span style="display: table-cell;"> Maximum&nbsp;Speed</span>
+                        <input style="display: table-cell;" type="number" th:field="*{maxSpeed}" />
+                    </div><br/>
+                    <input type="hidden" name="minimal" th:value="${minimal}" />
                     <button type="submit" id="saveButton" >Update</button>
                 </form>
             </div>            
@@ -62,12 +95,16 @@ Copyright (C) 2017 Peter Withers
                 </g>
             </svg>   
             <br/>
-            <pre id="gcode" th:text="${laserTestGcodeData.getGcode()}"></pre>
+            <pre id="gcode" th:text="${(minimal)?'':laserTestGcodeData.getGcode()}"></pre>
         </div>
         <script th:inline="javascript">
             /*<![CDATA[*/
-            var gcodeString = /*[[${laserTestGcodeData.getGcode()}]]*/ '#no data';
-            parent.postMessage(gcodeString, "*");
+            function messageGcode() {
+                var gcodeString = /*[[${laserTestGcodeData.getGcode()}]]*/ '#no data';
+                parent.postMessage(gcodeString, "*");
+            }
+            parent.postMessage("", "*");
+//            messageGcode();
             window.addEventListener("message", function (event) {
                 event.data.split(" ").forEach(function (codePart) {
                     if (codePart.startsWith("Y")) {
@@ -85,14 +122,24 @@ Copyright (C) 2017 Peter Withers
                 });
                 document.getElementById("gcode").innerHTML = event.data;
             }, false);
+            function showEditor() {
+                parent.postMessage("", "*");
+                $("#editorForm").show();
+                $("#menuMinimal").hide();
+            }
             /*]]>*/
         </script>
-        <div id="menu" style="position: fixed; top: 5px;">
+        <div th:style="'display: ' + ${(minimal)?'none':'fixed'} + ';position: fixed; top: 5px;'" id="menu">
             <a href='#editSvgPanel'>Preview</a>
             <a href='#gcode'>View GCODE</a>
             <a th:href="${'laserGcode?' + #httpServletRequest.queryString}">Download GCODE</a>
             <a href="WingDesignView">WingDesignView</a>
             <a href="AerofoilListing">AerofoilListing</a>
+        </div>
+        <div th:style="'display: ' + ${(minimal)?'fixed':'none'} + ';position: fixed; top: 5px;'" id="menuMinimal" class="menu">
+            <a href='javascript:messageGcode()'>Load GCODE</a>
+            <a id='editButton' onclick="showEditor()">Edit</a>
+            <a th:href="'AerofoilListing?' + ${#httpServletRequest.getQueryString()}">AerofoilListing</a>
         </div>
     </body>
 </html>
