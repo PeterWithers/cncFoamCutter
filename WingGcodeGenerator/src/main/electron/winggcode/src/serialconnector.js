@@ -118,8 +118,8 @@ function sendGcode() {
                 sendInProgress = false;
                 cancelRequest = false;
             } else {
-                var lineToSend = gcodeLines.shift();
                 if (gcodeLines.length > 0) {
+                    var lineToSend = gcodeLines.shift();
                     messagePreview(lineToSend);
                     port.write(lineToSend + "\n", function (err) {
                         if (err) {
