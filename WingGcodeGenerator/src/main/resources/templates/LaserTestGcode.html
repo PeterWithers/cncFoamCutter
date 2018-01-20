@@ -90,8 +90,9 @@ Copyright (C) 2017 Peter Withers
                     <text y="-5" th:attr="x=${laserTestGcodeData.gridSize-10}" fill="grey" th:text="${'S'+laserTestGcodeData.maxPower}" style="font-size : 10px;">maxPower</text>
                     <text x="-10" y="0" fill="grey" th:text="${'F'+laserTestGcodeData.minSpeed}" transform="rotate(-90 0,5)" style="font-size:10px;text-anchor:'end'">minSpeed</text>
                     <text x="10" th:attr="y=${laserTestGcodeData.gridSize+10},transform=${'rotate(-90 -0,'+(laserTestGcodeData.gridSize+15)+')'}" fill="grey" th:text="${'F'+laserTestGcodeData.maxSpeed}" style="font-size:10px;text-anchor:'end'">maxSpeed</text>
-                    <line id="laserY" x1="-20" y1="-30" y2="-30" th:attr="x2=${laserTestGcodeData.gridSize+laserTestGcodeData.chordLength}" style="stroke:red;stroke-width:1" />
-                    <line id="laserX" y1="-20" x1="-30" x2="-30" th:attr="y2=${laserTestGcodeData.gridSize+laserTestGcodeData.chordLength}" style="stroke:red;stroke-width:1" />
+                    <path id="laserHistory" style="stroke:cyan;stroke-width:0.5;fill:none;"/>
+                    <line id="laserY" x1="-20" y1="-30" y2="-30" th:attr="x2=${laserTestGcodeData.gridSize+laserTestGcodeData.chordLength}" style="stroke:red;stroke-width:1;" />
+                    <line id="laserX" y1="-20" x1="-30" x2="-30" th:attr="y2=${laserTestGcodeData.gridSize+laserTestGcodeData.chordLength}" style="stroke:red;stroke-width:1;fill:none;" />
                 </g>
             </svg>   
             <br/>
@@ -100,26 +101,44 @@ Copyright (C) 2017 Peter Withers
         <script th:inline="javascript">
             /*<![CDATA[*/
             function messageGcode() {
+                laserPathHistory = "M";
+                document.getElementById("laserHistory").setAttribute("d", laserPathHistory);
                 var gcodeString = /*[[${laserTestGcodeData.getGcode()}]]*/ '#no data';
                 parent.postMessage(gcodeString, "*");
             }
             parent.postMessage("", "*");
 //            messageGcode();
+            var xPos = 0;
+            var yPos = 0;
+            var laserPathHistory = "M";
+            var absoluteMode = true;
             window.addEventListener("message", function (event) {
                 event.data.split(" ").forEach(function (codePart) {
+                    if (codePart.startsWith("G90")) {
+                        absoluteMode = true;
+                    }
+                    if (codePart.startsWith("G91")) {
+                        absoluteMode = false;
+                    }
+                    if (codePart.startsWith("G92")) {
+                        xPos = 0;
+                        yPos = 0;
+                    }
                     if (codePart.startsWith("Y")) {
-                        var yPos = codePart.substring(1);
+                        yPos = (absoluteMode) ? codePart.substring(1) : parseFloat(yPos) + parseFloat(codePart.substring(1));
                         var laserY = document.getElementById("laserY");
                         laserY.setAttribute("y1", yPos);
                         laserY.setAttribute("y2", yPos);
                     }
                     if (codePart.startsWith("X")) {
-                        var xPos = codePart.substring(1);
+                        xPos = (absoluteMode) ? codePart.substring(1) : parseFloat(xPos) + parseFloat(codePart.substring(1));
                         var laserX = document.getElementById("laserX");
                         laserX.setAttribute("x1", xPos);
                         laserX.setAttribute("x2", xPos);
                     }
                 });
+                laserPathHistory += xPos + "," + yPos + " ";
+                document.getElementById("laserHistory").setAttribute("d", laserPathHistory);
                 document.getElementById("gcode").innerHTML = event.data;
             }, false);
             function showEditor() {
