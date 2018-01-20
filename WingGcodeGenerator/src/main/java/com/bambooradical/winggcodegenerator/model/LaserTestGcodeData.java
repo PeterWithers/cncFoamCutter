@@ -162,13 +162,13 @@ public class LaserTestGcodeData {
                 double minX = xPos;
                 for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
                     double speed = minSpeed + (yPos * (maxSpeed - minSpeed) / (gridSize / lineSteps));
+                    yPos += aerofoilData.getBounds().getMaxY() * chordLength;
                     stringBuilderInner.append(String.format("G0 X%.3f Y%.3f F%d", xPos, yPos, flySpeed)); // move
                     stringBuilderInner.append(newLine);
                     stringBuilderInner.append("G4 P0"); // dwell
                     stringBuilderInner.append(newLine);
                     stringBuilderInner.append("M04 S").append(power); // turn on laser at power x
                     stringBuilderInner.append(newLine);
-                    yPos += aerofoilData.getBounds().getMaxY() * chordLength;
                     double maxY = yPos;
                     double minY = yPos;
                     for (double[] transformedPoints : aerofoilData.getTransformedPoints((int) xPos, (int) yPos, chordLength, 0, 0)) {
