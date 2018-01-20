@@ -39,6 +39,7 @@ public class LaserTestGcode {
             Model model,
             @ModelAttribute LaserTestGcodeData laserTestGcodeData,
             @RequestParam(value = "aerofoilData", required = false, defaultValue = "-1") final long aerofoilId,
+            @RequestParam(value = "minimal", required = false, defaultValue = "false") final boolean minimal,
             @RequestHeader("Accept-Language") String acceptLang,
             @RequestHeader("User-Agent") String userAgent,
             HttpServletRequest request) {
@@ -47,6 +48,7 @@ public class LaserTestGcode {
             laserTestGcodeData.setAerofoilData(aerofoilData);
         }
         model.addAttribute("aerofoilList", aerofoilRepository.findAll());
+        model.addAttribute("minimal", minimal);
         final String remoteAddr = request.getRemoteAddr();
         final String requestURI = request.getRequestURI();
         final Date accessDate = new java.util.Date();
