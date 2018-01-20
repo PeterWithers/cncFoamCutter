@@ -51,14 +51,15 @@ Copyright (C) 2018 Peter Withers
                 </td>
                 <td>
                     <div id="menu">
-                        <a th:href="${'AerofoilEdit?aerofoilData='+aerofoil.getId()}">Edit</a>
+                        <a th:href="${'AerofoilEdit?aerofoilData=' + aerofoil.getId() + '&amp;' + #httpServletRequest.getQueryString()}">Edit</a>
                     </div>
                 </td>
             </tr>
         </table>
         <div id="menu" style="position: fixed; top: 5px;">
-            <a href="WingDesignView">WingDesignView</a>
-            <a href="LaserTestGcode">LaserTestGcode</a>
+            <a th:if="${#httpServletRequest.getParameter('minimal') == null}" th:href="'WingDesignView?' + ${#httpServletRequest.getQueryString()}">WingDesignView</a>
+            <a th:if="${#httpServletRequest.getParameter('minimal') == null}" th:href="'LaserTestGcode?' + ${#httpServletRequest.getQueryString()}">LaserTestGcode</a>
+            <a th:if="${#httpServletRequest.getParameter('minimal') != null}" th:href="'LaserTestGcode?' + ${#httpServletRequest.getQueryString()}">Return to layout</a>
         </div>
     </body>
 </html>
