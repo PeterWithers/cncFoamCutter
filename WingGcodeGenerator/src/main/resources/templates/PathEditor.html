@@ -17,9 +17,9 @@ Copyright (C) 2015 Peter Withers
     </head>
     <body>
         <div id="menu">
-            <a href="WingDesignView">WingDesignView</a>
-            <a href="LaserTestGcode">LaserTestGcode</a>
-            <a href="AerofoilListing">Aerofoil Listing</a>
+            <a th:if="${#httpServletRequest.getParameter('minimal') == null}" th:href="'WingDesignView?' + ${#httpServletRequest.getQueryString()}"></a>
+            <a th:if="${#httpServletRequest.getParameter('minimal') == null}" th:href="'LaserTestGcode?' + ${#httpServletRequest.getQueryString()}"></a>
+            <a th:href="'AerofoilListing?' + ${#httpServletRequest.getQueryString()}">Aerofoil Listing</a>
         </div>
         <br/>
         <div th:fragment="pathEditor">
