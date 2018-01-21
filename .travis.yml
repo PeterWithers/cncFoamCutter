@@ -30,7 +30,9 @@ install:
 script:
 - cd WingGcodeGenerator/src/main/electron/winggcode
 - npm install
-- electron-forge make --platform=darwin --platform=win32 --platform=linux --arch=x64
+- electron-forge make --platform=linux
+- electron-forge make --platform=darwin
+- electron-forge make --platform=win32
 - pwd
 - ls out
 
