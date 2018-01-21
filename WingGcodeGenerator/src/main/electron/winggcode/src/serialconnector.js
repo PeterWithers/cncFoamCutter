@@ -7,10 +7,10 @@
  * @author <peter-gthb@bambooradical.com>
  */
 
-//const SerialPort = require('serialport')
-const SerialPort = require('serialport/test');
-const MockBinding = SerialPort.Binding;
-MockBinding.createPort('/dev/MockSerialPort', {echo: true, record: true});
+const SerialPort = require('serialport')
+//const SerialPort = require('serialport/test');
+//const MockBinding = SerialPort.Binding;
+//MockBinding.createPort('/dev/MockSerialPort', {echo: true, record: true});
 var port;
 SerialPort.list((err, ports) => {
     if (err) {
@@ -131,7 +131,7 @@ function sendGcode() {
                         port.drain(function () {
                             document.getElementById('porterror').textContent = "";
                             document.getElementById("gcodeArea").value = gcodeLines.join("\n");
-                            setTimeout(gcodeTimerCallback, 10);
+                            gcodeTimerCallback();
                         });
                     });
                 } else {
