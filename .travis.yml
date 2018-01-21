@@ -39,6 +39,8 @@ script:
 - electron-forge make --platform=win32
 - pwd
 - ls out
+- ls out/*
+- find out *.zip
 
 deploy:
   provider: pages
