@@ -31,5 +31,15 @@ install:
 script:
 - cd WingGcodeGenerator/src/main/electron/winggcode
 - npm install serialport
+- npm install electron-compile
 - electron-forge make
 - ls out
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  keep-history: true
+  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+  local_dir: WingGcodeGenerator/src/main/electron/winggcode/out
+  on:
+    branch: master
