@@ -9,7 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "install": "electron-rebuild"
+    "install": "electron-rebuild",
     "lint": "eslint src --color"
   },
   "keywords": [],
