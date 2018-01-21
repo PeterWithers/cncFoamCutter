@@ -1,0 +1,61 @@
+{
+  "name": "winggcode",
+  "productName": "winggcode",
+  "version": "1.0.0",
+  "description": "A desktop application for laser cutting aerofoils.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "install": "electron-rebuild"
+    "lint": "eslint src --color"
+  },
+  "keywords": [],
+  "author": "Peter Withers",
+  "license": "",
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip"
+        ],
+        "linux": [
+          "deb",
+          "rpm"
+        ]
+      },
+      "electronPackagerConfig": {
+        "packageManager": "npm"
+      },
+      "electronWinstallerConfig": {
+        "name": "winggcode"
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {},
+      "github_repository": {
+        "owner": "",
+        "name": ""
+      },
+      "windowsStoreConfig": {
+        "packageName": "",
+        "name": "winggcode"
+      }
+    }
+  },
+  "dependencies": {
+    "electron-compile": "^6.4.2",
+    "electron-squirrel-startup": "^1.0.0",
+    "serialport": "^6.0.4"
+  },
+  "devDependencies": {
+    "electron-forge": "^4.2.0",
+    "electron-prebuilt-compile": "1.8.2-beta.3",
+    "eslint": "^3.19.0",
+    "eslint-plugin-import": "^2.8.0"
+  }
+}
