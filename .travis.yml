@@ -47,6 +47,6 @@ deploy:
   skip_cleanup: true
   keep-history: true
   github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
-  local_dir: WingGcodeGenerator/src/main/electron/winggcode/out/make
+  local_dir: out/make
   on:
     branch: master
