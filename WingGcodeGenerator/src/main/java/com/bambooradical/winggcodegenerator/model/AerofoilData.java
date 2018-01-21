@@ -14,7 +14,7 @@ import javax.persistence.Temporal;
 
 /**
  * @since Aug 17, 2015 9:59:18 PM (creation date)
- * @author Peter Withers <peter@bambooradical.com>
+ * @author Peter Withers <peter-gthb@bambooradical.com>
  */
 @Entity
 public class AerofoilData {
