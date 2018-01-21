@@ -3,6 +3,7 @@ node_js: "6"
 os:
 - linux
 - osx
+- win32
 dist: trusty
 osx_image: xcode8.3
 sudo: false
@@ -25,8 +26,10 @@ branches:
 install:
 - npm install
 - npm update
+- npm install electron-forge
 
 script:
 - cd WingGcodeGenerator/src/main/electron/winggcode
-- electron-forge make --platform=darwin --platform=win32
+- npm install serialport
+- electron-forge make
 - ls out
