@@ -1,0 +1,32 @@
+language: node_js
+node_js: "6"
+os:
+- linux
+- osx
+dist: trusty
+osx_image: xcode8.3
+sudo: false
+
+cache:
+  directories:
+  - node_modules
+  - $HOME/.cache/electron
+
+addons:
+  apt:
+    packages:
+    - fakeroot
+    - rpm
+
+branches:
+  only:
+  - master
+
+install:
+- npm install
+- npm update
+
+script:
+- cd WingGcodeGenerator/src/main/electron/winggcode
+- electron-forge make --platform=darwin --platform=win32
+- ls out
