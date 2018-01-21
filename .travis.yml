@@ -2,7 +2,7 @@ language: node_js
 node_js: "6"
 os:
 - linux
-#- osx
+- osx
 dist: trusty
 osx_image: xcode8.3
 sudo: false
@@ -34,9 +34,10 @@ install:
 script:
 - cd WingGcodeGenerator/src/main/electron/winggcode
 - npm install
-- electron-forge make --platform=linux
-- electron-forge make --platform=darwin
-- electron-forge make --platform=win32
+- electron-forge make
+#- electron-forge make --platform=linux
+#- electron-forge make --platform=darwin
+#- electron-forge make --platform=win32
 - pwd
 - ls out
 - ls out/*
