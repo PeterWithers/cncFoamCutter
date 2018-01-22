@@ -48,15 +48,16 @@
   },
   "dependencies": {
     "electron-compile": "^6.4.2",
+    "electron-prebuilt": "^1.4.13",
     "electron-squirrel-startup": "^1.0.0",
-    "require-rebuild": "^1.2.8",
-    "serialport": "^6.0.4"
+    "require-rebuild": "^1.2.8"
   },
   "devDependencies": {
     "electron-forge": "^4.2.0",
     "electron-prebuilt-compile": "1.8.2-beta.3",
     "electron-rebuild": "^1.7.3",
     "eslint": "^3.19.0",
-    "eslint-plugin-import": "^2.8.0"
+    "eslint-plugin-import": "^2.8.0",
+    "serialport": "^6.0.4"
   }
 }
