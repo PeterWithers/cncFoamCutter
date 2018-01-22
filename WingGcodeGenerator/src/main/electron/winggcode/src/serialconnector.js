@@ -124,7 +124,8 @@ function sendGcode() {
         sendInProgress = true;
         var gcodeLines = document.getElementById("gcodeArea").value.split("\n");
         var gcodeTimerCallback = function () {
-            if (!port || !port.isOpen || cancelRequest) {
+            var portActive = (mockSerial) ? true : (port && port.isOpen);
+            if (!portActive || cancelRequest) {
                 sendInProgress = false;
                 cancelRequest = false;
             } else {
