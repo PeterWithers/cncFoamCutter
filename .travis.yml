@@ -23,8 +23,8 @@ branches:
   - master
 
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get -qq install wine mono-devel -y
+#  - sudo apt-get -qq update
+#  - sudo apt-get -qq install wine mono-devel -y
   
 install:
 - npm install
