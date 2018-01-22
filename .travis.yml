@@ -33,6 +33,9 @@ install:
 
 script:
 - cd WingGcodeGenerator/src/main/electron/winggcode
+- buildVersion=$(git rev-list --count HEAD .); 
+- echo $buildVersion; 
+- sed -i -e "s/<buildVersion>/1.0.$buildVersion/" package.json
 - npm install
 #- electron-forge make
 - electron-forge make --platform=linux
