@@ -38,7 +38,8 @@ script:
 - sed -i -e "s/<buildVersion>/1.0.$buildVersion/" package.json
 - npm install
 #- electron-forge make
-- electron-forge make --platform=linux
+- electron-forge make --platform=linux --arch=x64
+- electron-forge make --platform=linux --arch=ia32
 - electron-forge make --platform=darwin
 - electron-forge make --platform=win32
 - pwd
