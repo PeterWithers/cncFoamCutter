@@ -1,7 +1,7 @@
 {
   "name": "winggcode",
   "productName": "winggcode",
-  "version": "1.0.0",
+  "version": "<buildVersion>",
   "description": "A desktop application for laser cutting aerofoils.",
   "main": "src/index.js",
   "scripts": {
@@ -54,6 +54,7 @@
   "devDependencies": {
     "electron-forge": "^4.2.0",
     "electron-prebuilt-compile": "1.8.2-beta.3",
+    "electron-rebuild": "^1.7.3",
     "eslint": "^3.19.0",
     "eslint-plugin-import": "^2.8.0"
   }
