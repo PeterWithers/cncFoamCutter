@@ -1,4 +1,4 @@
-//require('require-rebuild')();
+require('require-rebuild')();
 import { app, BrowserWindow } from 'electron';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
