@@ -7,6 +7,7 @@
  * @author <peter-gthb@bambooradical.com>
  */
 
+require('require-rebuild')();
 const SerialPort = require('serialport')
 //const SerialPort = require('serialport/test');
 //const MockBinding = SerialPort.Binding;
