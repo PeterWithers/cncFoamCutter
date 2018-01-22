@@ -31,8 +31,12 @@ SerialPort.list((err, ports) => {
         option.text = port.comName;
         portSelect.add(option);
     });
+    var option1 = document.createElement("option");
+    option1.text = "<mock serial>";
+    portSelect.add(option1);
 
     document.getElementById("portlist").addEventListener("change", function () {
+        mockSerial = false;
         document.getElementById("portlist").disabled = true;
         if (port && port.isOpen) {
             port.close();
@@ -42,6 +46,10 @@ SerialPort.list((err, ports) => {
         if ("<serial port off>" === portName) {
             document.getElementById("portlist").disabled = false;
             document.getElementById("porterror").textContent = "disconnected";
+        } else if ("<mock serial>" === portName) {
+            document.getElementById("portlist").disabled = false;
+            mockSerial = true;
+            document.getElementById("porterror").textContent = "mock serial";
         } else {
             document.getElementById("porterror").textContent = "connecting: " + portName;
             cancelRequest = true;
@@ -109,6 +117,7 @@ function messagePreview(gcodeString) {
 
 var sendInProgress = false;
 var cancelRequest = false;
+var mockSerial = false;
 function sendGcode() {
     cancelRequest = false;
     if (!sendInProgress) {
@@ -122,19 +131,25 @@ function sendGcode() {
                 if (gcodeLines.length > 0) {
                     var lineToSend = gcodeLines.shift();
                     messagePreview(lineToSend);
-                    port.write(lineToSend + "\n", function (err) {
-                        if (err) {
-                            document.getElementById('porterror').textContent = err.message;
-                            sendInProgress = false;
-                            cancelRequest = false;
-                            return;
-                        }
-                        port.drain(function () {
-                            document.getElementById('porterror').textContent = "";
-                            document.getElementById("gcodeArea").value = gcodeLines.join("\n");
-                            gcodeTimerCallback();
+                    if (mockSerial) {
+                        document.getElementById('porterror').textContent = "mock serial";
+                        document.getElementById("gcodeArea").value = gcodeLines.join("\n");
+                        setTimeout(gcodeTimerCallback, 10);
+                    } else {
+                        port.write(lineToSend + "\n", function (err) {
+                            if (err) {
+                                document.getElementById('porterror').textContent = err.message;
+                                sendInProgress = false;
+                                cancelRequest = false;
+                                return;
+                            }
+                            port.drain(function () {
+                                document.getElementById('porterror').textContent = "";
+                                document.getElementById("gcodeArea").value = gcodeLines.join("\n");
+                                gcodeTimerCallback();
+                            });
                         });
-                    });
+                    }
                 } else {
                     sendInProgress = false;
                     cancelRequest = false;
