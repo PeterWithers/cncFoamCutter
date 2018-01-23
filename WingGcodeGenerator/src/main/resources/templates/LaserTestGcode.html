@@ -95,8 +95,8 @@ Copyright (C) 2017 Peter Withers
                     </g>
                     <text x="0" th:attr="y=${laserTestGcodeData.getMaxAreaY()+10}" fill="grey" th:text="${'S'+laserTestGcodeData.minPower}" style="font-size : 10px;">minPower</text>
                     <text th:attr="x=${laserTestGcodeData.getMaxAreaX()-10},y=${laserTestGcodeData.getMaxAreaY()+10}" fill="grey" th:text="${'S'+laserTestGcodeData.maxPower}" style="font-size : 10px;">maxPower</text>
-                    <text x="-10" y="0" fill="grey" th:text="${'F'+laserTestGcodeData.minSpeed}" transform="rotate(-90 0,5)" style="font-size:10px;text-anchor:'end'">minSpeed</text>
-                    <text x="10" th:attr="y=${laserTestGcodeData.getMaxAreaY()+10},transform=${'rotate(-90 -0,'+(laserTestGcodeData.getMaxAreaY()+15)+')'}" fill="grey" th:text="${'F'+laserTestGcodeData.maxSpeed}" style="font-size:10px;text-anchor:'end'">maxSpeed</text>
+                    <text x="-10" y="0" fill="grey" th:text="${'F'+laserTestGcodeData.maxSpeed}" transform="rotate(-90 0,5)" style="font-size:10px;text-anchor:'end'">maxSpeed</text>
+                    <text x="10" th:attr="y=${laserTestGcodeData.getMaxAreaY()+10},transform=${'rotate(-90 -0,'+(laserTestGcodeData.getMaxAreaY()+15)+')'}" fill="grey" th:text="${'F'+laserTestGcodeData.minSpeed}" style="font-size:10px;text-anchor:'end'">minSpeed</text>
                 </g>
             </svg>   
             <br/>
@@ -114,6 +114,8 @@ Copyright (C) 2017 Peter Withers
 //            messageGcode();
             var xPos = 0;
             var yPos = 0;
+            var sVal = 0;
+            var fVal = 0;
             var laserPathHistory = "M";
             var absoluteMode = true;
             window.addEventListener("message", function (event) {
@@ -140,10 +142,21 @@ Copyright (C) 2017 Peter Withers
                         laserX.setAttribute("x1", xPos);
                         laserX.setAttribute("x2", xPos);
                     }
+                    if (codePart.startsWith("S")) {
+                        sVal = codePart.substring(1);
+                    }
+                    if (codePart.startsWith("F")) {
+                        fVal = codePart.substring(1);
+                    }
                 });
                 laserPathHistory += xPos + "," + yPos + " ";
                 document.getElementById("laserHistory").setAttribute("d", laserPathHistory);
-                document.getElementById("gcode").innerHTML = event.data;
+                document.getElementById("gcode").innerHTML = event.data + " : " +
+                        ((absoluteMode) ? "G90" : "G91") +
+                        " X" + xPos +
+                        " Y" + yPos +
+                        " S" + sVal +
+                        " F" + fVal;
             }, false);
             function showEditor() {
                 parent.postMessage("", "*");
