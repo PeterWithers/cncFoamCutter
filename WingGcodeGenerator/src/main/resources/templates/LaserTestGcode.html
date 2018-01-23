@@ -106,7 +106,7 @@ Copyright (C) 2017 Peter Withers
             /*<![CDATA[*/
             function messageGcode() {
                 laserPathHistory = "M";
-                document.getElementById("laserHistory").setAttribute("d", laserPathHistory);
+                document.getElementById("laserHistory").setAttribute("d", "");
                 var gcodeString = /*[[${laserTestGcodeData.getGcode()}]]*/ '#no data';
                 parent.postMessage(gcodeString, "*");
             }
