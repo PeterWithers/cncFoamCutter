@@ -87,10 +87,10 @@ SerialPort.list((err, ports) => {
         jogRequest(10, 0);
     };
     document.getElementById("upButton").onclick = function () {
-        jogRequest(0, -10);
+        jogRequest(0, 10);
     };
     document.getElementById("downButton").onclick = function () {
-        jogRequest(0, 10);
+        jogRequest(0, -10);
     };
     document.getElementById("homeButton").onclick = function () {
         document.getElementById("gcodeArea").value = "M05 S0 G90 G0 X0 Y0 Z0";
