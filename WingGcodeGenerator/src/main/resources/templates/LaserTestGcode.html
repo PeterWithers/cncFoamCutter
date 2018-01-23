@@ -151,12 +151,12 @@ Copyright (C) 2017 Peter Withers
                 });
                 laserPathHistory += xPos + "," + yPos + " ";
                 document.getElementById("laserHistory").setAttribute("d", laserPathHistory);
-                document.getElementById("gcode").innerHTML = event.data + " : " +
+                document.getElementById("gcode").innerHTML = event.data + "<br/>" +
                         ((absoluteMode) ? "G90" : "G91") +
-                        " X" + xPos +
-                        " Y" + yPos +
-                        " S" + sVal +
-                        " F" + fVal;
+                        "<br/>X" + xPos +
+                        "<br/>Y" + yPos +
+                        "<br/>S" + sVal +
+                        "<br/>F" + fVal;
             }, false);
             function showEditor() {
                 parent.postMessage("", "*");
