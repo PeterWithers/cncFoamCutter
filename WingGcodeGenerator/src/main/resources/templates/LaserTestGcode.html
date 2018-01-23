@@ -76,25 +76,25 @@ Copyright (C) 2017 Peter Withers
                     <button type="submit" id="saveButton">Update</button>
                 </form>
             </div>            
-            <svg id="editSvgPanel" th:attr="viewBox=${'-5 -55 '+(laserTestGcodeData.gridSize+laserTestGcodeData.chordLength+30)+' '+(laserTestGcodeData.gridSize+laserTestGcodeData.chordLength+30)}">
+            <svg th:with="svgPoints=${laserTestGcodeData.getSvgPoints()}" id="editSvgPanel" th:attr="viewBox=${'-5 -55 '+(laserTestGcodeData.getMaxAreaX()+30)+' '+(laserTestGcodeData.getMaxAreaY()+30)}">
                 <g id="grid">
-                    <line th:each="yRow : ${#numbers.sequence( -50, (laserTestGcodeData.gridSize+laserTestGcodeData.chordLength-30))}" x1="0" th:attr="y1=${yRow}, y2=${yRow}, x2=${laserTestGcodeData.gridSize+laserTestGcodeData.chordLength+20}" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
-                    <line th:each="yRow : ${#numbers.sequence( -5, (laserTestGcodeData.gridSize+laserTestGcodeData.chordLength)/10-3)}" x1="-5" th:attr="y1=${yRow*10}, y2=${yRow*10}, x2=${laserTestGcodeData.gridSize+laserTestGcodeData.chordLength+25}" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
-                    <line th:each="xRow : ${#numbers.sequence( 0, (laserTestGcodeData.gridSize+laserTestGcodeData.chordLength)+20)}" y1="-50" th:attr="x1=${xRow}, x2=${xRow}, y2=${laserTestGcodeData.gridSize+laserTestGcodeData.chordLength-30}" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
-                    <line th:each="xRow : ${#numbers.sequence( 0, (laserTestGcodeData.gridSize+laserTestGcodeData.chordLength)/10+2)}" y1="-55" th:attr="x1=${xRow*10}, x2=${xRow*10}, y2=${(laserTestGcodeData.gridSize+laserTestGcodeData.chordLength-25)}" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
+                    <line th:each="yRow : ${#numbers.sequence( -50, (laserTestGcodeData.getMaxAreaY()-30))}" x1="0" th:attr="y1=${yRow}, y2=${yRow}, x2=${laserTestGcodeData.getMaxAreaX()+20}" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
+                    <line th:each="yRow : ${#numbers.sequence( -5, (laserTestGcodeData.getMaxAreaY())/10-3)}" x1="-5" th:attr="y1=${yRow*10}, y2=${yRow*10}, x2=${laserTestGcodeDatagetMaxAreaX()+25}" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
+                    <line th:each="xRow : ${#numbers.sequence( 0, (laserTestGcodeData.getMaxAreaX())+20)}" y1="-50" th:attr="x1=${xRow}, x2=${xRow}, y2=${laserTestGcodeData.getMaxAreaY()-30}" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
+                    <line th:each="xRow : ${#numbers.sequence( 0, (laserTestGcodeData.getMaxAreaX())/10+2)}" y1="-55" th:attr="x1=${xRow*10}, x2=${xRow*10}, y2=${(laserTestGcodeData.getMaxAreaY()-25)}" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
                 </g>
                 <!--<path class="aerofoilEditLines" id="extrusionPath" th:attr="d=${laserTestGcodeData.getSvgPoints()}"/>-->
                 <g transform="translate(20, -30)">
-                    <path th:each="pathString, iterator : ${laserTestGcodeData.getSvgPoints()}" th:class="${laserTestGcodeData.getSvgPointsClass(iterator.index, iterator.size)}" th:attr="d=${pathString}">
+                    <path th:each="pathString, iterator : ${svgPoints}" th:class="${laserTestGcodeData.getSvgPointsClass(iterator.index, iterator.size)}" th:attr="d=${pathString}">
                         <animate th:if="${iterator.index} eq 0" attributeName="stroke-dashoffset" from="1000" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
                     </path>
                     <text y="-5" x="0"  fill="grey" th:text="${'S'+laserTestGcodeData.minPower}" style="font-size : 10px;">minPower</text>
-                    <text y="-5" th:attr="x=${laserTestGcodeData.gridSize-10}" fill="grey" th:text="${'S'+laserTestGcodeData.maxPower}" style="font-size : 10px;">maxPower</text>
+                    <text y="-5" th:attr="x=${laserTestGcodeData.getMaxAreaX()-10}" fill="grey" th:text="${'S'+laserTestGcodeData.maxPower}" style="font-size : 10px;">maxPower</text>
                     <text x="-10" y="0" fill="grey" th:text="${'F'+laserTestGcodeData.minSpeed}" transform="rotate(-90 0,5)" style="font-size:10px;text-anchor:'end'">minSpeed</text>
-                    <text x="10" th:attr="y=${laserTestGcodeData.gridSize+10},transform=${'rotate(-90 -0,'+(laserTestGcodeData.gridSize+15)+')'}" fill="grey" th:text="${'F'+laserTestGcodeData.maxSpeed}" style="font-size:10px;text-anchor:'end'">maxSpeed</text>
-                    <path id="laserHistory" style="stroke:cyan;stroke-width:0.5;fill:none;"/>
-                    <line id="laserY" x1="-20" y1="-30" y2="-30" th:attr="x2=${laserTestGcodeData.gridSize+laserTestGcodeData.chordLength}" style="stroke:red;stroke-width:1;" />
-                    <line id="laserX" y1="-20" x1="-30" x2="-30" th:attr="y2=${laserTestGcodeData.gridSize+laserTestGcodeData.chordLength}" style="stroke:red;stroke-width:1;fill:none;" />
+                    <text x="10" th:attr="y=${laserTestGcodeData.getMaxAreaY()+10},transform=${'rotate(-90 -0,'+(laserTestGcodeData.getMaxAreaY()+15)+')'}" fill="grey" th:text="${'F'+laserTestGcodeData.maxSpeed}" style="font-size:10px;text-anchor:'end'">maxSpeed</text>
+                    <path id="laserHistory" style="stroke:cyan;stroke-width:0.5;fill:none;" d="M"/>
+                    <line id="laserY" x1="-20" y1="-30" y2="-30" th:attr="x2=${laserTestGcodeData.getMaxAreaX()}" style="stroke:red;stroke-width:1;" />
+                    <line id="laserX" y1="-20" x1="-30" x2="-30" th:attr="y2=${laserTestGcodeData.getMaxAreaY()}" style="stroke:red;stroke-width:1;fill:none;" />
                 </g>
             </svg>   
             <br/>
