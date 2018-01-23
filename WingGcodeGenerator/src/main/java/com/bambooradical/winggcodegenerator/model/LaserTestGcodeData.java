@@ -59,11 +59,13 @@ public class LaserTestGcodeData {
     }
 
     public double getMaxAreaX() {
-        return maxAreaX;
+        // round the area to the nearest whole cm
+        return Math.round(maxAreaX / 10) * 10;
     }
 
     public double getMaxAreaY() {
-        return maxAreaY;
+        // round the area to the nearest whole cm
+        return Math.round(maxAreaY / 10) * 10;
     }
 
     public void setGridSize(int gridSize) {
