@@ -76,12 +76,12 @@ Copyright (C) 2017 Peter Withers
                     <button type="submit" id="saveButton">Update</button>
                 </form>
             </div>            
-            <svg th:with="svgPoints=${laserTestGcodeData.getSvgPoints()}" id="editSvgPanel" th:attr="viewBox=${'-5 -55 '+(laserTestGcodeData.getMaxAreaX()+30)+' '+(laserTestGcodeData.getMaxAreaY()+30)}">
+            <svg th:with="svgPoints=${laserTestGcodeData.getSvgPoints()}" id="editSvgPanel" th:attr="viewBox=${'-5 -55 '+(laserTestGcodeData.getMaxAreaX()+60)+' '+(laserTestGcodeData.getMaxAreaY()+60)}">
                 <g id="grid">
-                    <line th:each="yRow : ${#numbers.sequence( -50, (laserTestGcodeData.getMaxAreaY()-30))}" x1="0" th:attr="y1=${yRow}, y2=${yRow}, x2=${laserTestGcodeData.getMaxAreaX()+20}" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
-                    <line th:each="yRow : ${#numbers.sequence( -5, (laserTestGcodeData.getMaxAreaY())/10-3)}" x1="-5" th:attr="y1=${yRow*10}, y2=${yRow*10}, x2=${laserTestGcodeDatagetMaxAreaX()+25}" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
-                    <line th:each="xRow : ${#numbers.sequence( 0, (laserTestGcodeData.getMaxAreaX())+20)}" y1="-50" th:attr="x1=${xRow}, x2=${xRow}, y2=${laserTestGcodeData.getMaxAreaY()-30}" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
-                    <line th:each="xRow : ${#numbers.sequence( 0, (laserTestGcodeData.getMaxAreaX())/10+2)}" y1="-55" th:attr="x1=${xRow*10}, x2=${xRow*10}, y2=${(laserTestGcodeData.getMaxAreaY()-25)}" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
+                    <line th:each="yRow : ${#numbers.sequence( -50, (laserTestGcodeData.getMaxAreaY()-10))}" x1="0" th:attr="y1=${yRow}, y2=${yRow}, x2=${laserTestGcodeData.getMaxAreaX()+40}" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
+                    <line th:each="yRow : ${#numbers.sequence( -5, (laserTestGcodeData.getMaxAreaY())/10-1)}" x1="-5" th:attr="y1=${yRow*10}, y2=${yRow*10}, x2=${laserTestGcodeData.getMaxAreaX()+45}" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
+                    <line th:each="xRow : ${#numbers.sequence( 0, (laserTestGcodeData.getMaxAreaX())+40)}" y1="-50" th:attr="x1=${xRow}, x2=${xRow}, y2=${laserTestGcodeData.getMaxAreaY()-10}" style="stroke:rgba(50,50,50, 150);stroke-width:0.1" />
+                    <line th:each="xRow : ${#numbers.sequence( 0, (laserTestGcodeData.getMaxAreaX())/10+4)}" y1="-55" th:attr="x1=${xRow*10}, x2=${xRow*10}, y2=${(laserTestGcodeData.getMaxAreaY()-5)}" style="stroke:rgba(100,100,100, 150);stroke-width:0.1" />
                 </g>
                 <!--<path class="aerofoilEditLines" id="extrusionPath" th:attr="d=${laserTestGcodeData.getSvgPoints()}"/>-->
                 <g transform="translate(20, -30)">
