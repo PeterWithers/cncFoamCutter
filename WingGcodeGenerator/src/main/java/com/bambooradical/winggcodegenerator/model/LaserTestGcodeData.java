@@ -12,6 +12,10 @@ public class LaserTestGcodeData {
     final private String newLine = "\n";
 
     private int gridSize = 50;
+    double minAreaX = 0;
+    double minAreaY = 0;
+    double maxAreaX = 0;
+    double maxAreaY = 0;
     private int lineSpacing = 5;
     private double lineSteps = 5;
     private double lineZigzag = 2;
@@ -44,6 +48,22 @@ public class LaserTestGcodeData {
 
     public int getGridSize() {
         return gridSize;
+    }
+
+    public double getMinAreaX() {
+        return minAreaX;
+    }
+
+    public double getMinAreaY() {
+        return minAreaY;
+    }
+
+    public double getMaxAreaX() {
+        return maxAreaX;
+    }
+
+    public double getMaxAreaY() {
+        return maxAreaY;
     }
 
     public void setGridSize(int gridSize) {
@@ -124,10 +144,10 @@ public class LaserTestGcodeData {
 //        stringBuilderOuter.append("G1 Z0"); // linear move
         stringBuilderOuter.append("G21"); // Millimeters
         stringBuilderOuter.append(newLine);
-        double minAreaX = 0;
-        double minAreaY = 0;
-        double maxAreaX = 0;
-        double maxAreaY = 0;
+        minAreaX = 0;
+        minAreaY = 0;
+        maxAreaX = 0;
+        maxAreaY = 0;
         for (double xPos = 0; xPos < gridSize; xPos += lineSpacing) {
 //            stringBuilderInner.append("G4 P0 "); // dwell
 //            stringBuilderInner.append("M05 S0"); // turn off laser
