@@ -116,21 +116,40 @@ function portDataReceived(data) {
         if (sentGcode.length > 0) {
             ackCount++;
             var lineToSend = sentGcode.shift();
+            if (!lineToSend.startsWith("G1") && !lineToSend.startsWith("G0")) {
+                ackIndex--; // do not require an OK for non G0 or G1 codes
+            }
             messagePreview(lineToSend);
         }
     }
     updateProgressIndicator();
 }
+
+window.addEventListener("message", function (event) {
+    cancelRequest = true;
+    document.getElementById("gcodeArea").value = event.data;
+    totalCount = 0;
+    sentGcode = [];
+    ackCount = 0;
+    updateProgressIndicator();
+}, false);
+
 function messagePreview(gcodeString) {
     document.getElementById("remoteFrame").contentWindow.postMessage(gcodeString, "*");
 }
 
 function updateProgressIndicator() {
-    var percentDone = ackCount / totalCount * 100;
-    var percentProcessing = sentGcode.length / totalCount * 100;
-    document.getElementById('completeIndicator').style.width = percentDone + "%";
-    document.getElementById('progressIndicator').style.width = percentProcessing + "%";
-    document.getElementById('progressIndicator').style.marginLeft = percentDone + "%";
+    if (totalCount <= 1) {
+        document.getElementById('completeIndicator').style.width = "0px";
+        document.getElementById('progressIndicator').style.width = "0px";
+        document.getElementById('progressIndicator').style.marginLeft = "0px";
+    } else {
+        var percentDone = ackCount / totalCount * 100;
+        var percentProcessing = sentGcode.length / totalCount * 100;
+        document.getElementById('completeIndicator').style.width = percentDone + "%";
+        document.getElementById('progressIndicator').style.width = percentProcessing + "%";
+        document.getElementById('progressIndicator').style.marginLeft = percentDone + "%";
+    }
 }
 
 var sendInProgress = false;
