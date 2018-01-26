@@ -163,7 +163,7 @@ public class LaserTestGcodeData {
                 stringBuilderInner.append(newLine);
                 boolean isOdd = false;
                 for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
-                    double speed = minSpeed + (yPos * (maxSpeed - minSpeed) / (gridSize / lineSteps));
+                    double speed = minSpeed + ((maxSpeed - minSpeed) * (yPos / gridSize));
                     final double calculatedX = xPos + ((isOdd) ? lineZigzag : 0);
                     // start loop
 //                        stringBuilderInner.append("G1 F" + speed); // set speed 
