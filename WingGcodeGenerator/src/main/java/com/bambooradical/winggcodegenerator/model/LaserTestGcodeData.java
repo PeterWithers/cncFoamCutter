@@ -157,17 +157,17 @@ public class LaserTestGcodeData {
             stringBuilderInner.append(newLine);
             stringBuilderInner.append("G4 P0"); // dwell
             stringBuilderInner.append(newLine);
-            double power = minPower + (xPos * (maxPower - minPower) / (gridSize / lineSpacing));
+            double power = minPower + ((maxPower - minPower) * xPos / (gridSize - lineSpacing));
             if (aerofoilData == null) {
-                stringBuilderInner.append("M04 S").append(power); // turn on laser at power x
+                stringBuilderInner.append("M04 S").append((int) power); // turn on laser at power x
                 stringBuilderInner.append(newLine);
                 boolean isOdd = false;
                 for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
-                    double speed = minSpeed + ((maxSpeed - minSpeed) * (yPos / gridSize));
+                    double speed = minSpeed + ((maxSpeed - minSpeed) * (yPos / (gridSize - lineSteps)));
                     final double calculatedX = xPos + ((isOdd) ? lineZigzag : 0);
                     // start loop
 //                        stringBuilderInner.append("G1 F" + speed); // set speed 
-                    stringBuilderInner.append("G1 X").append(calculatedX).append(" Y").append(yPos).append(" F").append(speed); // move at speed
+                    stringBuilderInner.append(String.format("G1 X%.3f Y%.3f F%d", calculatedX, yPos, (int) speed)); // move at speed
                     stringBuilderInner.append(newLine);
                     isOdd = !isOdd;
 //                    stringBuilderInner.append("G4 P0 "); // dwell
@@ -183,17 +183,17 @@ public class LaserTestGcodeData {
                 double maxX = xPos;
                 double minX = xPos;
                 for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
-                    double speed = minSpeed + (yPos * (maxSpeed - minSpeed) / (gridSize / lineSteps));
+                    double speed = minSpeed + (yPos * (maxSpeed - minSpeed) / ((gridSize - lineSteps) / lineSteps));
                     yPos += aerofoilData.getBounds().getMaxY() * chordLength;
                     stringBuilderInner.append(String.format("G0 X%.2f Y%.2f F%d", xPos, yPos, flySpeed)); // move
                     stringBuilderInner.append(newLine);
                     stringBuilderInner.append("G4 P0"); // dwell
                     stringBuilderInner.append(newLine);
-                    stringBuilderInner.append("M04 S").append(power); // turn on laser at power x
+                    stringBuilderInner.append("M04 S").append((int) power); // turn on laser at power x
                     stringBuilderInner.append(newLine);
                     double maxY = yPos;
                     double minY = yPos;
-                    stringBuilderInner.append(String.format("G1 X%.3f Y%.3f F%d S%d", xPos, yPos, (int) speed, (int) power));
+                    stringBuilderInner.append(String.format("G1 X%.3f Y%.3f F%d", xPos, yPos, (int) speed));
                     stringBuilderInner.append(newLine);
                     String previousGcode = "";
                     for (double[] transformedPoints : aerofoilData.getTransformedPoints((int) xPos, (int) yPos, chordLength, 0, 0)) {
