@@ -72,6 +72,15 @@ SerialPort.list((err, ports) => {
             });
             port.on('data', function (data) {
                 document.getElementById("serialData").value += data;
+                var currentCount = (data.match(/ok/g) || []).length;
+                ackCount += currentCount;
+                for (var ackIndex = 0; ackIndex < currentCount; ackIndex++) {
+                    if (sentGcode.length > 0) {
+                        var lineToSend = sentGcode.shift();
+                        messagePreview(lineToSend);
+                    }
+                }
+                updateProgressIndicator();
             });
         }
     });
@@ -115,14 +124,27 @@ function messagePreview(gcodeString) {
     document.getElementById("remoteFrame").contentWindow.postMessage(gcodeString, "*");
 }
 
+function updateProgressIndicator() {
+    var percentDone = ackCount / totalCount * 100;
+    var percentProcessing = (ackCount + sentGcode.length) / totalCount * 100;
+    document.getElementById('progressIndicator').style.width = percentProcessing + "%";
+    document.getElementById('progressIndicator').style.margin_left = percentDone + "%";
+}
+
 var sendInProgress = false;
 var cancelRequest = false;
 var mockSerial = false;
+var totalCount = 0;
+var sentGcode = [];
+var ackCount;
 function sendGcode() {
     cancelRequest = false;
     if (!sendInProgress) {
         sendInProgress = true;
+        sentGcode = [];
+        ackCount = 0;
         var gcodeLines = document.getElementById("gcodeArea").value.split("\n");
+        totalCount = gcodeLines.length;
         var gcodeTimerCallback = function () {
             var portActive = (mockSerial) ? true : (port && port.isOpen);
             if (!portActive || cancelRequest) {
@@ -131,7 +153,7 @@ function sendGcode() {
             } else {
                 if (gcodeLines.length > 0) {
                     var lineToSend = gcodeLines.shift();
-                    messagePreview(lineToSend);
+                    sentGcode.push(lineToSend);
                     if (mockSerial) {
                         document.getElementById('porterror').textContent = "mock serial";
                         document.getElementById("gcodeArea").value = gcodeLines.join("\n");
@@ -156,6 +178,7 @@ function sendGcode() {
                     cancelRequest = false;
                 }
             }
+            updateProgressIndicator();
         }
         setTimeout(gcodeTimerCallback, 100);
     }
