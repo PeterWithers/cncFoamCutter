@@ -153,7 +153,7 @@ public class LaserTestGcodeData {
         for (double xPos = 0; xPos < gridSize; xPos += lineSpacing) {
 //            stringBuilderInner.append("G4 P0 "); // dwell
 //            stringBuilderInner.append("M05 S0"); // turn off laser
-            stringBuilderInner.append("G0  X").append(xPos).append(" Y0 F").append(flySpeed); // move
+            stringBuilderInner.append(String.format("G0 X%.3f Y0 F%d", xPos, flySpeed)); // move
             stringBuilderInner.append(newLine);
             stringBuilderInner.append("G4 P0"); // dwell
             stringBuilderInner.append(newLine);
