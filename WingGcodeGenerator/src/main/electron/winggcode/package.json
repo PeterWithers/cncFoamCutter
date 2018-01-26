@@ -19,7 +19,7 @@
     "forge": {
       "make_targets": {
         "win32": [
-          "squirrel"
+          "zip"
         ],
         "darwin": [
           "zip"
@@ -49,6 +49,7 @@
   "dependencies": {
     "electron-compile": "^6.4.2",
     "electron-squirrel-startup": "^1.0.0",
+    "require-rebuild": "^1.2.8",
     "serialport": "^6.0.4"
   },
   "devDependencies": {
