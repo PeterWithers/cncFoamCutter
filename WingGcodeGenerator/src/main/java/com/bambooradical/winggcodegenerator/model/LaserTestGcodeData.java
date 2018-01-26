@@ -183,7 +183,7 @@ public class LaserTestGcodeData {
                 double maxX = xPos;
                 double minX = xPos;
                 for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
-                    double speed = minSpeed + (yPos * (maxSpeed - minSpeed) / ((gridSize - lineSteps) / lineSteps));
+                    double speed = minSpeed + ((maxSpeed - minSpeed) * (yPos / (gridSize - lineSteps)));
                     yPos += aerofoilData.getBounds().getMaxY() * chordLength;
                     stringBuilderInner.append(String.format("G0 X%.2f Y%.2f F%d", xPos, yPos, flySpeed)); // move
                     stringBuilderInner.append(newLine);
