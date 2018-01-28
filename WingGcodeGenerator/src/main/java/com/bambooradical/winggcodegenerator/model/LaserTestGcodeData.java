@@ -196,7 +196,7 @@ public class LaserTestGcodeData {
                     stringBuilderInner.append(String.format("G1 X%.3f Y%.3f F%d", xPos, yPos, (int) speed));
                     stringBuilderInner.append(newLine);
                     String previousGcode = "";
-                    for (double[] transformedPoints : aerofoilData.getTransformedPoints((int) xPos, (int) yPos, chordLength, 0, 180)) {
+                    for (double[] transformedPoints : aerofoilData.getTransformedPoints((int) xPos, (int) yPos, chordLength, 0, 0)) {
                         minX = (minX < transformedPoints[0]) ? minX : transformedPoints[0];
                         minY = (minY < transformedPoints[1]) ? minY : transformedPoints[1];
                         maxX = (maxX > transformedPoints[0]) ? maxX : transformedPoints[0];
