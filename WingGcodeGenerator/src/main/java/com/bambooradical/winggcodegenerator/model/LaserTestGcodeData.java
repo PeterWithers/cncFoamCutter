@@ -185,7 +185,7 @@ public class LaserTestGcodeData {
                 for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
                     double speed = minSpeed + ((maxSpeed - minSpeed) * (yPos / (gridSize - lineSteps)));
                     yPos += aerofoilData.getBounds().getMaxY() * chordLength;
-                    stringBuilderInner.append(String.format("G0 X%.2f Y%.2f F%d", xPos, yPos, flySpeed)); // move
+                    stringBuilderInner.append(String.format("G0 X%.2f Y%.2f F%d", xPos + chordLength, yPos, flySpeed)); // move
                     stringBuilderInner.append(newLine);
                     stringBuilderInner.append("G4 P0"); // dwell
                     stringBuilderInner.append(newLine);
@@ -193,10 +193,11 @@ public class LaserTestGcodeData {
                     stringBuilderInner.append(newLine);
                     double maxY = yPos;
                     double minY = yPos;
-                    stringBuilderInner.append(String.format("G1 X%.3f Y%.3f F%d", xPos, yPos, (int) speed));
+                    // is this G1 needed?
+                    stringBuilderInner.append(String.format("G1 X%.3f Y%.3f F%d", xPos + chordLength, yPos, (int) speed));
                     stringBuilderInner.append(newLine);
                     String previousGcode = "";
-                    for (double[] transformedPoints : aerofoilData.getTransformedPoints((int) xPos, (int) yPos, chordLength, 0, 0)) {
+                    for (double[] transformedPoints : aerofoilData.getTransformedPoints((int) xPos + chordLength, (int) yPos, chordLength, 0, 180, 1.0)) {
                         minX = (minX < transformedPoints[0]) ? minX : transformedPoints[0];
                         minY = (minY < transformedPoints[1]) ? minY : transformedPoints[1];
                         maxX = (maxX > transformedPoints[0]) ? maxX : transformedPoints[0];
