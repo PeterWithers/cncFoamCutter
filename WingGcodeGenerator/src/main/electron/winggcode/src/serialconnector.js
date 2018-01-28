@@ -115,13 +115,13 @@ function portDataReceived(data) {
     const charK = 107;
     for (var bufferIndex = 0; bufferIndex < data.length - 1; bufferIndex++) {
         if (data[bufferIndex] === charO && data[bufferIndex + 1] === charK) {
-            while (sentGcode.length > 0) {
+            if (sentGcode.length > 0) {
                 ackCount++;
                 var lineToSend = sentGcode.shift();
                 messagePreview(lineToSend);
-                if (lineToSend.startsWith("G1") || !lineToSend.startsWith("G0")) {
-                    break; // require a fresh OK for G0 or G1 codes
-                }
+//                if (lineToSend.startsWith("G1") || !lineToSend.startsWith("G0")) {
+//                    break; // require a fresh OK for G0 or G1 codes
+//                }
             }
         }
     }
@@ -174,6 +174,8 @@ function sendGcode() {
             if (!portActive || cancelRequest) {
                 sendInProgress = false;
                 cancelRequest = false;
+            } else if (sentGcode.length > 0) {
+                setTimeout(gcodeTimerCallback, 10);
             } else {
                 if (gcodeLines.length > 0) {
                     var lineToSend = gcodeLines.shift();
