@@ -151,14 +151,15 @@ public class LaserTestGcodeData {
         maxAreaX = 0;
         maxAreaY = 0;
         for (double xPos = 0; xPos < gridSize; xPos += lineSpacing) {
-//            stringBuilderInner.append("G4 P0 "); // dwell
+            stringBuilderInner.append("G4 P0"); // dwell
+            stringBuilderInner.append(newLine);
 //            stringBuilderInner.append("M05 S0"); // turn off laser
             stringBuilderInner.append(String.format("G0 X%.3f Y0 F%d", xPos, flySpeed)); // move
             stringBuilderInner.append(newLine);
-            stringBuilderInner.append("G4 P0"); // dwell
-            stringBuilderInner.append(newLine);
             double power = minPower + ((maxPower - minPower) * xPos / (gridSize - lineSpacing));
             if (aerofoilData == null) {
+                stringBuilderInner.append("G4 P0"); // dwell
+                stringBuilderInner.append(newLine);
                 stringBuilderInner.append("M04 S").append((int) power); // turn on laser at power x
                 stringBuilderInner.append(newLine);
                 boolean isOdd = false;
@@ -185,6 +186,8 @@ public class LaserTestGcodeData {
                 for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
                     double speed = minSpeed + ((maxSpeed - minSpeed) * (yPos / (gridSize - lineSteps)));
                     yPos += aerofoilData.getBounds().getMaxY() * chordLength;
+                    stringBuilderInner.append("G4 P0"); // dwell
+                    stringBuilderInner.append(newLine);
                     stringBuilderInner.append(String.format("G0 X%.2f Y%.2f F%d", xPos + chordLength, yPos, flySpeed)); // move
                     stringBuilderInner.append(newLine);
                     stringBuilderInner.append("G4 P0"); // dwell
@@ -221,15 +224,17 @@ public class LaserTestGcodeData {
 //        stringBuilderOuter.append("# fly around perimeter");
         stringBuilderOuter.append(String.format("G0 X%.2f Y%.2f F%d", minAreaX, minAreaY, flySpeed)); // fly around perimeter
         stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append("G4 P0").append(newLine); // dwell
         stringBuilderOuter.append(String.format("G0 X%.2f Y%.2f F%d", minAreaX, maxAreaY, flySpeed)); // fly around perimeter
         stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append("G4 P0").append(newLine); // dwell
         stringBuilderOuter.append(String.format("G0 X%.2f Y%.2f F%d", maxAreaX, maxAreaY, flySpeed)); // fly around perimeter
         stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append("G4 P0").append(newLine); // dwell
         stringBuilderOuter.append(String.format("G0 X%.2f Y%.2f F%d", maxAreaX, minAreaY, flySpeed)); // fly around perimeter
         stringBuilderOuter.append(newLine);
+        stringBuilderOuter.append("G4 P0").append(newLine); // dwell
         stringBuilderOuter.append(String.format("G0 X%.2f Y%.2f F%d", minAreaX, minAreaY, flySpeed)); // fly around perimeter
-        stringBuilderOuter.append(newLine);
-        stringBuilderOuter.append("G4 P0"); // dwell
         stringBuilderOuter.append(newLine);
         stringBuilderOuter.append(stringBuilderInner);
         stringBuilderOuter.append("G4 P0 "); // dwell
