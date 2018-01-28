@@ -159,6 +159,7 @@ function updateProgressIndicator() {
     }
 }
 
+var writeAhead = 1;
 var sendInProgress = false;
 var cancelRequest = false;
 var mockSerial = false;
@@ -171,6 +172,7 @@ function sendGcode() {
         sendInProgress = true;
         sentGcode = [];
         ackCount = 0;
+        writeAhead = document.getElementById("writeAhead").value;
         var gcodeLines = document.getElementById("gcodeArea").value.split("\n");
         totalCount = gcodeLines.length;
         var gcodeTimerCallback = function () {
@@ -178,7 +180,7 @@ function sendGcode() {
             if (!portActive || cancelRequest) {
                 sendInProgress = false;
                 cancelRequest = false;
-            } else if (sentGcode.length > 5) {
+            } else if (sentGcode.length > writeAhead) {
                 setTimeout(gcodeTimerCallback, 10);
             } else {
                 if (gcodeLines.length > 0) {
