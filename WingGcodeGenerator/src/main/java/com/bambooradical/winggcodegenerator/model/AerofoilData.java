@@ -113,15 +113,19 @@ public class AerofoilData {
         this.name = name;
     }
 
-    private double[] rotate(double[] point, double washDeg) {
+    private double[] rotate(double[] point, double washDeg, double locX) {
         double wash = Math.toRadians(washDeg);
-        double locX = 0.33;
         double locY = 0;
         return new double[]{((point[0] - locX) * Math.cos(wash) - (point[1] - locY) * Math.sin(wash)) + locX,
             ((point[0] - locX) * Math.sin(wash) + (point[1] - locY) * Math.cos(wash)) + locY};
     }
 
     public ArrayList<double[]> getTransformedPoints(int xOffset, int yOffset, int chord, int sweep, double wash) {
+        double locX = 0.33; // this is the rotation point for wash, I think I intended this to rotate at the spar, but that would be 0.66 and this value should be checked
+        return getTransformedPoints(xOffset, yOffset, chord, sweep, wash, locX);
+    }
+
+    public ArrayList<double[]> getTransformedPoints(int xOffset, int yOffset, int chord, int sweep, double wash, double locX) {
         ArrayList<double[]> transformedPoints = new ArrayList<>();
         final double initialX = 1;
         final double initialY = 0;
@@ -149,14 +153,14 @@ public class AerofoilData {
             // cubic
             for (int index = points.length - 1; index > 2; index -= 3) {
                 System.out.println("index:" + index);
-                final double xP0 = rotate(points[index - 0], wash)[0];
-                final double yP0 = rotate(points[index - 0], wash)[1];
-                final double xP1 = rotate(points[index - 1], wash)[0];
-                final double yP1 = rotate(points[index - 1], wash)[1];
-                final double xP2 = rotate(points[index - 2], wash)[0];
-                final double yP2 = rotate(points[index - 2], wash)[1];
-                final double xP3 = rotate(points[index - 3], wash)[0];
-                final double yP3 = rotate(points[index - 3], wash)[1];
+                final double xP0 = rotate(points[index - 0], wash, locX)[0];
+                final double yP0 = rotate(points[index - 0], wash, locX)[1];
+                final double xP1 = rotate(points[index - 1], wash, locX)[0];
+                final double yP1 = rotate(points[index - 1], wash, locX)[1];
+                final double xP2 = rotate(points[index - 2], wash, locX)[0];
+                final double yP2 = rotate(points[index - 2], wash, locX)[1];
+                final double xP3 = rotate(points[index - 3], wash, locX)[0];
+                final double yP3 = rotate(points[index - 3], wash, locX)[1];
                 for (double t = 0; t <= 1; t += 0.01) {
                     // linear bezier
                     // P0+t*(P1-P0)
@@ -174,7 +178,7 @@ public class AerofoilData {
 //            final double initialX = svgBounds.getMaxX();
 //            final double initialY = svgBounds.getMaxY();
             for (int index = points.length - 1; index > -1; index--) {
-                double[] currentPoint = rotate(points[index], wash);
+                double[] currentPoint = rotate(points[index], wash, locX);
                 transformedPoints.add(new double[]{(initialX - currentPoint[0]) * chord + xOffset + sweep, (initialY - currentPoint[1]) * chord + yOffset});
             }
         }
