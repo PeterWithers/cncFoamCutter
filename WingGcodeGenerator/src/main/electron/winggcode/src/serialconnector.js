@@ -111,15 +111,18 @@ function jogRequest(xDist, yDist) {
 
 function portDataReceived(data) {
     document.getElementById("serialData").value += data;
-    var currentCount = (data.match(/ok/g) || []).length;
-    for (var ackIndex = 0; ackIndex < currentCount; ackIndex++) {
-        if (sentGcode.length > 0) {
-            ackCount++;
-            var lineToSend = sentGcode.shift();
-            if (!lineToSend.startsWith("G1") && !lineToSend.startsWith("G0")) {
-                ackIndex--; // do not require an OK for non G0 or G1 codes
+    const charO = 111;
+    const charK = 107;
+    for (var bufferIndex = 0; bufferIndex < data.length - 1; bufferIndex++) {
+        if (data[bufferIndex] === charO && data[bufferIndex + 1] === charK) {
+            while (sentGcode.length > 0) {
+                ackCount++;
+                var lineToSend = sentGcode.shift();
+                messagePreview(lineToSend);
+                if (lineToSend.startsWith("G1") || !lineToSend.startsWith("G0")) {
+                    break; // require a fresh OK for G0 or G1 codes
+                }
             }
-            messagePreview(lineToSend);
         }
     }
     updateProgressIndicator();
@@ -179,7 +182,7 @@ function sendGcode() {
                         document.getElementById('porterror').textContent = "mock serial";
                         document.getElementById("gcodeArea").value = gcodeLines.join("\n");
                         setTimeout(gcodeTimerCallback, 10);
-                        setTimeout(portDataReceived, 1000, "ok\n");
+                        setTimeout(portDataReceived, 1000, Buffer.from('bla\nok\ns'));
                     } else {
                         port.write(lineToSend + "\n", function (err) {
                             if (err) {
