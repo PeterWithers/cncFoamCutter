@@ -113,8 +113,12 @@ function portDataReceived(data) {
     document.getElementById("serialData").value += data;
     const charO = 111;
     const charK = 107;
+    const charE = 101;
+    const charR = 114;
     for (var bufferIndex = 0; bufferIndex < data.length - 1; bufferIndex++) {
-        if (data[bufferIndex] === charO && data[bufferIndex + 1] === charK) {
+        if (data[bufferIndex] === charE && data[bufferIndex + 1] === charR) {
+            document.getElementById('gcodeerror').textContent = data;
+        } else if (data[bufferIndex] === charO && data[bufferIndex + 1] === charK) {
             if (sentGcode.length > 0) {
                 ackCount++;
                 var lineToSend = sentGcode.shift();
@@ -174,7 +178,7 @@ function sendGcode() {
             if (!portActive || cancelRequest) {
                 sendInProgress = false;
                 cancelRequest = false;
-            } else if (sentGcode.length > 50) {
+            } else if (sentGcode.length > 5) {
                 setTimeout(gcodeTimerCallback, 10);
             } else {
                 if (gcodeLines.length > 0) {
