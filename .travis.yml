@@ -31,6 +31,9 @@ install:
 - npm update
 - npm install -g electron-forge
 
+git:
+  depth: 500
+
 script:
 - cd WingGcodeGenerator/src/main/electron/winggcode
 - buildVersion=$(git rev-list --count HEAD .); 
