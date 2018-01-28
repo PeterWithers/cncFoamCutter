@@ -118,6 +118,7 @@ function portDataReceived(data) {
     for (var bufferIndex = 0; bufferIndex < data.length - 1; bufferIndex++) {
         if (data[bufferIndex] === charE && data[bufferIndex + 1] === charR) {
             document.getElementById('gcodeerror').textContent = data;
+            document.getElementById("writeAhead").style.backgroundColor = "red";
         } else if (data[bufferIndex] === charO && data[bufferIndex + 1] === charK) {
             if (sentGcode.length > 0) {
                 ackCount++;
@@ -173,6 +174,8 @@ function sendGcode() {
         sentGcode = [];
         ackCount = 0;
         writeAhead = document.getElementById("writeAhead").value;
+        document.getElementById("writeAhead").style.backgroundColor = "";
+        document.getElementById('gcodeerror').textContent = "";
         var gcodeLines = document.getElementById("gcodeArea").value.split("\n");
         totalCount = gcodeLines.length;
         var gcodeTimerCallback = function () {
