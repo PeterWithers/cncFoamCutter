@@ -174,7 +174,7 @@ function sendGcode() {
             if (!portActive || cancelRequest) {
                 sendInProgress = false;
                 cancelRequest = false;
-            } else if (sentGcode.length > 0) {
+            } else if (sentGcode.length > 50) {
                 setTimeout(gcodeTimerCallback, 10);
             } else {
                 if (gcodeLines.length > 0) {
