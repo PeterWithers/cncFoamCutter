@@ -193,7 +193,7 @@ function sendGcode() {
                         document.getElementById('porterror').textContent = "mock serial";
                         document.getElementById("gcodeArea").value = gcodeLines.join("\n");
                         setTimeout(gcodeTimerCallback, 10);
-                        setTimeout(portDataReceived, 1000, Buffer.from('bla\nok\ns'));
+                        setTimeout(portDataReceived, 1000, Buffer.from('mock serial\nok\n'));
                     } else {
                         port.write(lineToSend + "\n", function (err) {
                             if (err) {
