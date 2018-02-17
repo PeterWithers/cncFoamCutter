@@ -90,8 +90,8 @@ Copyright (C) 2017 Peter Withers
                             <animate th:if="${iterator.index} eq 0" attributeName="stroke-dashoffset" from="1000" to="0" begin="1s" dur="2s" repeatCount="indefinite" />
                         </path>
                         <path id="laserHistory" style="stroke:cyan;stroke-width:0.5;fill:none;"/>
-                        <line id="laserY" x1="-20" y1="-40" y2="-40" th:attr="x2=${laserTestGcodeData.getMaxAreaX()}" style="stroke:red;stroke-width:1;" />
-                        <line id="laserX" y1="-20" x1="-30" x2="-30" th:attr="y2=${laserTestGcodeData.getMaxAreaY()}" style="stroke:red;stroke-width:1;fill:none;" />
+                        <line id="laserY" x1="-20" y1="-40" y2="-40" th:attr="x2=${laserTestGcodeData.getMaxAreaX()+20}" style="stroke:red;stroke-width:1;" />
+                        <line id="laserX" y1="-20" x1="-30" x2="-30" th:attr="y2=${laserTestGcodeData.getMaxAreaY()+20}" style="stroke:red;stroke-width:1;fill:none;" />
                     </g>
                     <text x="0" th:attr="y=${laserTestGcodeData.getMaxAreaY()+10}" fill="grey" th:text="${'S'+laserTestGcodeData.minPower}" style="font-size : 10px;">minPower</text>
                     <text th:attr="x=${laserTestGcodeData.getMaxAreaX()-10},y=${laserTestGcodeData.getMaxAreaY()+10}" fill="grey" th:text="${'S'+laserTestGcodeData.maxPower}" style="font-size : 10px;">maxPower</text>
