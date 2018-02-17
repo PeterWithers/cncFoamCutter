@@ -139,7 +139,7 @@ public class LaserTestGcodeData {
     public String getGcode() {
         StringBuilder stringBuilderOuter = new StringBuilder();
         StringBuilder stringBuilderInner = new StringBuilder();
-        stringBuilderOuter.append("M05 S0"); // turn off laser
+        stringBuilderOuter.append("G0 S0"); // turn off laser
         stringBuilderOuter.append(newLine);
         stringBuilderOuter.append("G90"); // Set to Absolute Positioning
         stringBuilderOuter.append(newLine);
@@ -160,7 +160,7 @@ public class LaserTestGcodeData {
             if (aerofoilData == null) {
                 stringBuilderInner.append("G4 P0"); // dwell
                 stringBuilderInner.append(newLine);
-                stringBuilderInner.append("M04 S").append((int) power); // turn on laser at power x
+                stringBuilderInner.append("G1 S").append((int) power); // turn on laser at power x
                 stringBuilderInner.append(newLine);
                 boolean isOdd = false;
                 for (double yPos = 0; yPos < gridSize; yPos += lineSteps) {
@@ -192,7 +192,7 @@ public class LaserTestGcodeData {
                     stringBuilderInner.append(newLine);
                     stringBuilderInner.append("G4 P0"); // dwell
                     stringBuilderInner.append(newLine);
-                    stringBuilderInner.append("M04 S").append((int) power); // turn on laser at power x
+                    stringBuilderInner.append("G1 S").append((int) power); // turn on laser at power x
                     stringBuilderInner.append(newLine);
                     double maxY = yPos;
                     double minY = yPos;
@@ -239,13 +239,11 @@ public class LaserTestGcodeData {
         stringBuilderOuter.append(stringBuilderInner);
         stringBuilderOuter.append("G4 P0 "); // dwell
         stringBuilderOuter.append(newLine);
-        stringBuilderOuter.append("M05 S0"); // turn off laser
+        stringBuilderOuter.append("G1 S0"); // turn off laser
         stringBuilderOuter.append(newLine);
         stringBuilderOuter.append("G1 F3500"); // set speed
         stringBuilderOuter.append(newLine);
         stringBuilderOuter.append("G0 X0 Y0"); // go to home
-        stringBuilderOuter.append(newLine);
-        stringBuilderOuter.append("M30"); // perhaps this can be used as a repeat command
         stringBuilderOuter.append(newLine);
         return stringBuilderOuter.toString();
     }
